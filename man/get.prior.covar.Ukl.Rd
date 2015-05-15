@@ -4,7 +4,7 @@
 \alias{get.prior.covar.Ukl}
 \title{Get prior covariances}
 \usage{
-get.prior.covar.Ukl(P, L, R, factors, omega.table)
+get.prior.covar.Ukl(P, lambda.mat, Q, factor.mat, omega.table)
 }
 \arguments{
 \item{P}{integer number of PCs}

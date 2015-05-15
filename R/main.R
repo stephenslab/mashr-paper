@@ -214,31 +214,35 @@ saveRDS(post.nulls,paste0("post.nulls",A,".rds"))
 ##ask how to write in a function that reads in arrays
 
 
-##' @total.mean function Generate a KxR matrix for each gene snp pair of weighted 
-##' @describe generate a K x R matrix of post.weighted quantieis for each gene snp pair and sum them to get total weighted 
-##' @param post.means J x K x R arrays of posterior means for each snp in each component in each tissue
-##' @param post.cov J x K x R arrays of posterior variance for each snp in each component in each tissue
-##' @param post.ups J x K x R arrays of posterior upper tail probabilities for each snp in each component in each tissue
-##' @param post.downs J x K x R arrays of posterior lower tail probabilities for each snp in each component in each tissue
-##' @param post.weights J x K matrix of posterior weights for each componenet and for each snp
-##' @return get vector of total weighted quanties for each gene SNP pair
+#' Total mean
+#'
+#' Generate a K x R matrix for each gene snp pair of weighted quantities
+#'
+#' Generate a K x R matrix of post.weighted quantities for each gene snp pair and sum the to get total weighted posterior quantities
+#' 
+#' @param post.means J x K x R arrays of posterior means for each snp in each component in each tissue
+#' @param post.cov J x K x R arrays of posterior variance for each snp in each component in each tissue
+#' @param post.ups J x K x R arrays of posterior upper tail probabilities for each snp in each component in each tissue
+#' @param post.downs J x K x R arrays of posterior lower tail probabilities for each snp in each component in each tissue
+#' @param post.weights J x K matrix of posterior weights for each componenet and for each snp
+#'
+#' @return Get R-vector of total weighted quantities for each gene SNP pair
+total.mean <- function(j, post.means, post.weights) {
+    weightedmeans <- (as.matrix(post.means[j, , 1:R] * post.weights[j, ]))
+    colSums(weightedmeans)
+}
 
-total.mean=function(j,post.means,post.weights){weightedmeans=(as.matrix(post.means[j,,1:R]*post.weights[j,]))
-                       colSums(weightedmeans)}
-total.up=function(j,post.ups,post.weights){colSums(as.matrix(post.ups[j,,1:R]*post.weights[j,]))}
-total.down=function(j,post.downs,post.weights){colSums(as.matrix(post.downs[j,,1:R]*post.weights[j,]))}
-total.null=function(j,post.nulls,post.weights){colSums(as.matrix(post.nulls[j,,1:R]*post.weights[j,]))}
+total.up <- function(j, post.ups, post.weights) {
+    colSums(as.matrix(post.ups[j, , 1:R] * post.weights[j, ]))
+}
 
+total.down <- function(j, post.downs, post.weights) {
+    colSums(as.matrix(post.downs[j, , 1:R] * post.weights[j, ]))
+}
 
-##' @total.mean function Generate a KxR matrix for each gene snp pair of weighted 
-##' @describe generate a K x R matrix of post.weighted quantieis for each gene snp pair and sum them to get total weighted 
-##' @param post.means J x K x R arrays of posterior means for each snp in each component in each tissue
-##' @param post.cov J x K x R arrays of posterior variance for each snp in each component in each tissue
-##' @param post.ups J x K x R arrays of posterior upper tail probabilities for each snp in each component in each tissue
-##' @param post.downs J x K x R arrays of posterior lower tail probabilities for each snp in each component in each tissue
-##' @param post.weights J x K matrix of posterior weights for each componenet and for each snp
-##' @return get vector of total weighted quanties for each gene SNP pair
-
+total.null <- function(j, post.nulls, post.weights) {
+    colSums(as.matrix(post.nulls[j, , 1:R] * post.weights[j, ]))
+} 
 
 ##' @title compares upper and lower tail probability at each tissue to determine larger
 ##' @param all.upper and all.lower are JxR matrices of upper and lower tail probabilities for all gene pairs 
