@@ -66,7 +66,7 @@ get.prior.covar.Ukl <- function(P, lambda.mat, Q, factor.mat,omega.table)  {
 
 
 
-#' @title Select a grid
+#' @title select.grid
 #' @description mult.tissue.grid computes a set of omega 'stretch' factors in log 2 multiples of sd; the max and min for each tissue are chosen by autoselect.mix.sd
 #' @param beta hat is an J x R matrix of betahats (or t statistics)
 #' @param sebetahat is a J x R matrix of their standard errors (or 1s, if T staitsitcs)
