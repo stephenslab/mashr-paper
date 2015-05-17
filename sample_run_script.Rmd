@@ -10,7 +10,7 @@ When you click the **Knit** button a document will be generated that includes bo
 ```{r}
 rm(list=ls())
 setwd("/Users/sarahurbut/Dropbox/cyclingstatistician/beta_gp_continuous/matched")
-source("~/Dropbox/mash/R/main.R")
+source("~/matrix_ash/R/main.R")
 start="firstbatch"
 
 b.gp.hat=na.omit(read.table(paste0(start,"beta.hat.unstd.txt"),header=F,skip=1)[,-c(1,2)])
@@ -36,7 +36,6 @@ compute.mixture.dist(b.gp.hat,J=5,se.gp.hat,covmat,A="stfinal")
 
 
 ##A sample of how to compute posterior quantities##
-
 A="tesstfinal"
 post.weights=readRDS(file=paste0("post.weight.",A,".rds"))
 post.means=readRDS(file=paste0("post.means",A,".rds"))
