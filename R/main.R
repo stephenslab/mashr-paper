@@ -267,7 +267,7 @@ total.mean=function(j){weightedmeans=(as.matrix(post.means[j,,1:R]*post.weights[
 total.up=function(j){colSums(as.matrix(post.ups[j,,1:R]*post.weights[j,]))}
 total.down=function(j){colSums(as.matrix(post.downs[j,,1:R]*post.weights[j,]))}
 total.null=function(j){colSums(as.matrix(post.nulls[j,,1:R]*post.weights[j,]))}
-
+total.covs.partone=function(j){colSums(as.matrix((post.covs[j,,1:R]+post.means[j,,1:R]^2)*post.weights[j,]))}
 
 ##' function Generate a KxR matrix for each gene snp pair of weighted
 ##'  generate a K x R matrix of post.weighted quantieis for each gene snp pair and sum them to get total weighted
