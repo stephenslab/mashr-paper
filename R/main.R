@@ -21,17 +21,21 @@ post.b.gpkl.mean <- function(b.mle, V.gp.hat.inv, U.gp1kl){
 #'
 #' @return U.0kl L dimensional list of K dimensional list with prior covairnace matrix for each grid weight, prior covariance pair
 #' @export
-get.prior.covar.Ukl <- function(P, lambda.mat, Q, factor.mat,omega.table)  {
+get.prior.covar.Ukl <- function(P, lambda.mat, Q, factor.mat,omega.table,rhos)  {
     test=list()
     for(l in 1:nrow(omega.table)){
         test[[l]]=list()
         omega=omega.table[l,]
-        test[[l]][[1]]=omega*diag(1,R)
+        for(r in 1:length(rhos)){
+          test[[l]][[r]]=list()
+          rho=rhos[r]
+        
+        test[[l]][[r]][[1]]=rho*omega*diag(1,R)
         data.prox=((t(X.c)%*%X.c)/M)
         d.norm=data.prox/max(diag(data.prox))
         
         
-        test[[l]][[2]]=omega*d.norm
+        test[[l]][[r]][[2]]=rho*omega*d.norm
         
         
         svd.X=svd(X.c)
@@ -45,7 +49,7 @@ get.prior.covar.Ukl <- function(P, lambda.mat, Q, factor.mat,omega.table)  {
         
         
         
-        test[[l]][[3]]=omega*(cov.pc.norm)
+        test[[l]][[r]][[3]]=rho*omega*(cov.pc.norm)
         if(Q!=0){for(q in 1:Q){
             fact=factor.mat
             load=as.matrix(lambda[,q])
@@ -54,13 +58,13 @@ get.prior.covar.Ukl <- function(P, lambda.mat, Q, factor.mat,omega.table)  {
             a=(1/M*(t(rank.prox)%*% rank.prox))
             a[is.nan(a)] = 0
             a.norm=a/max(diag(a))
-            test[[l]][[q+3]]=omega*a.norm
+            test[[l]][[r]][[q+3]]=rho*omega*a.norm
         }
         full.rank=as.matrix(lambda)%*%as.matrix(factor.mat)
         b=(1/M*(t(full.rank)%*%full.rank))
         b[is.nan(b)]=0
         b.norm=b/max(diag(b))
-            test[[l]][[Q+4]]=omega*b.norm}}
+            test[[l]][[r]][[Q+4]]=rho*omega*b.norm}}}
     return(U.0kl=test)
 }
 
@@ -276,16 +280,19 @@ compare.func=function(j){
 compute.covmat = function(b.gp.hat,sebetahat,Q,X.c,lambda.mat,P,A,factor.mat){
     
     omega=mult.tissue.grid(mult=sqrt(2),b.gp.hat,sebetahat)
+    
     omega.table=data.frame(omega)
+    rhos=seq(0,1,by=0.1)
     lambda=lambda
     A=A
     factor.mat=factor.mat
     X.c=X.c
     Q=Q
     
-    U.0kl=get.prior.covar.Ukl(P=2,lambda=lambda,Q=Q,factor.mat=factor.mat, omega.table=omega.table)
+    U.0kl=get.prior.covar.Ukl(P=2,lambda=lambda,Q=Q,factor.mat=factor.mat, omega.table=omega.table,rhos=rhos)
     
-    covmat=unlist(U.0kl,recursive=F)
+    covmat1=unlist(U.0kl,recursive=F)
+    covmat=unlist(covmat1,recursive=F)
     
     saveRDS(covmat,paste0("covmat",A,".rds"))
     
