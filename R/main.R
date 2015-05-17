@@ -311,6 +311,10 @@ gen.tail.probs=function(post.ups,post.downs,post.weights,A){
 }
 
 
+gen.marginal.var=function(J,A){
+all.covs.partone=t(sapply(seq(1:J),function(j){total.covs.partone(j)}))
+marginal.var=all.covs.partone-all.mus^2
+write.table(marginal.var,paste0("marginal.var.","A",".txt"))}
 
 
 compare.func=function(j){
