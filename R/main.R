@@ -292,7 +292,7 @@ compute.covmat = function(b.gp.hat,sebetahat,Q,X.c,lambda.mat,P,A,factor.mat){
     return(covmat)}
 
 
-compute.mixture.dist=function(b.gp.hat,J=10,se.gp.hat,covmat,A){
+compute.mixture.dist=function(b.gp.hat,J,se.gp.hat,covmat,A){
     
     J=J
     R=ncol(b.gp.hat)
