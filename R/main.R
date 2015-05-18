@@ -109,7 +109,19 @@ get.prior.covar.Ukl <- function(P, lambda.mat, Q, factor.mat,omega.table)  {
     b[is.nan(b)]=0
     b.norm=b/max(diag(b))
     test[[l]][[Q+4]]=omega*b.norm}
-  test[[l]]}
+    
+    configs=matrix(0,nrow=R,ncol=R)
+    
+    R=ncol(factor.mat)
+    for(r in 1:R){
+    configs[r,r]=1}
+    
+    configs=rbind(configs,rep(1,R))
+    for(c in 1:nrow(configs)) {
+      
+    mat=(configs[1,]%*%t(configs[1,]))
+
+    test[[l]][[Q+4+c]]=omega*mat}}
   return(U.0kl=test)
 }
 
