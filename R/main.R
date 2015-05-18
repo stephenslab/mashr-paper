@@ -444,16 +444,16 @@ checkfunc=function(j,b.gp.hat,se.gp.hat,A,k ) {
     
     U.gp1kl <- post.b.gpkl.cov(V.gp.hat.inv, covmat[[k]])
     
-    pdf(paste0("matchingvariance",A,".txt"))
+    pdf(paste0("matchingvariance",A,".pdf"))
     plot(diag(U.gp1kl),post.covs[j,k,1:R])
     dev.off()
     
-    pdf(paste0("matchingmus",A,".txt"))
+    pdf(paste0("matchingmus",A,".pdf"))
     mu.gp1kl <- as.array(post.b.gpkl.mean(b.mle, V.gp.hat.inv, U.gp1kl))
     plot(mu.gp1kl,post.means[j,k,])
     dev.off()
     
-    pdf(paste0("postmeancheck",A,".txt"))
+    pdf(paste0("postmeancheck",A,".pdf"))
     plot((post.weights[j,]%*%post.means[j,,]),posterior.means[j,])
     dev.off()
     
