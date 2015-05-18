@@ -83,10 +83,10 @@ factor=as.matrix(read.table(&quot;tri_gtex_strongmay10_F.out&quot;))
 covmat=compute.covmat(b.gp.hat,se.gp.hat,Q=5,X.c,lambda,P=2,A=&quot;filename&quot;,factor)
 compute.mixture.dist(b.gp.hat,J=5,se.gp.hat,covmat,A=&quot;filename&quot;)
 compute.total.quant(A=&quot;filename&quot;,J=5)
-checkfunc(1,b.gp.hat,se.gp.hat,A=&quot;filename&quot;,1180)</code></pre>
+checkfunc(2,b.gp.hat,se.gp.hat,A=&quot;filename&quot;,k=8)</code></pre>
 <pre><code>## pdf 
 ##   2</code></pre>
-<p>Checkfunc creates three checkpoint plots to check that componenet specific means and variances match the manual computation, and that the weighted posterior mean is computed and stored correctly.</p>
+<p>Checkfunc creates three checkpoint plots to check that componenet specific means and variances match the manual computation, and that the weighted posterior mean is computed and stored correctly. I ran on just the first 5 snps for illustration, but you can try if for any number of SNPS. Also, the readRDS(paste0(“covmat”,A,“.rds”)) allows you to see that the length of the list of your covariance matrices should correspond to the number of componenets in your mixture distribution.</p>
 
 
 </div>
