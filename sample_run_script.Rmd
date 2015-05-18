@@ -5,7 +5,7 @@ output: html_document
 
 Here is a sample way to run the script. First we load some data:
 
-```{r}
+```{r, echo=TRUE, warning=FALSE}
 rm(list=ls())
 setwd("/Users/sarahurbut/Dropbox/cyclingstatistician/beta_gp_continuous/matched")
 source("~/matrix_ash/R/main.R")
@@ -30,12 +30,12 @@ M=nrow(X.c)
 library("mvtnorm")
 lambda=as.matrix(read.table("tri_gtex_strongmay10_lambda.out"))
 factor=as.matrix(read.table("tri_gtex_strongmay10_F.out"))
-covmat=compute.covmat(b.gp.hat,se.gp.hat,Q=5,X.c,lambda,P=2,A="finalsat",factor)
-compute.mixture.dist(b.gp.hat,J=5,se.gp.hat,covmat,A="fiveeighteen")
-compute.total.quant(A="fiveeighteen",J=5)
-checkfunc(1,b.gp.hat,se.gp.hat,A="fiveeighteen",1180)
+covmat=compute.covmat(b.gp.hat,se.gp.hat,Q=5,X.c,lambda,P=2,A="filename",factor)
+compute.mixture.dist(b.gp.hat,J=5,se.gp.hat,covmat,A="filename")
+compute.total.quant(A="filename",J=5)
+checkfunc(1,b.gp.hat,se.gp.hat,A="filename",1180)
 
 ```
 
-
+Checkfunc creates three checkpoint plots to check that componenet specific means and variances match the manual computation, and that the weighted posterior mean is computed and stored correctly. I ran on just the first 5 snps for illustration, but you can try if for any number of SNPS. Also, the readRDS(paste0("covmat",A,".rds")) allows you to see that the length of the list of your covariance matrices should correspond to the number of componenets in your mixture distribution.
 
