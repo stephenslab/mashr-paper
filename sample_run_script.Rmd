@@ -3,20 +3,19 @@ title: "test.R"
 output: html_document
 ---
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Here is a sample way to run the script. First we load some data:
 
 ```{r}
 rm(list=ls())
 setwd("/Users/sarahurbut/Dropbox/cyclingstatistician/beta_gp_continuous/matched")
 source("~/matrix_ash/R/main.R")
+source("~/matrix_ash/R/mixEm.R")
 start="firstbatch"
 
 b.gp.hat=na.omit(read.table(paste0(start,"beta.hat.unstd.txt"),header=F,skip=1)[,-c(1,2)])
 se.gp.hat=na.omit(read.table(paste0(start,"se.beta.hat.txt"),header=F,skip=1)[,-c(1,2)])
 t.stat=na.omit(read.table("filtered_SNP_batcht.stat.txt",header=F,skip=1)[,-c(1,2,3,48)])
-source("~/Dropbox/cyclingstatistician/beta_gp_continuous/mixEm.R")
+
 library("mvtnorm")
 
 
@@ -32,36 +31,11 @@ library("mvtnorm")
 lambda=as.matrix(read.table("tri_gtex_strongmay10_lambda.out"))
 factor=as.matrix(read.table("tri_gtex_strongmay10_F.out"))
 covmat=compute.covmat(b.gp.hat,se.gp.hat,Q=5,X.c,lambda,P=2,A="finalsat",factor)
-compute.mixture.dist(b.gp.hat,J=5,se.gp.hat,covmat,A="stfinal")
-```
-
-```{r}
-##A sample of how to compute posterior quantities##
-A="stfinal"
-post.weights=readRDS(file=paste0("post.weight.",A,".rds"))
-post.means=readRDS(file=paste0("post.means",A,".rds"))
-post.covs=readRDS(file=paste0("post.covs",A,".rds"))
-post.ups=readRDS(file=paste0("post.ups",A,".rds"))
-post.nulls=readRDS(file=paste0("post.nulls",A,".rds"))
-post.downs=readRDS(file=paste0("post.downs",A,".rds"))
-J=dim(post.weights)[1]
-all.mus=t(sapply(seq(1:J),function(j){total.mean(j)}))
-all.upper=t(sapply(seq(1:J),function(j){total.up(j)}))
-all.lower=t(sapply(seq(1:J),function(j){total.down(j)}))
-all.nuller=t(sapply(seq(1:J),function(j){total.null(j)}))
-    
-    lfsr.mat=t(sapply(seq(1:J),function(j){compare.func(j)}))
-    
-    
-    write.table(all.mus,paste0("post.mean.",A,".txt"))
-    write.table(all.upper,paste0("post.up.",A,".txt"))
-    write.table(all.lower,paste0("post.low.",A,".txt"))
-    write.table(all.nuller,paste0("post.null.",A,".txt"))
-    write.table(lfsr.mat,paste0("lfsr.",A,".txt"))
-
-
-
-checkfunc(9,b.gp.hat,se.gp.hat,A="testfinal",k=20)
+compute.mixture.dist(b.gp.hat,J=5,se.gp.hat,covmat,A="fiveeighteen")
+compute.total.quant(A="fiveeighteen",J=5)
+checkfunc(1,b.gp.hat,se.gp.hat,A="fiveeighteen",1180)
 
 ```
+
+
 

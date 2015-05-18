@@ -119,7 +119,7 @@ get.prior.covar.Ukl <- function(P, lambda.mat, Q, factor.mat,omega.table)  {
     configs=rbind(configs,rep(1,R))
     for(c in 1:nrow(configs)) {
       
-    mat=(configs[1,]%*%t(configs[1,]))
+    mat=(configs[c,]%*%t(configs[c,]))
 
     test[[l]][[Q+4+c]]=omega*mat}}
   return(U.0kl=test)
