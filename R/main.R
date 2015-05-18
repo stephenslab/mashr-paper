@@ -286,35 +286,8 @@ total.covs.partone=function(j,post.means,post.covs,post.weights){colSums(as.matr
 compare.func=function(j,all.upper,all.lower){
     as.matrix(apply(rbind(all.upper[j,],all.lower[j,]),2,function(j){1-max(j)}))}
 
-##' @title gen.XXX to compute total weight mean (1 x R vector) for each gene-snp pair
-##' @return JxR matrix of grand means, grand nulls, grand lfsr
-gen.mean= function(post.means,post.weights,A){
-    all.mus= t(sapply(seq(1:J),function(j){total.mean(j,post.means,post.weights)}))
-    write.table(all.mus,paste0("post.mean.",A,".txt"))}
 
 
-gen.null.probs=function(post.nulls,post.weights,A){
-    all.nuller=t(sapply(seq(1:J),function(j){total.null(j,post.nulls,post.weights)}))
-    write.table(all.nuller,paste0("post.null.",A,".txt"))}
-
-gen.tail.probs=function(post.ups,post.downs,post.weights,A){
-    all.lower=t(sapply(seq(1:J),function(j){total.down(j,post.downs,post.weights)}))
-    
-    all.upper=t(sapply(seq(1:J),function(j){total.up(j,post.ups,post.weights)}))
-    
-    lfsr.mat=t(sapply(seq(1:J),function(j){compare.func(j)}))
-    
-    
-    write.table(all.lower,paste0("post.low.",A,".txt"))
-    write.table(all.upper,paste0("post.high.",A,".txt"))
-    write.table(lfsr.mat,paste0("lfsr.",A,".txt"))
-}
-
-
-gen.marginal.var=function(J,A){
-all.covs.partone=t(sapply(seq(1:J),function(j){total.covs.partone(j)}))
-marginal.var=all.covs.partone-all.mus^2
-write.table(marginal.var,paste0("marginal.var.","A",".txt"))}
 
 
 
@@ -370,15 +343,18 @@ compute.mixture.dist=function(b.gp.hat,J,se.gp.hat,covmat,A){
     J=J
     R=ncol(b.gp.hat)
     
+    if(file.exists(paste0("likelihood",A,".rds"))==FALSE){
     lik.mat=t(sapply(seq(1:J),function(x){lik.func(b.mle=b.gp.hat[x,],V.gp.hat=diag(se.gp.hat[x,])^2,covmat)}))
     
-    saveRDS(lik.mat,paste0("likelihood",A,".rds"))
+    saveRDS(lik.mat,paste0("likelihood",A,".rds"))}
+    
+    else(lik.mat=readRDS(paste0("likelihood",A,".rds")))
     
     
     pis=hm.weight.gen(lik.mat,J/2,J/2)
     
     
-    total.lik.func(lik.mat,pis)
+    write.table(total.lik.func(lik.mat,pis),paste0("total.lik.",A,".txt"))
     
     post.weights=as.matrix(post.weight.func(pis,lik.mat))
     
@@ -417,14 +393,18 @@ compute.total.quant=function(A,J){
     
      
     
+    all.covs.partone=t(sapply(seq(1:J),function(j){total.covs.partone(j,post.means,post.covs,post.weights)}))
+
     all.mus=t(sapply(seq(1:J),function(j){total.mean(j,post.means,post.weights)}))
     all.upper=t(sapply(seq(1:J),function(j){total.up(j,post.ups,post.weights)}))
     all.lower=t(sapply(seq(1:J),function(j){total.down(j,post.downs,post.weights)}))
     all.nuller=t(sapply(seq(1:J),function(j){total.null(j,post.nulls,post.weights)}))
     
     lfsr.mat=t(sapply(seq(1:J),function(j){compare.func(j,all.upper,all.lower)}))
+    marginal.var=all.covs.partone-all.mus^2
     
     
+    write.table(marginal.var,paste0("marginal.var.",A,".txt"))
     write.table(all.mus,paste0("post.mean.",A,".txt"))
     write.table(all.upper,paste0("post.up.",A,".txt"))
     write.table(all.lower,paste0("post.low.",A,".txt"))
@@ -444,18 +424,25 @@ checkfunc=function(j,b.gp.hat,se.gp.hat,A,k ) {
     post.nulls=readRDS(file=paste0("post.nulls",A,".rds"))
     post.downs=readRDS(file=paste0("post.downs",A,".rds"))
     posterior.means=read.table(file=paste0("post.mean.",A,".txt"))
-    post.weights=readRDS("post.weight.testfinal.rds")
+    post.weights=readRDS(paste0("post.weight.",A,".rds"))
     b.mle=t(as.vector(b.gp.hat[j,]))
     V.gp.hat=diag(se.gp.hat[j,])^2
     V.gp.hat.inv <- solve(V.gp.hat)
     
     U.gp1kl <- post.b.gpkl.cov(V.gp.hat.inv, covmat[[k]])
+    
+    pdf(paste0("matchingvariance",A,".txt"))
     plot(diag(U.gp1kl),post.covs[j,k,1:R])
+    dev.off()
+    
+    pdf(paste0("matchingmus",A,".txt"))
     mu.gp1kl <- as.array(post.b.gpkl.mean(b.mle, V.gp.hat.inv, U.gp1kl))
-    
     plot(mu.gp1kl,post.means[j,k,])
-    plot((post.weights[j,]%*%post.means[j,,]),posterior.means[j,])
+    dev.off()
     
+    pdf(paste0("postmeancheck",A,".txt"))
+    plot((post.weights[j,]%*%post.means[j,,]),posterior.means[j,])
+    dev.off()
     
 }
 
