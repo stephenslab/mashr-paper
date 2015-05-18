@@ -419,7 +419,7 @@ compute.total.quant=function(A,J){
     
     all.mus=t(sapply(seq(1:J),function(j){total.mean(j,post.means,post.weights)}))
     all.upper=t(sapply(seq(1:J),function(j){total.up(j,post.ups,post.weights)}))
-    all.lower=t(sapply(seq(1:J),function(j){total.down(j,post.lows,post.weights)}))
+    all.lower=t(sapply(seq(1:J),function(j){total.down(j,post.downs,post.weights)}))
     all.nuller=t(sapply(seq(1:J),function(j){total.null(j,post.nulls,post.weights)}))
     
     lfsr.mat=t(sapply(seq(1:J),function(j){compare.func(j,all.upper,all.lower)}))
