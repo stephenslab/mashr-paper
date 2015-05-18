@@ -33,10 +33,11 @@ lambda=as.matrix(read.table("tri_gtex_strongmay10_lambda.out"))
 factor=as.matrix(read.table("tri_gtex_strongmay10_F.out"))
 covmat=compute.covmat(b.gp.hat,se.gp.hat,Q=5,X.c,lambda,P=2,A="finalsat",factor)
 compute.mixture.dist(b.gp.hat,J=5,se.gp.hat,covmat,A="stfinal")
+```
 
-
+```{r}
 ##A sample of how to compute posterior quantities##
-A="tesstfinal"
+A="stfinal"
 post.weights=readRDS(file=paste0("post.weight.",A,".rds"))
 post.means=readRDS(file=paste0("post.means",A,".rds"))
 post.covs=readRDS(file=paste0("post.covs",A,".rds"))

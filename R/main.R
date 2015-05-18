@@ -262,12 +262,12 @@ post.array.generator=function(b.gp.hat,J,A,se.gp.hat,covmat){
 ##' @param post.weights J x K matrix of posterior weights for each componenet and for each snp
 ##' @return get vector of total weighted quanties for each gene SNP pair
 
-total.mean=function(j){weightedmeans=(as.matrix(post.means[j,,1:R]*post.weights[j,]))
+total.mean=function(j,post.means,post.weights){weightedmeans=(as.matrix(post.means[j,,1:R]*post.weights[j,]))
     colSums(weightedmeans)}
-total.up=function(j){colSums(as.matrix(post.ups[j,,1:R]*post.weights[j,]))}
-total.down=function(j){colSums(as.matrix(post.downs[j,,1:R]*post.weights[j,]))}
-total.null=function(j){colSums(as.matrix(post.nulls[j,,1:R]*post.weights[j,]))}
-total.covs.partone=function(j){colSums(as.matrix((post.covs[j,,1:R]+post.means[j,,1:R]^2)*post.weights[j,]))}
+total.up=function(j,post.ups,post.weights){colSums(as.matrix(post.ups[j,,1:R]*post.weights[j,]))}
+total.down=function(j,post.downs,post.weights){colSums(as.matrix(post.downs[j,,1:R]*post.weights[j,]))}
+total.null=function(j,post.nulls,post.weights){colSums(as.matrix(post.nulls[j,,1:R]*post.weights[j,]))}
+total.covs.partone=function(j,post.means,post.covs,post.weights){colSums(as.matrix((post.covs[j,,1:R]+post.means[j,,1:R]^2)*post.weights[j,]))}
 
 ##' function Generate a KxR matrix for each gene snp pair of weighted
 ##'  generate a K x R matrix of post.weighted quantieis for each gene snp pair and sum them to get total weighted
@@ -283,7 +283,7 @@ total.covs.partone=function(j){colSums(as.matrix((post.covs[j,,1:R]+post.means[j
 ##' @param all.upper and all.lower are JxR matrices of upper and lower tail probabilities for all gene pairs
 ##' @return 1 x R vector of lfsr at each tissue
 
-compare.func=function(j){
+compare.func=function(j,all.upper,all.lower){
     as.matrix(apply(rbind(all.upper[j,],all.lower[j,]),2,function(j){1-max(j)}))}
 
 ##' @title gen.XXX to compute total weight mean (1 x R vector) for each gene-snp pair
@@ -317,8 +317,6 @@ marginal.var=all.covs.partone-all.mus^2
 write.table(marginal.var,paste0("marginal.var.","A",".txt"))}
 
 
-compare.func=function(j){
-    as.matrix(apply(rbind(all.upper[j,],all.lower[j,]),2,function(j){1-max(j)}))}
 
 
 
@@ -376,7 +374,7 @@ compute.mixture.dist=function(b.gp.hat,J,se.gp.hat,covmat,A){
     
     saveRDS(lik.mat,paste0("likelihood",A,".rds"))
     
-    source("~/Dropbox/cyclingstatistician/beta_gp_continuous/mixEm.R")
+    
     pis=hm.weight.gen(lik.mat,J/2,J/2)
     
     
@@ -399,7 +397,7 @@ compute.mixture.dist=function(b.gp.hat,J,se.gp.hat,covmat,A){
     post.nulls=all.arrays$post.nulls
     post.weights=as.matrix(post.weight.func(pis,lik.mat))
     
-    
+    # return(list(post.means,...))
     saveRDS(post.means,paste0("post.means",A,".rds"))
     saveRDS(post.covs,paste0("post.covs",A,".rds"))
     saveRDS(post.ups,paste0("post.ups",A,".rds"))
@@ -409,21 +407,22 @@ compute.mixture.dist=function(b.gp.hat,J,se.gp.hat,covmat,A){
 
 
 compute.total.quant=function(A,J){
+    A=A
     post.means=readRDS(file=paste0("post.means",A,".rds"))
     post.covs=readRDS(file=paste0("post.covs",A,".rds"))
     post.ups=readRDS(file=paste0("post.ups",A,".rds"))
     post.nulls=readRDS(file=paste0("post.nulls",A,".rds"))
     post.downs=readRDS(file=paste0("post.downs",A,".rds"))
+    post.weights=readRDS(file=paste0("post.weight.",A,".rds"))
     
+     
     
+    all.mus=t(sapply(seq(1:J),function(j){total.mean(j,post.means,post.weights)}))
+    all.upper=t(sapply(seq(1:J),function(j){total.up(j,post.ups,post.weights)}))
+    all.lower=t(sapply(seq(1:J),function(j){total.down(j,post.lows,post.weights)}))
+    all.nuller=t(sapply(seq(1:J),function(j){total.null(j,post.nulls,post.weights)}))
     
-    
-    all.mus=t(sapply(seq(1:J),function(j){total.mean(j)}))
-    all.upper=t(sapply(seq(1:J),function(j){total.up(j)}))
-    all.lower=t(sapply(seq(1:J),function(j){total.down(j)}))
-    all.nuller=t(sapply(seq(1:J),function(j){total.null(j)}))
-    
-    lfsr.mat=t(sapply(seq(1:J),function(j){compare.func(j)}))
+    lfsr.mat=t(sapply(seq(1:J),function(j){compare.func(j,all.upper,all.lower)}))
     
     
     write.table(all.mus,paste0("post.mean.",A,".txt"))
