@@ -33,6 +33,7 @@ factor=as.matrix(read.table("tri_gtex_strongmay10_F.out"))
 covmat=compute.covmat(b.gp.hat,se.gp.hat,Q=5,X.c,lambda,P=2,A="filename",factor,bma=TRUE)
 all.arrays=compute.mixture.dist(b.gp.hat,J=5,se.gp.hat,covmat,A="filename",save=TRUE)
 compute.total.quant(A="filename",J=5)
+##Note that the checkfunc will only work if you saved the RDS objects##
 checkfunc(2,b.gp.hat,se.gp.hat,A="filename",k=8)
 
 ```
