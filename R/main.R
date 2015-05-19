@@ -69,7 +69,7 @@ get.prior.covar.Ukl.with.rho <- function(P, lambda.mat, Q, factor.mat,omega.tabl
     return(U.0kl=test)
 }
 
-get.prior.covar.Ukl <- function(P, lambda.mat, Q, factor.mat,omega.table)  {
+get.prior.covar.Ukl <- function(P, lambda.mat, Q, factor.mat,omega.table,bma=TRUE)  {
   test=list()
   for(l in 1:nrow(omega.table)){
     test[[l]]=list()
@@ -110,7 +110,8 @@ get.prior.covar.Ukl <- function(P, lambda.mat, Q, factor.mat,omega.table)  {
     b.norm=b/max(diag(b))
     test[[l]][[Q+4]]=omega*b.norm}
     
-    configs=matrix(0,nrow=R,ncol=R)
+    if(bma==TRUE){
+      configs=matrix(0,nrow=R,ncol=R)
     
     R=ncol(factor.mat)
     for(r in 1:R){
@@ -121,7 +122,7 @@ get.prior.covar.Ukl <- function(P, lambda.mat, Q, factor.mat,omega.table)  {
       
     mat=(configs[c,]%*%t(configs[c,]))
 
-    test[[l]][[Q+4+c]]=omega*mat}}
+    test[[l]][[Q+4+c]]=omega*mat}}}
   return(U.0kl=test)
 }
 
@@ -330,7 +331,7 @@ compute.covmat.with.rho = function(b.gp.hat,sebetahat,Q,X.c,lambda.mat,P,A,facto
 
 
 
-compute.covmat = function(b.gp.hat,sebetahat,Q,X.c,lambda.mat,P,A,factor.mat){
+compute.covmat = function(b.gp.hat,sebetahat,Q,X.c,lambda.mat,P,A,factor.mat,bma=TRUE){
   
   omega=mult.tissue.grid(mult=sqrt(2),b.gp.hat,sebetahat)
   
@@ -342,7 +343,7 @@ compute.covmat = function(b.gp.hat,sebetahat,Q,X.c,lambda.mat,P,A,factor.mat){
   X.c=X.c
   Q=Q
   
-U.0kl=get.prior.covar.Ukl(P=2,lambda=lambda,Q=Q,factor.mat=factor.mat, omega.table=omega.table)
+U.0kl=get.prior.covar.Ukl(P=2,lambda=lambda,Q=Q,factor.mat=factor.mat, omega.table=omega.table,bma)
     
    
     covmat=unlist(U.0kl,recursive=F)
@@ -351,7 +352,7 @@ U.0kl=get.prior.covar.Ukl(P=2,lambda=lambda,Q=Q,factor.mat=factor.mat, omega.tab
   return(covmat)}
 
 
-compute.mixture.dist=function(b.gp.hat,J,se.gp.hat,covmat,A){
+compute.mixture.dist=function(b.gp.hat,J,se.gp.hat,covmat,A,save=FALSE){
     
     J=J
     R=ncol(b.gp.hat)
@@ -373,18 +374,21 @@ compute.mixture.dist=function(b.gp.hat,J,se.gp.hat,covmat,A){
     
     saveRDS(post.weights,paste0("post.weight.",A,".rds"))
     
+    rm(post.weights) ## to conserve memory
+    rm(lik.mat) ## to conserve memory
     
     all.arrays=post.array.generator(b.gp.hat,A=A,J=J,se.gp.hat,covmat)
     
+ 
     
     
+    if(save==TRUE){
     
     post.means=all.arrays$post.means
     post.covs=all.arrays$post.covs
     post.ups=all.arrays$post.ups
     post.downs=all.arrays$post.downs
     post.nulls=all.arrays$post.nulls
-    post.weights=as.matrix(post.weight.func(pis,lik.mat))
     
     # return(list(post.means,...))
     saveRDS(post.means,paste0("post.means",A,".rds"))
@@ -392,19 +396,31 @@ compute.mixture.dist=function(b.gp.hat,J,se.gp.hat,covmat,A){
     saveRDS(post.ups,paste0("post.ups",A,".rds"))
     saveRDS(post.downs,paste0("post.downs",A,".rds"))
     saveRDS(post.nulls,paste0("post.nulls",A,".rds"))}
+    else(return(all.arrays))
+  }
 
 
-
-compute.total.quant=function(A,J){
-    A=A
+compute.total.quant=function(A,J,all.arrays){
+   
+      if(missing(all.arrays)){
     post.means=readRDS(file=paste0("post.means",A,".rds"))
     post.covs=readRDS(file=paste0("post.covs",A,".rds"))
     post.ups=readRDS(file=paste0("post.ups",A,".rds"))
     post.nulls=readRDS(file=paste0("post.nulls",A,".rds"))
     post.downs=readRDS(file=paste0("post.downs",A,".rds"))
     post.weights=readRDS(file=paste0("post.weight.",A,".rds"))
+    }
     
      
+  
+  else{
+      post.means=all.arrays$post.means
+      post.covs=all.arrays$post.covs
+      post.ups=all.arrays$post.ups
+      post.downs=all.arrays$post.downs
+      post.nulls=all.arrays$post.nulls
+      post.weights=readRDS(file=paste0("post.weight.",A,".rds"))
+  }
     
     all.covs.partone=t(sapply(seq(1:J),function(j){total.covs.partone(j,post.means,post.covs,post.weights)}))
 
@@ -438,6 +454,7 @@ checkfunc=function(j,b.gp.hat,se.gp.hat,A,k ) {
     post.downs=readRDS(file=paste0("post.downs",A,".rds"))
     posterior.means=read.table(file=paste0("post.mean.",A,".txt"))
     post.weights=readRDS(paste0("post.weight.",A,".rds"))
+    
     b.mle=t(as.vector(b.gp.hat[j,]))
     V.gp.hat=diag(se.gp.hat[j,])^2
     V.gp.hat.inv <- solve(V.gp.hat)
