@@ -514,7 +514,7 @@ post.array.per.snp=function(j,covmat,b.gp.hat,se.gp.hat){
   
   
 }
-=======
+
 
 plotting.func=function(j,posterior.means,lfsr.mat,marginal.var,genesnpnames,tissue.names,mle.mat){
   
@@ -560,4 +560,4 @@ plotting.func=function(j,posterior.means,lfsr.mat,marginal.var,genesnpnames,tiss
 
 
 
->>>>>>> 998cf24fb7976fd44f74c67c2e9da319ca390b42
+
