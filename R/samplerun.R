@@ -29,3 +29,4 @@ compute.total.quant(A="fiveeighteen",J=nrow(t.j))
 checkfunc(1,t.j,v.j,A="fiveeighteen",100)
 
     
+tissuenames=read.table("~/matrix_ash/tissuenames.txt")[,1]

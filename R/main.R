@@ -478,3 +478,34 @@ checkfunc=function(j,b.gp.hat,se.gp.hat,A,k ) {
 
 
 
+plotting.func=function(j,posterior.means,lfsr.mat,marginal.var,genesnpnames,tissue.names){
+  
+ 
+  posterior.means=as.matrix(posterior.means)
+  col.mat=NULL
+  
+    for(r in 1:R){
+      
+      if (lfsr.mat[j,r]<=0.10) {
+        col.mat[r]=1
+      } else if (lfsr.mat[j,r]<0.5) {
+        col.mat[r]=2
+      } else if (lfsr.mat[j,r]>=0.50) {
+        col.mat[r]=3
+      } 
+    }
+  
+  
+  
+  b=barplot((posterior.means[j,]),main=paste0("PostTissueMeans,B_",genesnpnames[j]),names=tissue.names,col=col.mat,las=2,ylim=c((min(posterior.means[j,])-0.05),(max(posterior.means[j,])+0.10)),cex.names=0.5,ylab="PosteriorMean")
+  lfsr=lfsr.mat[j,]
+  mean=as.numeric(posterior.means[j,])
+  sd=as.numeric(sqrt(marginal.var[j,]))
+  segments(b, mean - sd, b, mean + sd, lwd=2)
+  
+
+
+}
+
+
+
