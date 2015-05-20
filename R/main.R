@@ -480,8 +480,36 @@ post.array.per.snp=function(j,covmat,b.gp.hat,se.gp.hat){
 
   
   K=length(covmat)
-  post.means=array(NA,dim=c(J,K,R))
-  post.covs=array(NA,dim=c(J,K,R))
-  post.ups=array(NA,dim=c(J,K,R))
-  post.nulls=array(NA,dim=c(J,K,R))
-  post.downs=array(NA,dim=c(J,K,R))}
+  post.means=array(NA,dim=c(K,R))
+  post.covs=array(NA,dim=c(K,R))
+  post.ups=array(NA,dim=c(K,R))
+  post.nulls=array(NA,dim=c(K,R))
+  post.downs=array(NA,dim=c(K,R))
+
+  b.mle=as.vector(t(b.gp.hat[j,]))##turn i into a R x 1 vector
+  V.gp.hat=diag(se.gp.hat[j,])^2
+  V.gp.hat.inv <- solve(V.gp.hat)
+  
+  for(k in 1:K){
+    
+    
+    U.gp1kl <- (post.b.gpkl.cov(V.gp.hat.inv, covmat[[k]]))
+    mu.gp1kl <- as.array(post.b.gpkl.mean(b.mle, V.gp.hat.inv, U.gp1kl))
+    post.means[k,]=mu.gp1kl
+    post.covs[k,]=as.array(diag(U.gp1kl))
+    for(r in 1:R){##` marginal calculation for each tissue in each component
+      if(post.covs[k,r]==0){###if the covariance matrix has entry 0, then p(null=1)
+        post.ups[k,r]=0#need to figure out how to make the list have individual entries
+        post.downs[k,r]=0
+        post.nulls[k,r]=1}
+      else{
+        post.ups[k,r]=pnorm(0,mean=mu.gp1kl[r],sd=sqrt(diag(U.gp1kl)[r]),lower.tail=F)
+        post.downs[k,r]=pnorm(0,mean=mu.gp1kl[r],sd=sqrt(diag(U.gp1kl)[r]),lower.tail=T)
+        post.nulls[k,r]=0}
+    }
+  }
+  
+  
+  
+  
+}
