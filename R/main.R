@@ -476,5 +476,12 @@ checkfunc=function(j,b.gp.hat,se.gp.hat,A,k ) {
     
 }
 
+post.array.per.snp=function(j,covmat,b.gp.hat,se.gp.hat){
 
-
+  
+  K=length(covmat)
+  post.means=array(NA,dim=c(J,K,R))
+  post.covs=array(NA,dim=c(J,K,R))
+  post.ups=array(NA,dim=c(J,K,R))
+  post.nulls=array(NA,dim=c(J,K,R))
+  post.downs=array(NA,dim=c(J,K,R))}
