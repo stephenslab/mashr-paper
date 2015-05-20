@@ -478,6 +478,7 @@ checkfunc=function(j,b.gp.hat,se.gp.hat,A,k ) {
 
 post.array.per.snp=function(j,covmat,b.gp.hat,se.gp.hat){
 
+<<<<<<< HEAD
   
   K=length(covmat)
   post.means=array(NA,dim=c(K,R))
@@ -513,3 +514,50 @@ post.array.per.snp=function(j,covmat,b.gp.hat,se.gp.hat){
   
   
 }
+=======
+
+plotting.func=function(j,posterior.means,lfsr.mat,marginal.var,genesnpnames,tissue.names,mle.mat){
+  
+  R=ncol(posterior.means)
+  posterior.means=as.matrix(posterior.means)
+  col.mat=NULL
+  
+    for(r in 1:R){
+      
+      if (lfsr.mat[j,r]<=0.10) {
+        col.mat[r]=1
+      } else if (lfsr.mat[j,r]<0.5) {
+        col.mat[r]=2
+      } else if (lfsr.mat[j,r]>=0.50) {
+        col.mat[r]=3
+      } 
+    }
+  
+  
+  pdf(paste0("posteriormeans",genesnpnames[j],".pdf"))
+  b=barplot((posterior.means[j,]),main=paste0("PostTissueMeans,",genesnpnames[j]),names=tissue.names,col=col.mat,las=2,ylim=c((min(posterior.means[j,])-0.05),(max(posterior.means[j,])+0.10)),cex.names=0.5,ylab="PosteriorMean")
+  lfsr=lfsr.mat[j,]
+  mean=as.numeric(posterior.means[j,])
+  sd=as.numeric(sqrt(marginal.var[j,]))
+  segments(b, mean - sd, b, mean + sd, lwd=2)
+  dev.off()
+  
+  mle=mle.mat[j,]
+  a.m=(mle)
+  a.p=(posterior.means[j,])
+  low=min(a.m-0.01,a.p-0.01)
+  high=max(a.m+0.01,a.p+0.01)
+  
+  pdf(paste0("mlevsposteriormeans",genesnpnames[j],".pdf"))
+  plot(as.matrix(mle),as.matrix(posterior.means[j,]),main=paste0("MLEvsPostMeans,",genesnpnames[j]),ylim=c(low,high),xlim=c(low,high))
+  abline(0,1,col="red")
+  dev.off()
+  
+  pdf("ShrinkagePlots.pdf")
+  plot(seq(1:R),lapply(1:44,function(x){mean(abs(mle.mat[,x])>=posterior.means[,x])}),ylim=c(0,1),main="|MLE|>|Posteriormean|")
+  dev.off()
+}
+
+
+
+>>>>>>> 998cf24fb7976fd44f74c67c2e9da319ca390b42

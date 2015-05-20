@@ -28,4 +28,11 @@ compute.mixture.dist(t.j,J=nrow(t.j),v.j,covmat,A="fiveeighteen")
 compute.total.quant(A="fiveeighteen",J=nrow(t.j))
 checkfunc(1,t.j,v.j,A="fiveeighteen",100)
 
-    
+##And if you wanted to plot##
+
+genesnpnames=na.omit(read.table("~/Dropbox/AllGeneSNPStuff/max_beta_eQTL.table.txt"))[,2]
+tissuenames=read.table("~/matrix_ash/tissuenames.txt")[,1]
+marginal.var=read.table(paste0("marginal.var."A,".txt"))
+lfsr.mat=read.table(paste0("lfsr.",A,".txt"))
+posterior.means=read.table(paste0("post.mean.",A,".txt"))
+plotting.func(186,posterior.means,lfsr.mat,marginal.var,genesnpnames,tissue.names)
