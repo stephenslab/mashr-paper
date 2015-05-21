@@ -509,10 +509,31 @@ post.array.per.snp=function(j,covmat,b.gp.hat,se.gp.hat){
         post.nulls[k,r]=0}
     }
   }
-  
-  
-  
-  
+  return(list(post.means=post.means,post.ups=post.ups,post.downs=post.downs,post.covs=post.covs,post.nulls=post.nulls))
+}
+
+total.mean.per.snp=function(j,post.weights,post.means){
+  post.weights[j,]%*%post.means
+}
+
+
+total.null.per.snp=function(j,post.weights,post.nulls){
+  post.weights[j,]%*%post.nulls
+}
+
+
+total.up.per.snp=function(j,post.weights,post.ups){
+  post.weights[j,]%*%post.ups
+}
+
+
+total.down.per.snp=function(j,post.weights,post.downs){
+  post.weights[j,]%*%post.downs
+}
+
+
+total.covs.partone.persnp=function(j,post.means,post.covs,post.weights){
+  post.weights[j,]%*%(post.covs+post.means^2)
 }
 
 
