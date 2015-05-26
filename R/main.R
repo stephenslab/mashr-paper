@@ -659,3 +659,48 @@ plotting.func.html=function(j,posterior.means,lfsr.mat,marginal.var,genesnpnames
 
 
 
+plotting.func.html.neg=function(j,posterior.means,lfsr.mat,marginal.var,genesnpnames,tissue.names,mle.mat){
+  
+  R=ncol(posterior.means)
+  posterior.means=as.matrix(posterior.means)
+  col.mat=NULL
+  
+  for(r in 1:R){
+    
+    if (lfsr.mat[j,r]<=0.10) {
+      col.mat[r]=1
+    } else if (lfsr.mat[j,r]<0.5) {
+      col.mat[r]=2
+    } else if (lfsr.mat[j,r]>=0.50) {
+      col.mat[r]=3
+    } 
+  }
+  
+  par(mfrow=c(1,3))
+  
+  b=barplot((posterior.means[j,]),main=paste0("PostTissueMeans,",genesnpnames[j]),names=tissue.names,col=col.mat,las=2,ylim=c((min(posterior.means[j,])-0.05),0),cex.names=0.5,ylab="PosteriorMean")
+  lfsr=lfsr.mat[j,]
+  mean=as.numeric(posterior.means[j,])
+  sd=as.numeric(sqrt(marginal.var[j,]))
+  segments(b, mean - sd, b, mean + sd, lwd=2)
+  t=as.numeric(levels(as.factor(col.mat)))
+  key=c("<0.10","0.10<x<0.50",">0.5")
+  legend("topright",legend=key[t],col=t,pch=1,title="lfsr")
+  
+  
+  mle=mle.mat[j,]
+  a.m=(mle)
+  a.p=(posterior.means[j,])
+  low=min(a.m-0.01,a.p-0.01)
+  high=max(a.m+0.01,a.p+0.01)
+  
+  
+  plot(as.matrix(mle),as.matrix(posterior.means[j,]),main=paste0("MLEvsPostMeans,",genesnpnames[j]),ylim=c(low,high),xlim=c(low,high))
+  abline(0,1,col="red")
+  
+  
+  
+  #plot(seq(1:R),lapply(1:44,function(x){mean(abs(mle.mat[,x])>=posterior.means[,x])}),ylim=c(0,1),main="|MLE|>|Posteriormean|")
+  
+}
+
