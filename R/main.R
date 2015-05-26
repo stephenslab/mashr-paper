@@ -636,6 +636,9 @@ plotting.func.html=function(j,posterior.means,lfsr.mat,marginal.var,genesnpnames
   mean=as.numeric(posterior.means[j,])
   sd=as.numeric(sqrt(marginal.var[j,]))
   segments(b, mean - sd, b, mean + sd, lwd=2)
+  t=as.numeric(levels(as.factor(col.mat)))
+  key=c("<0.10","0.10<x<0.50",">0.5")
+  legend("topright",legend=key[t],col=t,pch=1,title="lfsr")
 
   
   mle=mle.mat[j,]
@@ -650,8 +653,8 @@ plotting.func.html=function(j,posterior.means,lfsr.mat,marginal.var,genesnpnames
 
   
   
-  plot(seq(1:R),lapply(1:44,function(x){mean(abs(mle.mat[,x])>=posterior.means[,x])}),ylim=c(0,1),main="|MLE|>|Posteriormean|")
-  dev.off()
+  #plot(seq(1:R),lapply(1:44,function(x){mean(abs(mle.mat[,x])>=posterior.means[,x])}),ylim=c(0,1),main="|MLE|>|Posteriormean|")
+ 
 }
 
 
