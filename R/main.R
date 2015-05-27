@@ -629,7 +629,7 @@ plotting.func.html=function(j,posterior.means,lfsr.mat,marginal.var,genesnpnames
     } 
   }
   
-  par(mfrow=c(1,3))
+  #par(mfrow=c(2,1))
   
   b=barplot((posterior.means[j,]),main=paste0("PostTissueMeans,",genesnpnames[j]),names=tissue.names,col=col.mat,las=2,ylim=c((min(posterior.means[j,])-0.05),(max(posterior.means[j,])+0.10)),cex.names=0.5,ylab="PosteriorMean")
   lfsr=lfsr.mat[j,]
@@ -648,8 +648,8 @@ plotting.func.html=function(j,posterior.means,lfsr.mat,marginal.var,genesnpnames
   high=max(a.m+0.01,a.p+0.01)
   
   
-  plot(as.matrix(mle),as.matrix(posterior.means[j,]),main=paste0("MLEvsPostMeans,",genesnpnames[j]),ylim=c(low,high),xlim=c(low,high))
-  abline(0,1,col="red")
+  #plot(as.matrix(mle),as.matrix(posterior.means[j,]),main=paste0("MLEvsPostMeans,",genesnpnames[j]),ylim=c(low,high),xlim=c(low,high))
+  #abline(0,1,col="red")
 
   
   
@@ -676,7 +676,7 @@ plotting.func.html.neg=function(j,posterior.means,lfsr.mat,marginal.var,genesnpn
     } 
   }
   
-  par(mfrow=c(1,3))
+
   
   b=barplot((posterior.means[j,]),main=paste0("PostTissueMeans,",genesnpnames[j]),names=tissue.names,col=col.mat,las=2,ylim=c((min(posterior.means[j,])-0.05),0),cex.names=0.5,ylab="PosteriorMean")
   lfsr=lfsr.mat[j,]
@@ -687,17 +687,17 @@ plotting.func.html.neg=function(j,posterior.means,lfsr.mat,marginal.var,genesnpn
   key=c("<0.10","0.10<x<0.50",">0.5")
   legend("topright",legend=key[t],col=t,pch=1,title="lfsr")
   
-  
-  mle=mle.mat[j,]
-  a.m=(mle)
-  a.p=(posterior.means[j,])
-  low=min(a.m-0.01,a.p-0.01)
-  high=max(a.m+0.01,a.p+0.01)
-  
-  
-  plot(as.matrix(mle),as.matrix(posterior.means[j,]),main=paste0("MLEvsPostMeans,",genesnpnames[j]),ylim=c(low,high),xlim=c(low,high))
-  abline(0,1,col="red")
-  
+#   
+#   mle=mle.mat[j,]
+#   a.m=(mle)
+#   a.p=(posterior.means[j,])
+#   low=min(a.m-0.01,a.p-0.01)
+#   high=max(a.m+0.01,a.p+0.01)
+#   
+#   
+#   plot(as.matrix(mle),as.matrix(posterior.means[j,]),main=paste0("MLEvsPostMeans,",genesnpnames[j]),ylim=c(low,high),xlim=c(low,high))
+#   abline(0,1,col="red")
+#   
   
   
   #plot(seq(1:R),lapply(1:44,function(x){mean(abs(mle.mat[,x])>=posterior.means[,x])}),ylim=c(0,1),main="|MLE|>|Posteriormean|")
