@@ -367,8 +367,8 @@ compute.mixture.dist=function(b.gp.hat,J,se.gp.hat,covmat,A,save=FALSE){
     
     pis=hm.weight.gen(lik.mat,J/2,J/2)
     
-    train=lik.mat[(1:(J/2)),]
-    write.table(total.lik.func(train,pis),paste0("total.lik.",A,".txt"))
+    test=lik.mat[((J/2):(J)),]
+    write.table(total.lik.func(test,pis),paste0("total.lik.",A,".txt"))
     
     post.weights=as.matrix(post.weight.func(pis,lik.mat))
     
