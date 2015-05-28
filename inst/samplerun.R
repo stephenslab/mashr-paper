@@ -1,6 +1,5 @@
 rm(list=ls())
 source("~/matrix_ash/R/main.R")
-source("/mnt/lustre/home/surbut/prior_mix_multi/matched/mixEm.R")
 start="firstbatch"
 
 b.gp.hat=na.omit(read.table(paste0("/mnt/lustre/home/surbut/prior_mix_multi/matched/",start,"beta.hat.unstd.txt"),header=F,skip=1)[,-c(1,2)])
@@ -32,7 +31,7 @@ checkfunc(1,t.j,v.j,A="fiveeighteen",100)
 
 genesnpnames=na.omit(read.table("~/Dropbox/AllGeneSNPStuff/max_beta_eQTL.table.txt"))[,2]
 tissuenames=read.table("~/matrix_ash/tissuenames.txt")[,1]
-marginal.var=read.table(paste0("marginal.var."A,".txt"))
+marginal.var=read.table(paste0("marginal.var.",A,".txt"))
 lfsr.mat=read.table(paste0("lfsr.",A,".txt"))
 posterior.means=read.table(paste0("post.mean.",A,".txt"))
 plotting.func(186,posterior.means,lfsr.mat,marginal.var,genesnpnames,tissue.names)

@@ -151,7 +151,7 @@ autoselect.mix.sd = function(betahat,sebetahat,mult){
 }
 
 
-mult.tissue.grid = function(mult,betahat,sebetahat){ R=ncol(betahat);mix.weights=unlist(sapply(seq(1:ncol(b.gp.hat)),function(r){autoselect.mix.sd(betahat = betahat[,r],sebetahat = sebetahat[,r],mult=2)}))
+mult.tissue.grid = function(mult,betahat,sebetahat){ R=ncol(betahat);mix.weights=unlist(sapply(seq(1:ncol(betahat)),function(r){autoselect.mix.sd(betahat = betahat[,r],sebetahat = sebetahat[,r],mult=2)}))
     mult=sqrt(2);sigmaamin=min(mix.weights);sigmaamax=max(mix.weights);npoint = ceiling(log2(sigmaamax/sigmaamin)/log2(mult));
     omega=mult^((-npoint):0) * sigmaamax;return(omega)}
 
@@ -700,7 +700,7 @@ plotting.func.html.neg=function(j,posterior.means,lfsr.mat,marginal.var,genesnpn
 #   
   
   
-  #plot(seq(1:R),lapply(1:44,function(x){mean(abs(mle.mat[,x])>=posterior.means[,x])}),ylim=c(0,1),main="|MLE|>|Posteriormean|")
+ # plot(seq(1:R),lapply(1:44,function(x){mean(abs(mle.mat[,x])>=posterior.means[,x])}),ylim=c(0,1),main="|MLE|>|Posteriormean|")
   
 }
 
