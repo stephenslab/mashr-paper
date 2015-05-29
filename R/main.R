@@ -366,7 +366,7 @@ compute.mixture.dist=function(b.gp.hat,J,se.gp.hat,covmat,A,save=FALSE){
     
     
     pis=hm.weight.gen(lik.mat,J/2,J/2)
-    
+    write.table(pis,paste0("pis",A,".txt"))
     test=lik.mat[((J/2):(J)),]
     write.table(total.lik.func(test,pis),paste0("total.lik.",A,".txt"))
     
@@ -703,4 +703,127 @@ plotting.func.html.neg=function(j,posterior.means,lfsr.mat,marginal.var,genesnpn
  # plot(seq(1:R),lapply(1:44,function(x){mean(abs(mle.mat[,x])>=posterior.means[,x])}),ylim=c(0,1),main="|MLE|>|Posteriormean|")
   
 }
+
+
+compute.hm.train=function(train.b,se.train,covmat,A){
+  
+  J=nrow(train.b)
+  R=ncol(train.b)
+  
+  if(file.exists(paste0("liketrain",A,".rds"))==FALSE){
+    lik.mat=t(sapply(seq(1:J),function(x){lik.func(b.mle=b.train[x,],V.gp.hat=diag(se.train[x,])^2,covmat)}))
+    
+    saveRDS(lik.mat,paste0("liketrain",A,".rds"))}
+  
+  else(lik.mat=readRDS(paste0("liketrain",A,".rds")))
+  
+  train=lik.mat
+  pis=mixEM(matrix_lik=train,prior=rep(1,ncol(train)))
+  saveRDS(pis,paste0("pis",A,".rds"))
+  
+  pdf(paste0("pis",A,".pdf"))
+  barplot(t(as.matrix(pis$pihat)))
+  dev.off()
+}
+
+
+compute.lik.test=function(b.gp.hat,J,se.gp.hat,covmat,A,pis){
+  
+  J=J
+  R=ncol(b.gp.hat)
+  
+  if(file.exists(paste0("liketest",A,".rds"))==FALSE){
+    lik.mat=t(sapply(seq(1:J),function(x){lik.func(b.mle=b.gp.hat[x,],V.gp.hat=diag(se.gp.hat[x,])^2,covmat)}))
+    
+    saveRDS(lik.mat,paste0("liketest",A,".rds"))}
+  
+  else(lik.mat=readRDS(paste0("liketest",A,".rds")))
+  
+  
+
+  test=lik.mat
+  write.table(total.lik.func(test,pis),paste0("total.lik.",A,".txt"))
+  post.weights=as.matrix(post.weight.func(pis,lik.mat))
+  saveRDS(post.weights,paste0("post.weight.",A,".rds"))
+  rm(post.weights) ## to conserve memory
+  rm(lik.mat) ## to conserve memory
+  
+  
+} 
+
+compute.mix.test=function(b.gp.hat,J,se.gp.hat,covmat,A,save=FALSE){
+
+  
+
+  all.arrays=post.array.generator(b.gp.hat,A=A,J=J,se.gp.hat,covmat)
+  
+  
+  
+  
+  if(save==TRUE){
+    
+    post.means=all.arrays$post.means
+    post.covs=all.arrays$post.covs
+    post.ups=all.arrays$post.ups
+    post.downs=all.arrays$post.downs
+    post.nulls=all.arrays$post.nulls
+    
+    # return(list(post.means,...))
+    saveRDS(post.means,paste0("post.means",A,".rds"))
+    saveRDS(post.covs,paste0("post.covs",A,".rds"))
+    saveRDS(post.ups,paste0("post.ups",A,".rds"))
+    saveRDS(post.downs,paste0("post.downs",A,".rds"))
+    saveRDS(post.nulls,paste0("post.nulls",A,".rds"))}
+  else(return(all.arrays))
+}
+
+
+test.quant=function(A,all.arrays){
+  
+  
+  if(missing(all.arrays)){
+    post.means=readRDS(file=paste0("post.means",A,".rds"))
+    post.covs=readRDS(file=paste0("post.covs",A,".rds"))
+    post.ups=readRDS(file=paste0("post.ups",A,".rds"))
+    post.nulls=readRDS(file=paste0("post.nulls",A,".rds"))
+    post.downs=readRDS(file=paste0("post.downs",A,".rds"))
+    post.weights=readRDS(file=paste0("post.weight.",A,".rds"))
+  }
+  
+  
+  
+  else{
+    post.means=all.arrays$post.means
+    post.covs=all.arrays$post.covs
+    post.ups=all.arrays$post.ups
+    post.downs=all.arrays$post.downs
+    post.nulls=all.arrays$post.nulls
+    post.weights=readRDS(file=paste0("post.weight.",A,".rds"))
+  }
+  
+  J=nrow(post.means)
+  all.covs.partone=t(sapply(seq(1:J),function(j){total.covs.partone(j,post.means,post.covs,post.weights)}))
+  
+  all.mus=t(sapply(seq(1:J),function(j){total.mean(j,post.means,post.weights)}))
+  all.upper=t(sapply(seq(1:J),function(j){total.up(j,post.ups,post.weights)}))
+  all.lower=t(sapply(seq(1:J),function(j){total.down(j,post.downs,post.weights)}))
+  all.nuller=t(sapply(seq(1:J),function(j){total.null(j,post.nulls,post.weights)}))
+  
+  lfsr.mat=t(sapply(seq(1:J),function(j){compare.func(j,all.upper,all.lower)}))
+  marginal.var=all.covs.partone-all.mus^2
+  
+  
+  write.table(marginal.var,paste0("marginal.var.",A,".txt"))
+  write.table(all.mus,paste0("post.mean.",A,".txt"))
+  write.table(all.upper,paste0("post.up.",A,".txt"))
+  write.table(all.lower,paste0("post.low.",A,".txt"))
+  write.table(all.nuller,paste0("post.null.",A,".txt"))
+  write.table(lfsr.mat,paste0("lfsr.",A,".txt"))
+}
+
+
+
+
+
+
 

@@ -1,0 +1,64 @@
+---
+title: "methodcompare"
+output: html_document
+---
+
+```{r}
+rm(list=ls())
+setwd("~/Dropbox/")
+source("~/matrix_ash/R/main.R")
+source("~/matrix_ash/R/mixEm.R")
+library("bigmemory")
+library("SQUAREM")
+library("mvtnorm")
+
+
+b.gp.hat=na.omit(read.table("~/Dropbox/AllGeneSNPStuff/max_beta_eQTL.table.txt"))[,-c(1,2)]
+se.gp.hat=na.omit(read.table("~/Dropbox/AllGeneSNPStuff/max_sebeta_eQTL.table.txt"))[,-c(1,2)]
+se.gp.hat[310,14]=0.35
+t.stat=na.omit(read.table("~/Dropbox/AllGeneSNPStuff/max_tscore_eQTL.table.txt"))[,-c(1,2,47)]
+v.j=matrix(rep(1,nrow(t.stat)*ncol(t.stat)),nrow=nrow(t.stat),ncol(t.stat))
+
+R=ncol(b.gp.hat)#number of tissues
+X.t=as.matrix(t.stat)
+#X.real=X.t[which(truth$config!=0),]
+X.real=X.t
+X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
+R=ncol(X.t)
+M=nrow(X.c)
+
+
+lambda=as.matrix(read.table("~/Dropbox/AllGeneSNPStuff//tri_gtex_allstrongt_lambda.out"))
+factors=as.matrix(read.table("~/Dropbox/AllGeneSNPStuff/tri_gtex_allstrongt_F.out"))
+covmat=compute.covmat(b.gp.hat,se.gp.hat,Q=5,X.c,lambda,P=2,A="singlerun",factor.mat=factors,bma=FALSE)
+
+rm(b.gp.hat)
+rm(se.gp.hat)
+rm(t.stat)
+
+start="~/Dropbox/cyclingstatistician/beta_gp_continuous/matched/firstbatch"
+
+b.hat=na.omit(read.table(paste0(start,"beta.hat.unstd.txt"),header=F,skip=1)[,-c(1,2)])
+se.hat=na.omit(read.table(paste0(start,"se.beta.hat.txt"),header=F,skip=1)[,-c(1,2)])
+t=apply(se.hat,2,function(x){which(x==0)})
+bad=unlist(t)
+se.hat[bad,13]=0.35
+
+
+b.train=b.hat[1:1000,]
+se.train=se.hat[1:1000,]
+
+compute.hm.train(train.b = b.train,se.train = se.train,covmat = covmat,A="may29") ##compute the HM weights on training data
+
+rm(b.train)
+rm(se.train)
+
+b.test=b.hat[1001:nrow(b.hat),]
+se.test=se.hat[1001:nrow(se.hat),]
+
+pis=readRDS(paste0("pis",A,".rds"))$pihat
+compute.lik.test(b.gp.hat = b.test,J = 10,se.gp.hat = se.test,covmat,A="may29",pis) #compute the posterior weights and likelihood for test set for given vector of hm weights
+##now, we might want to compute our posterior means##
+
+all.arrays=compute.mixture.test(b.gp.hat = b.test,J = 10,se.gp.hat = se.test,covmat = covmat,A="may29",save=FALSE)##componenet specific posterior means, variances, tail probabilities
+test.quant(A="may29",all.arrays)##weighted posterior quantities
