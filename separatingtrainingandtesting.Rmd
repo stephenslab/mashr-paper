@@ -6,6 +6,7 @@ output: html_document
 First, we want to load the code:
 
 ```{r}
+devtools::install_github("surbut/matrix_ash")
 source("~/matrix_ash/R/main.R")
 source("~/matrix_ash/R/mixEM.R")
 library("bigmemory")
