@@ -24,11 +24,11 @@ set.seed(123)
 setwd("~/Dropbox/test/")
 R=5
 
-sigma=diag(rnorm(R,0,3))##big effects for input max effects
-Sigma=t(sigma)%*%sigma
-b.gp.hat=rmvnorm(15000,mean=rep(0,R),sigma=Sigma)
-se.gp.hat=matrix(runif(15000*R,0.2,0.5),ncol=R,nrow=15000)
-t.stat=b.gp.hat/se.gp.hat
+
+covdat = factor_sim(n=1000,K=10,betasd=3,esd=0.3,d=5)
+b.gp.hat=covdat$betahat
+se.gp.hat=covdat$sebetahat
+t.stat=covdat$tstat
 
 
 R=ncol(b.gp.hat)#number of tissues
@@ -40,31 +40,29 @@ R=ncol(X.t)
 M=nrow(X.c)
 
 
-##make up fake sfa factors using svd##
-lambda=svd(X.t)$u
-factors=svd(X.t)$v
+
+
+lambda=covdat$lambda
+factors=covdat$factors
 
 ##but let's not use them since they are artificial, i.e., Q=0
 
-covmat=compute.covmat(b.gp.hat,se.gp.hat,Q=0,X.c,lambda,P=2,A="singlerun",factor.mat=factors,bma=FALSE)
+covmat=compute.covmat(b.gp.hat,se.gp.hat,Q=5,X.c,lambda,P=2,A="singlerun",factor.mat=factors,bma=FALSE)
 
 K=length(covmat)
 K
 covmat[[K]]
 ```
 
-Now, we let's remove these strong tstats and split our new data into test and training. This will compute the HM weights on training data and return a file of likelihoods for the training data, 
+Now, we let's remove these strong tstats and split simulate new data into test and training. This will compute the HM weights on training data and return a file of likelihoods for the training data. I use my factor simulator to simulate true betas and betahats. 
 
 ```{r}
 rm(b.gp.hat)
 rm(se.gp.hat)
 
-
-
-sigma=diag(rnorm(R,0,1))##small effects for training data
-Sigma=t(sigma)%*%sigma
-b.hat=rmvnorm(15000,mean=rep(0,R),sigma=Sigma)
-se.hat=matrix(runif(15000*R,0.2,0.5),ncol=R,nrow=15000)
+newdat = factor_sim(n=10000,K=10,betasd=1,esd=0.3,d=5)
+b.hat=newdat$betahat
+se.hat=newdat$sebetahat
 
 
 J=nrow(b.hat)
@@ -85,6 +83,7 @@ rm(se.train)
 
 b.test=b.hat[1001:nrow(b.hat),]
 se.test=se.hat[1001:nrow(se.hat),]
+b.truth.test=newdat$beta[1001:nrow(b.hat),]
 ````
 
 We read in the previously computed pis and the covariane matrix and compute the test likelihood and corresponding weights. Note the return of a file of test likeilihoods and posterior weights. Here, I will only do the computation for 10 gene-snp pairs. 
@@ -128,3 +127,5 @@ post.weights=readRDS("post.weight.filename.rds")
 
 (post.weights[j,]%*%all.arrays$post.means[j,,])
 (post.means[j,])
+
+lapply(seq(1:R),function(r){plot(b.truth.test[1:10,r],post.means[,r])})

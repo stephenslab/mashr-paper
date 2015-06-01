@@ -828,6 +828,29 @@ test.quant=function(A,all.arrays){
 }
 
 
+factor_sim=function(n,d=3,betasd,esd=0.3,K=10){
+  
+  F=t(sapply(seq(1:K),function(x){rnorm(d,mean=0,sd=betasd)})) 
+  
+  covmat=lapply(seq(1:K),function(f){t=as.matrix((F[f,]))%*%F[f,]})
+  library("mvtnorm")
+  library("MASS")
+  possible_loadings = diag(K) #set possible loadings to be "sparse" (loaded on one factor each)
+  
+  z = sample(nrow(F),n,replace=TRUE)
+  
+  beta=t(sapply(seq(1:n),function(j){
+    k=z[j]
+    mvrnorm(1,mu=rep(0,d),Sigma=covmat[[k]])
+  }))
+  sebetahat=abs(matrix(runif(n*d,esd-0.05,esd+0.05),ncol=d))
+  betahat = beta + sebetahat
+  tstat=betahat/sebetahat
+  lambda=possible_loadings[z,]
+  return(list(beta=beta,betahat=betahat,component.mats=covmat,sebetahat=sebetahat,factors=F,lambda=lambda,tstat=tstat))
+}
+
+
 
 
 
