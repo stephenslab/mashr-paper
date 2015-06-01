@@ -330,6 +330,8 @@ compute.covmat.with.rho = function(b.gp.hat,sebetahat,Q,X.c,lambda.mat,P,A,facto
     return(covmat)}
 
 
+##' function Compute covariance matrices
+##' @return A list of covariance matrices
 
 compute.covmat = function(b.gp.hat,sebetahat,Q,X.c,lambda.mat,P,A,factor.mat,bma=TRUE){
   

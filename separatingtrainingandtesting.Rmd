@@ -1,17 +1,23 @@
 ---
-title: "methodcompare"
+title: "SampleRunVignette"
 output: html_document
 ---
 
+First, we want to load the packages:
+
 ```{r}
-rm(list=ls())
-setwd("~/Dropbox/")
+devtools::install_github("surbut/matrix_ash")
 source("~/matrix_ash/R/main.R")
-source("~/matrix_ash/R/mixEm.R")
 library("bigmemory")
 library("SQUAREM")
 library("mvtnorm")
+```
 
+Then, we need to load our matrix of 'strong' t statistics to create the covariance matrices as well as the matrix of factors from our SFA model. In this example, we will also use the additional BMA configurations (i.e., bma=TRUE). Also load the maximum beta hats and t statistics for grid selection.
+
+```{r}
+
+setwd("~/Dropbox/test/")
 
 b.gp.hat=na.omit(read.table("~/Dropbox/AllGeneSNPStuff/max_beta_eQTL.table.txt"))[,-c(1,2)]
 se.gp.hat=na.omit(read.table("~/Dropbox/AllGeneSNPStuff/max_sebeta_eQTL.table.txt"))[,-c(1,2)]
@@ -26,16 +32,18 @@ X.real=X.t
 X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
 R=ncol(X.t)
 M=nrow(X.c)
-
-
 lambda=as.matrix(read.table("~/Dropbox/AllGeneSNPStuff//tri_gtex_allstrongt_lambda.out"))
 factors=as.matrix(read.table("~/Dropbox/AllGeneSNPStuff/tri_gtex_allstrongt_F.out"))
-covmat=compute.covmat(b.gp.hat,se.gp.hat,Q=5,X.c,lambda,P=2,A="singlerun",factor.mat=factors,bma=FALSE)
+covmat=compute.covmat(b.gp.hat,se.gp.hat,Q=5,X.c,lambda,P=2,A="singlerun",factor.mat=factors,bma=TRUE)
 
-rm(b.gp.hat)
-rm(se.gp.hat)
-rm(t.stat)
+length(covmat)
+covmat[[1242]]
 
+```
+
+Now, we need to split our new data into test and training. This will compute the HM weights on training data and return a filee of likelihoods for the training data, 
+
+```{r}
 start="~/Dropbox/cyclingstatistician/beta_gp_continuous/matched/firstbatch"
 
 b.hat=na.omit(read.table(paste0(start,"beta.hat.unstd.txt"),header=F,skip=1)[,-c(1,2)])
@@ -44,21 +52,39 @@ t=apply(se.hat,2,function(x){which(x==0)})
 bad=unlist(t)
 se.hat[bad,13]=0.35
 
+J=nrow(b.hat)
 
 b.train=b.hat[1:1000,]
 se.train=se.hat[1:1000,]
 
-compute.hm.train(train.b = b.train,se.train = se.train,covmat = covmat,A="may29") ##compute the HM weights on training data
+compute.hm.train(train.b = b.train,se.train = se.train,covmat = covmat,A="filename") ##compute the HM weights on training data
 
+```
+Note creation of three files: pis, a pdf of pis, and a matrix  of likelihoods of training data.
+
+Now,we remove the training data and create our test data.
+
+```{r}
 rm(b.train)
 rm(se.train)
 
 b.test=b.hat[1001:nrow(b.hat),]
 se.test=se.hat[1001:nrow(se.hat),]
+````
 
+We read in the previously computed pis and the covariane matrix and compute the test likelihood and corresponding weights. Note the return of a file of test likeilihoods and posterior weights. Here, I will only do the computation for 10 gene-snp pairs. 
+
+```{r}
+A="filename"
 pis=readRDS(paste0("pis",A,".rds"))$pihat
-compute.lik.test(b.gp.hat = b.test,J = 10,se.gp.hat = se.test,covmat,A="may29",pis) #compute the posterior weights and likelihood for test set for given vector of hm weights
-##now, we might want to compute our posterior means##
+compute.lik.test(b.gp.hat = b.test,J = 10,se.gp.hat = se.test,covmat,A="filename",pis) 
+```
 
-all.arrays=compute.mixture.test(b.gp.hat = b.test,J = 10,se.gp.hat = se.test,covmat = covmat,A="may29",save=FALSE)##componenet specific posterior means, variances, tail probabilities
-test.quant(A="may29",all.arrays)##weighted posterior quantities
+We could stop here, but we might also want to compute the posterior means for each componenet and the weighted 'grand mean', as well as the weighted tail probabilities. The componenet specific quanitites are computed in 'compute.mix.test' and the weighted quantities in 'test.quant'. We can choose to save the rds object if 'save = TRUE' but this is 
+
+```{r}
+all.arrays=compute.mix.test(b.gp.hat = b.test,J = 10,se.gp.hat = se.test,covmat = covmat,A="filename",save=FALSE)##componenet specific posterior means, variances, tail probabilities
+test.quant(A="filename",all.arrays)##weighted posterior quantities
+```
+
+
