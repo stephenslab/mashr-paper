@@ -9,6 +9,10 @@ post.b.gpkl.cov <- function(V.gp.hat.inv, U.0k.l){
 }
 
 
+#' @title post.b.gpkl.mean
+#' @param U.0k.l let U.0k.l represent a specific matrix in U.0kl (.e.g, U.0kl[[l]][[k]])
+#' @return post.b.gpkl.mean return a 1 * R vector of posterior means for a given prior covariance matrix
+#' @export
 post.b.gpkl.mean <- function(b.mle, V.gp.hat.inv, U.gp1kl){
     mu.gp1kl <- U.gp1kl %*% V.gp.hat.inv %*% b.mle
     return(mu.gp1kl)
