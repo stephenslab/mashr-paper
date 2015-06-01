@@ -1,9 +1,0 @@
-Package: mash.
-Type: Package
-Title: Compute accurate posterior effect estimates for multi subgroup data
-Version: 1.0
-Date: 2015-05-12
-Author: Sarah Urbut
-Maintainer: sarahmurbut@gmail.com
-Description: Using a mixture of Multivariate Normals to compute posterior effect size estimates of ET, EE model
-License: What license is it under?
