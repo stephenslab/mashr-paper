@@ -45,7 +45,7 @@ M=nrow(X.c)
 lambda=covdat$lambda
 factors=covdat$factors
 
-##but let's not use them since they are artificial, i.e., Q=0
+
 
 covmat=compute.covmat(b.gp.hat,se.gp.hat,Q=5,X.c,lambda,P=2,A="singlerun",factor.mat=factors,bma=FALSE)
 
