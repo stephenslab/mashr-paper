@@ -1,4 +1,4 @@
-Package: matrix_ash
+Package: mash.
 Type: Package
 Title: Compute accurate posterior effect estimates for multi subgroup data
 Version: 1.0
