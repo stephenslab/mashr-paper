@@ -18,6 +18,7 @@
 #' 
 
 library(SQUAREM)
+
 mixEM = function(matrix_lik,prior,pi.init=NULL,control=list()){
   control.default=list(K = 1, method=3, square=TRUE, step.min0=1, step.max0=1, mstep=4, kr=1, objfn.inc=1,tol=1.e-07, maxiter=5000, trace=FALSE)
   namc=names(control)
