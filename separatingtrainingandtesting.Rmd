@@ -3,10 +3,9 @@ title: "SampleRunVignette"
 output: html_document
 ---
 
-First, we want to load the packages:
+First, we want to load the code:
 
 ```{r}
-devtools::install_github("surbut/matrix_ash")
 source("~/matrix_ash/R/main.R")
 source("~/matrix_ash/R/mixEM.R")
 library("bigmemory")
@@ -82,7 +81,7 @@ pis=readRDS(paste0("pis",A,".rds"))$pihat
 compute.lik.test(b.gp.hat = b.test,J = 10,se.gp.hat = se.test,covmat,A="filename",pis) 
 ```
 
-We could stop here, but we might also want to compute the posterior means for each componenet and the weighted 'grand mean', as well as the weighted tail probabilities. The componenet specific quanitites are computed in 'compute.mix.test' and the weighted quantities in 'test.quant'. We can choose to save the rds object if 'save = TRUE' but this is 
+We could stop here, but we might also want to compute the posterior means for each componenet and the weighted 'grand mean', as well as the weighted tail probabilities. The componenet specific quanitites are computed in 'compute.mix.test' and the weighted quantities in 'test.quant'. We can choose to save the rds object if 'save = TRUE' but this consumes a lot of space.
 
 ```{r}
 all.arrays=compute.mix.test(b.gp.hat = b.test,J = 10,se.gp.hat = se.test,covmat = covmat,A="filename",save=FALSE)##componenet specific posterior means, variances, tail probabilities
