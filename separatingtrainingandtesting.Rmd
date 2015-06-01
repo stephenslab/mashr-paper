@@ -8,12 +8,14 @@ First, we want to load the packages:
 ```{r}
 devtools::install_github("surbut/matrix_ash")
 source("~/matrix_ash/R/main.R")
+source("~/matrix_ash/R/mixEM.R")
 library("bigmemory")
 library("SQUAREM")
 library("mvtnorm")
+
 ```
 
-Then, we need to load our matrix of 'strong' t statistics to create the covariance matrices as well as the matrix of factors from our SFA model. In this example, we will also use the additional BMA configurations (i.e., bma=TRUE). Also load the maximum beta hats and t statistics for grid selection.
+Then, we need to load our matrix of 'strong' t statistics to create the covariance matrices as well as the matrix of factors from our SFA model. In this example, we will not use the additional BMA configurations (i.e., bma=FALSE). Also load the maximum beta hats and t statistics for grid selection.
 
 ```{r}
 
@@ -34,10 +36,10 @@ R=ncol(X.t)
 M=nrow(X.c)
 lambda=as.matrix(read.table("~/Dropbox/AllGeneSNPStuff//tri_gtex_allstrongt_lambda.out"))
 factors=as.matrix(read.table("~/Dropbox/AllGeneSNPStuff/tri_gtex_allstrongt_F.out"))
-covmat=compute.covmat(b.gp.hat,se.gp.hat,Q=5,X.c,lambda,P=2,A="singlerun",factor.mat=factors,bma=TRUE)
+covmat=compute.covmat(b.gp.hat,se.gp.hat,Q=5,X.c,lambda,P=2,A="singlerun",factor.mat=factors,bma=FALSE)
 
 length(covmat)
-covmat[[1242]]
+covmat[[207]]
 
 ```
 
