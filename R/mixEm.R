@@ -1,9 +1,10 @@
-#@details Fits a k component mixture model \deqn{f(x|\pi) = \sum_k \pi_k f_k(x)} to independent
-#' and identically distributed data \eqn{x_1,\dots,x_n}. 
-#' Estimates posterior on mixture proportions \eqn{\pi} by Variational Bayes, 
-#' with a Dirichlet prior on \eqn{\pi}. 
-#' Algorithm adapted from Bishop (2009), Pattern Recognition and Machine Learning, Chapter 10.
-#' 
+#'@title mixEM
+#'  @details Fits a k component mixture model \deqn{f(x|\pi) = \sum_k \pi_k f_k(x)} to independent
+##' and identically distributed data \eqn{x_1,\dots,x_n}. 
+##' Estimates posterior on mixture proportions \eqn{\pi} by Variational Bayes, 
+##' with a Dirichlet prior on \eqn{\pi}. 
+##' Algorithm adapted from Bishop (2009), Pattern Recognition and Machine Learning, Chapter 10.
+##' 
 #' @param matrix_lik a n by k matrix with (j,k)th element equal to \eqn{f_k(x_j)}.
 #' @param prior a k vector of the parameters of the Dirichlet prior on \eqn{\pi}. Recommended to be rep(1,k)
 #' @param pi.init the initial value of the posterior parameters. If not specified defaults to the prior parameters.
@@ -15,9 +16,6 @@
 #' and a flag to indicate convergence (converged).
 #'  
 #' @export
-#' 
-
-library(SQUAREM)
 
 mixEM = function(matrix_lik,prior,pi.init=NULL,control=list()){
   control.default=list(K = 1, method=3, square=TRUE, step.min0=1, step.max0=1, mstep=4, kr=1, objfn.inc=1,tol=1.e-07, maxiter=5000, trace=FALSE)

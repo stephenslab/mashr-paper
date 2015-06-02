@@ -74,6 +74,13 @@ get.prior.covar.Ukl.with.rho <- function(P, lambda.mat, Q, factor.mat,omega.tabl
 
 
 #' @title get.prior.covar.Ukl
+#' @param P number of pcs
+#' @param lambda.mat matrix of lambdas
+#' @param Q number factor
+#' @param factor.mat
+#' @param omega.table
+#' @param bma=TRUE
+#' @return U.0kl
 #' @export
 get.prior.covar.Ukl <- function(P, lambda.mat, Q, factor.mat,omega.table,bma=TRUE)  {
   test=list()
@@ -158,14 +165,14 @@ autoselect.mix.sd = function(betahat,sebetahat,mult){
 
 
 #' @title mult.tissue.grid 
+#' @param mult is density
+#' @param betahat is matrix of betahats
+#' @param sebetahat is matrix of sebetahats
+#' @return omega
 #' @export
 mult.tissue.grid = function(mult,betahat,sebetahat){ R=ncol(betahat);mix.weights=unlist(sapply(seq(1:ncol(betahat)),function(r){autoselect.mix.sd(betahat = betahat[,r],sebetahat = sebetahat[,r],mult=2)}))
     mult=sqrt(2);sigmaamin=min(mix.weights);sigmaamax=max(mix.weights);npoint = ceiling(log2(sigmaamax/sigmaamin)/log2(mult));
     omega=mult^((-npoint):0) * sigmaamax;return(omega)}
-
-
-
-
 
 
 #' @title lik.func 
@@ -278,7 +285,7 @@ post.array.generator=function(b.gp.hat,J,A,se.gp.hat,covmat){
 
 
 #' @title total.mean
-#' @describe generate a K x R matrix of post.weighted quantieis for each gene snp pair and sum them to get total weighted
+#' @description generate a K x R matrix of post.weighted quantieis for each gene snp pair and sum them to get total weighted
 #' @param post.means J x K x R arrays of posterior means for each snp in each component in each tissue
 #' @param post.cov J x K x R arrays of posterior variance for each snp in each component in each tissue
 #' @param post.ups J x K x R arrays of posterior upper tail probabilities for each snp in each component in each tissue
@@ -501,7 +508,7 @@ checkfunc=function(j,b.gp.hat,se.gp.hat,A,k ) {
     
 }
 
-#'@title
+#'@title post.array.per.snp
 #'@export
 
 post.array.per.snp=function(j,covmat,b.gp.hat,se.gp.hat){
