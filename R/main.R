@@ -134,7 +134,7 @@ get.prior.covar.Ukl <- function(P, lambda.mat, Q, factor.mat,omega.table,bma=TRU
 
 
 #' @title autoselect.mix.sd 
-#' @param beta hat is an J x R matrix of betahats (or t statistics)
+#' @param betahat is an J x R matrix of betahats (or t statistics)
 #' @param sebetahat is a J x R matrix of their standard errors (or 1s, if T staitsitcs)
 #' @return omega, a list of stretch factors by which to scale each covariance matrix U_k
 #' @export
