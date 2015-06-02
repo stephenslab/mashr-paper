@@ -75,7 +75,10 @@ b.train=b.hat[1:1000,]
 se.train=se.hat[1:1000,]
 
 compute.hm.train(train.b = b.train,se.train = se.train,covmat = covmat,A="filename") ##compute the HM weights on training data
-
+##check to show that the likelihood computatations are correct
+likmat=readRDS("liketrainfilename.rds")
+likmat[1,1:10]
+lik.func(b.mle = b.train[1,],V.gp.hat = diag(se.train[1,])^2,covmat)[1:10]
 ```
 Note creation of three files: pis, a pdf of pis, and a matrix  of likelihoods of training data.
 
@@ -100,7 +103,11 @@ barplot(t(as.matrix(pis)))
 (covmat[[which.max(pis)]])
 
 
-compute.lik.test(b.gp.hat = b.test,J = 100,se.gp.hat = se.test,covmat,A="filename",pis) 
+compute.lik.test(b.test = b.test,J = 100,se.test = se.test,covmat,A="filename",pis) 
+
+likmat=readRDS("liketestfilename.rds")
+likmat[1,1:10]
+lik.func(b.mle = b.test[1,],V.gp.hat = diag(se.test[1,])^2,covmat)[1:10]
 ```
 
 We could stop here, but we might also want to compute the posterior means for each componenet and the weighted 'grand mean', as well as the weighted tail probabilities. The componenet specific quanitites are computed in 'compute.mix.test' and the weighted quantities in 'test.quant'. We can choose to save the rds object if 'save = TRUE' but this consumes a lot of space.

@@ -753,7 +753,7 @@ compute.hm.train=function(train.b,se.train,covmat,A){
   R=ncol(train.b)
   
   if(file.exists(paste0("liketrain",A,".rds"))==FALSE){
-    lik.mat=t(sapply(seq(1:J),function(x){lik.func(b.mle=b.train[x,],V.gp.hat=diag(se.train[x,])^2,covmat)}))
+    lik.mat=t(sapply(seq(1:J),function(x){lik.func(b.mle=train.b[x,],V.gp.hat=diag(se.train[x,])^2,covmat)}))
     
     saveRDS(lik.mat,paste0("liketrain",A,".rds"))}
   
@@ -770,13 +770,13 @@ compute.hm.train=function(train.b,se.train,covmat,A){
 
 #'@title compute.lik.test
 #'@export
-compute.lik.test=function(b.gp.hat,J,se.gp.hat,covmat,A,pis){
+compute.lik.test=function(b.test,J,se.test,covmat,A,pis){
   
   J=J
-  R=ncol(b.gp.hat)
+  R=ncol(b.test)
   
   if(file.exists(paste0("liketest",A,".rds"))==FALSE){
-    lik.mat=t(sapply(seq(1:J),function(x){lik.func(b.mle=b.gp.hat[x,],V.gp.hat=diag(se.gp.hat[x,])^2,covmat)}))
+    lik.mat=t(sapply(seq(1:J),function(x){lik.func(b.mle=b.test[x,],V.gp.hat=diag(se.test[x,])^2,covmat)}))
     
     saveRDS(lik.mat,paste0("liketest",A,".rds"))}
   
