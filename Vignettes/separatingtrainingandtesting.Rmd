@@ -28,7 +28,7 @@ setwd("~/Dropbox/test/")
 R=5
 
 
-covdat = factor_sim(n=1000,K=10,betasd=3,esd=0.3,d=5)
+covdat = factor_sim(n=1000,K=10,betasd=1,esd=0.3,d=5)
 b.gp.hat=covdat$betahat
 se.gp.hat=covdat$sebetahat
 t.stat=covdat$tstat
@@ -63,7 +63,7 @@ Now, we let's remove these strong tstats and split simulate new data into test a
 rm(b.gp.hat)
 rm(se.gp.hat)
 
-newdat = factor_sim(n=10000,K=10,betasd=1,esd=0.3,d=5)
+newdat = factor_sim(n=10000,K=10,betasd=0.5,esd=0.3,d=5)
 b.hat=newdat$betahat
 se.hat=newdat$sebetahat
 
