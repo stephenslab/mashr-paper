@@ -6,9 +6,10 @@ output: html_document
 First, we want to load the code:
 
 ```{r}
+setwd("~/Dropbox/test")
 devtools::install_github("surbut/matrix_ash")
 library("mash")
-devtools::load_all(".")
+
 
 source("~/matrix_ash/R/main.R")
 source("~/matrix_ash/R/mixEm.R")

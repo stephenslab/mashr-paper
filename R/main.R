@@ -893,9 +893,22 @@ factor_sim=function(n,d=3,betasd,esd=0.3,K=10){
   return(list(beta=beta,betahat=betahat,component.mats=covmat,sebetahat=sebetahat,factors=F,lambda=lambda,tstat=tstat))
 }
 
+#' @title compute.determinant
+#' @description compute product of inverse sebhats for transofrmations of likielihood
+#' @export 
 
+compute.determinant=function(se.gp.hat){
+  apply(se.gp.hat,1,function(x){prod(x^-1)})
+}
 
+#' @title convert.liks
+#' @description converttestlikelihoods between models
+#' @export 
 
-
-
+convert.liks=function(se.gp.hat,test.lik,pis){
+  test.liks=test.lik%*%pis
+  conversion.factor=compute.determinant(se.gp.hat)
+  sum(log(test.liks))+sum(log(conversion.factor))
+  
+}
 
