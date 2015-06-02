@@ -18,11 +18,10 @@ post.b.gpkl.mean <- function(b.mle, V.gp.hat.inv, U.gp1kl){
     return(mu.gp1kl)
 }
 
-#' @title Get prior covariances
+#' @title get.prior.covar.Ukl.with.rho 
 #' @description Compute the prior covariance matrix for each gene SNP pair in the rows and componenets in the columns
 #' @param P integer number of PCs
 #' @param L integer number of gridweights
-#'
 #' @return U.0kl L dimensional list of K dimensional list with prior covairnace matrix for each grid weight, prior covariance pair
 #' @export
 get.prior.covar.Ukl.with.rho <- function(P, lambda.mat, Q, factor.mat,omega.table,rhos)  {
@@ -73,6 +72,9 @@ get.prior.covar.Ukl.with.rho <- function(P, lambda.mat, Q, factor.mat,omega.tabl
     return(U.0kl=test)
 }
 
+
+#' @title get.prior.covar.Ukl
+#' @export
 get.prior.covar.Ukl <- function(P, lambda.mat, Q, factor.mat,omega.table,bma=TRUE)  {
   test=list()
   for(l in 1:nrow(omega.table)){
@@ -130,8 +132,8 @@ get.prior.covar.Ukl <- function(P, lambda.mat, Q, factor.mat,omega.table,bma=TRU
   return(U.0kl=test)
 }
 
-#' @title Select a grid
-#' @description mult.tissue.grid computes a set of omega 'stretch' factors in log 2 multiples of sd; the max and min for each tissue are chosen by autoselect.mix.sd
+
+#' @title autoselect.mix.sd 
 #' @param beta hat is an J x R matrix of betahats (or t statistics)
 #' @param sebetahat is a J x R matrix of their standard errors (or 1s, if T staitsitcs)
 #' @return omega, a list of stretch factors by which to scale each covariance matrix U_k
@@ -155,6 +157,8 @@ autoselect.mix.sd = function(betahat,sebetahat,mult){
 }
 
 
+#' @title mult.tissue.grid 
+#' @export
 mult.tissue.grid = function(mult,betahat,sebetahat){ R=ncol(betahat);mix.weights=unlist(sapply(seq(1:ncol(betahat)),function(r){autoselect.mix.sd(betahat = betahat[,r],sebetahat = sebetahat[,r],mult=2)}))
     mult=sqrt(2);sigmaamin=min(mix.weights);sigmaamax=max(mix.weights);npoint = ceiling(log2(sigmaamax/sigmaamin)/log2(mult));
     omega=mult^((-npoint):0) * sigmaamax;return(omega)}
@@ -164,21 +168,23 @@ mult.tissue.grid = function(mult,betahat,sebetahat){ R=ncol(betahat);mix.weights
 
 
 
-##' @title lik.func computes likelihood for each betahat
-##' @param b.mle Rx1 vector of mles
-##' @param V.gp.hat RxR matrix of standard errors
-##' @param U.0kl L dimensional list of K dimensional list with prior covairnace matrix for each grid weight, prior covariance pair
+#' @title lik.func 
+#' @details computes likelihood for each betahat
+#' @param b.mle Rx1 vector of mles
+#' @param V.gp.hat RxR matrix of standard errors
+#' @param U.0kl L dimensional list of K dimensional list with prior covairnace matrix for each grid weight, prior covariance pair
+#' @export
 
 lik.func=function(b.mle,V.gp.hat,covmat)
 { sapply(seq(1:length(covmat)),function(x){dmvnorm(x=b.mle, sigma=covmat[[x]] + V.gp.hat)})
 }
 
-##' @title hm.weight.gen
-##' @param lik.mat = JxK matrix of marginal likelihoods
-##' @param Jtrain = size of train set
-##' @param Jtest=size of test set
-##' @return compute HM weights on training and test set for compoarsion
-
+#' @title hm.weight.gen
+#' @param lik.mat = JxK matrix of marginal likelihoods
+#' @param Jtrain = size of train set
+#' @param Jtest=size of test set
+#' @return compute HM weights on training and test set for compoarsion
+#' @export
 hm.weight.gen=function(lik.mat,jtrain,jtest){
     
     train=lik.mat[1:jtrain,]
@@ -188,23 +194,24 @@ hm.weight.gen=function(lik.mat,jtrain,jtest){
 }
 
 
-##' @title total.lik.func
-##' @param test = J x R matrix of likielihoods from test data set
-##' @param pis HM weights
-##' @return likelihood of whole data set
-##' export
-##'
+#' @title total.lik.func
+#' @param test = J x R matrix of likielihoods from test data set
+#' @param pis HM weights
+#' @return likelihood of whole data set
+#' @export
+
 total.lik.func=function(test,pis){
     
     sum(log(test%*%pis))}
 
 
 
-##' post.weight.func converts the matrix of likelihood for each gene snp pairs to matrix of posterior weights ##` for each componenet
-##' @param pis = object from EM output with prior weight P(Z=K) as computed from
-##' @param lik.mat = a JxK matrix of likelihoods (may be training set) for the P(D|Z=K)
-##' @return a 1xK vector of posterior weight for each gene snp pait
-
+#' @title post.weight.func 
+#' @details converts the matrix of likelihood for each gene snp pairs to matrix of posterior weights 
+#' @param pis = object from EM output with prior weight P(Z=K) as computed from
+#' @param lik.mat = a JxK matrix of likelihoods (may be training set) for the P(D|Z=K)
+#' @return a 1xK vector of posterior weight for each gene snp pait
+#' @export
 
 post.weight.func=function(pis,lik.mat){d=t(apply(lik.mat,1,function(x){x*pis}))
     
@@ -212,19 +219,19 @@ post.weight.func=function(pis,lik.mat){d=t(apply(lik.mat,1,function(x){x*pis}))
     return(d/marg)}
 
 
-##' @title creat an array of posterior quantities
-##' @param b.mle =  Rx1 vector of beta.hats
-##' @param V.gp.hat = Rx1 vector of standard errors
-##' @param covmat = LxK dimenstional (unlisted list) of prior covariance matrices
-##' @return post.means JxKxR array of posterior means, correspodning to the posterior mean ##' for the Jth individual in the Kth compoenent across all R tissues
-##' @return post.covs JxKxR array of posterior vars, correspodning to the posterior vars ##' for the Jth individual in the Kth compoenent across all R tissues
-##' @return post.ups JxKxR array of posterior tailprobs, corresponding to the marginal
-##' upper tail probability for the Jth individual in the Kth compoenent across all R
-##' @return post.ups JxKxR array of posterior tailprobs, corresponding to the marginal
-##' upper  tail probability for the Jth individual in the Kth component across all R
-##' @return post.nulls JxKxR array of posterior nullprobs, corresponding to the marginal
-##'  "null probability"" for the Jth individual in the Kth component across all R
-
+#' @title post.array.generator
+#' @param b.mle =  Rx1 vector of beta.hats
+#' @param V.gp.hat = Rx1 vector of standard errors
+#' @param covmat = LxK dimenstional (unlisted list) of prior covariance matrices
+#' @return post.means JxKxR array of posterior means, correspodning to the posterior mean ##' for the Jth individual in the Kth compoenent across all R tissues
+#' @return post.covs JxKxR array of posterior vars, correspodning to the posterior vars ##' for the Jth individual in the Kth compoenent across all R tissues
+#' @return post.ups JxKxR array of posterior tailprobs, corresponding to the marginal
+#' @return upper tail probability for the Jth individual in the Kth compoenent across all R
+#' @return post.ups JxKxR array of posterior tailprobs, corresponding to the marginal
+#' @return upper  tail probability for the Jth individual in the Kth component across all R
+#' @return post.nulls JxKxR array of posterior nullprobs, corresponding to the marginal
+#' @return "null probability"" for the Jth individual in the Kth component across all R
+#' @export
 
 post.array.generator=function(b.gp.hat,J,A,se.gp.hat,covmat){
     
@@ -268,38 +275,44 @@ post.array.generator=function(b.gp.hat,J,A,se.gp.hat,covmat){
 }
 
 
-##ask how to write in a function that reads in arrays
 
 
-##' total.mean function Generate a KxR matrix for each gene snp pair of weighted
-##' describe generate a K x R matrix of post.weighted quantieis for each gene snp pair and sum them to get total weighted
-##' @param post.means J x K x R arrays of posterior means for each snp in each component in each tissue
-##' @param post.cov J x K x R arrays of posterior variance for each snp in each component in each tissue
-##' @param post.ups J x K x R arrays of posterior upper tail probabilities for each snp in each component in each tissue
-##' @param post.downs J x K x R arrays of posterior lower tail probabilities for each snp in each component in each tissue
-##' @param post.weights J x K matrix of posterior weights for each componenet and for each snp
-##' @return get vector of total weighted quanties for each gene SNP pair
+#' @title total.mean
+#' @describe generate a K x R matrix of post.weighted quantieis for each gene snp pair and sum them to get total weighted
+#' @param post.means J x K x R arrays of posterior means for each snp in each component in each tissue
+#' @param post.cov J x K x R arrays of posterior variance for each snp in each component in each tissue
+#' @param post.ups J x K x R arrays of posterior upper tail probabilities for each snp in each component in each tissue
+#' @param post.downs J x K x R arrays of posterior lower tail probabilities for each snp in each component in each tissue
+#' @param post.weights J x K matrix of posterior weights for each componenet and for each snp
+#' @return get vector of total weighted quanties for each gene SNP pair
+#' @export
 
 total.mean=function(j,post.means,post.weights){weightedmeans=(as.matrix(post.means[j,,1:R]*post.weights[j,]))
     colSums(weightedmeans)}
+
+#' @title total.up
+#' @export
 total.up=function(j,post.ups,post.weights){colSums(as.matrix(post.ups[j,,1:R]*post.weights[j,]))}
+
+#' @title total.down
+#' @export
 total.down=function(j,post.downs,post.weights){colSums(as.matrix(post.downs[j,,1:R]*post.weights[j,]))}
+
+#' @title total.null
+#' @export
 total.null=function(j,post.nulls,post.weights){colSums(as.matrix(post.nulls[j,,1:R]*post.weights[j,]))}
+
+#' @title total.covs.partone
+#' @export
 total.covs.partone=function(j,post.means,post.covs,post.weights){colSums(as.matrix((post.covs[j,,1:R]+post.means[j,,1:R]^2)*post.weights[j,]))}
 
-##' function Generate a KxR matrix for each gene snp pair of weighted
-##'  generate a K x R matrix of post.weighted quantieis for each gene snp pair and sum them to get total weighted
-##' @param post.means J x K x R arrays of posterior means for each snp in each component in each tissue
-##' @param post.cov J x K x R arrays of posterior variance for each snp in each component in each tissue
-##' @param post.ups J x K x R arrays of posterior upper tail probabilities for each snp in each component in each tissue
-##' @param post.downs J x K x R arrays of posterior lower tail probabilities for each snp in each component in each tissue
-##' @param post.weights J x K matrix of posterior weights for each componenet and for each snp
-##' @return get vector of total weighted quanties for each gene SNP pair
 
 
-##' @title compares upper and lower tail probability at each tissue to determine larger
-##' @param all.upper and all.lower are JxR matrices of upper and lower tail probabilities for all gene pairs
-##' @return 1 x R vector of lfsr at each tissue
+
+#' @title compare.func
+#' @details compares upper and lower tail probability at each tissue to determine larger
+#' @param all.upper and all.lower are JxR matrices of upper and lower tail probabilities for all gene pairs
+#' @return 1 x R vector of lfsr at each tissue
 
 compare.func=function(j,all.upper,all.lower){
     as.matrix(apply(rbind(all.upper[j,],all.lower[j,]),2,function(j){1-max(j)}))}
@@ -310,7 +323,8 @@ compare.func=function(j,all.upper,all.lower){
 
 
 
-
+#' @title compute.covmat.with.rho
+#' @export
 
 compute.covmat.with.rho = function(b.gp.hat,sebetahat,Q,X.c,lambda.mat,P,A,factor.mat){
   
@@ -334,8 +348,9 @@ compute.covmat.with.rho = function(b.gp.hat,sebetahat,Q,X.c,lambda.mat,P,A,facto
     return(covmat)}
 
 
-##' function Compute covariance matrices
-##' @return A list of covariance matrices
+#' @title compute.covmat
+#' @return A list of covariance matrices
+#' @export
 
 compute.covmat = function(b.gp.hat,sebetahat,Q,X.c,lambda.mat,P,A,factor.mat,bma=TRUE){
   
@@ -358,6 +373,8 @@ U.0kl=get.prior.covar.Ukl(P=2,lambda=lambda,Q=Q,factor.mat=factor.mat, omega.tab
   return(covmat)}
 
 
+#' @title compute.mixture.dist
+#' @export
 compute.mixture.dist=function(b.gp.hat,J,se.gp.hat,covmat,A,save=FALSE){
     
     J=J
@@ -405,7 +422,8 @@ compute.mixture.dist=function(b.gp.hat,J,se.gp.hat,covmat,A,save=FALSE){
     else(return(all.arrays))
   }
 
-
+#'@title compute.total.quant
+#'@export
 compute.total.quant=function(A,J,all.arrays){
    
       if(missing(all.arrays)){
@@ -450,7 +468,8 @@ compute.total.quant=function(A,J,all.arrays){
 
 
 
-
+#'@title checkfunc
+#'@export
 
 checkfunc=function(j,b.gp.hat,se.gp.hat,A,k ) {
     post.means=readRDS(file=paste0("post.means",A,".rds"))
@@ -481,6 +500,9 @@ checkfunc=function(j,b.gp.hat,se.gp.hat,A,k ) {
     dev.off()
     
 }
+
+#'@title
+#'@export
 
 post.array.per.snp=function(j,covmat,b.gp.hat,se.gp.hat){
 
@@ -542,6 +564,8 @@ total.covs.partone.persnp=function(j,post.means,post.covs,post.weights){
   post.weights[j,]%*%(post.covs+post.means^2)
 }
 
+#'@title plotting.func
+#'@export
 
 plotting.func=function(j,posterior.means,lfsr.mat,marginal.var,genesnpnames,tissue.names,mle.mat){
   
@@ -586,7 +610,8 @@ plotting.func=function(j,posterior.means,lfsr.mat,marginal.var,genesnpnames,tiss
 }
 
 
-
+#'@title checkfunc
+#'@export
 checkfunc.html=function(j,b.gp.hat,se.gp.hat,A,k ) {
   post.means=readRDS(file=paste0("post.means",A,".rds"))
   post.covs=readRDS(file=paste0("post.covs",A,".rds"))
@@ -617,7 +642,8 @@ checkfunc.html=function(j,b.gp.hat,se.gp.hat,A,k ) {
 }
 
 
-
+#'@title plotting.func.html
+#'@export
 plotting.func.html=function(j,posterior.means,lfsr.mat,marginal.var,genesnpnames,tissue.names,mle.mat){
   
   R=ncol(posterior.means)
@@ -664,7 +690,8 @@ plotting.func.html=function(j,posterior.means,lfsr.mat,marginal.var,genesnpnames
 }
 
 
-
+#'@title plotting.func.html.neg
+#'@export
 plotting.func.html.neg=function(j,posterior.means,lfsr.mat,marginal.var,genesnpnames,tissue.names,mle.mat){
   
   R=ncol(posterior.means)
@@ -711,6 +738,8 @@ plotting.func.html.neg=function(j,posterior.means,lfsr.mat,marginal.var,genesnpn
 }
 
 
+#'@title compute.hm.train
+#'@export
 compute.hm.train=function(train.b,se.train,covmat,A){
   
   J=nrow(train.b)
@@ -732,7 +761,8 @@ compute.hm.train=function(train.b,se.train,covmat,A){
   dev.off()
 }
 
-
+#'@title compute.lik.test
+#'@export
 compute.lik.test=function(b.gp.hat,J,se.gp.hat,covmat,A,pis){
   
   J=J
@@ -757,6 +787,9 @@ compute.lik.test=function(b.gp.hat,J,se.gp.hat,covmat,A,pis){
   
 } 
 
+
+#'@title compute.mix.test
+#'@export
 compute.mix.test=function(b.gp.hat,J,se.gp.hat,covmat,A,save=FALSE){
 
   
@@ -783,7 +816,8 @@ compute.mix.test=function(b.gp.hat,J,se.gp.hat,covmat,A,save=FALSE){
   else(return(all.arrays))
 }
 
-
+#'@title test.quant
+#'@export
 test.quant=function(A,all.arrays){
   
   
@@ -827,6 +861,8 @@ test.quant=function(A,all.arrays){
   write.table(lfsr.mat,paste0("lfsr.",A,".txt"))
 }
 
+#'@title factor.sim
+#'@export
 
 factor_sim=function(n,d=3,betasd,esd=0.3,K=10){
   
