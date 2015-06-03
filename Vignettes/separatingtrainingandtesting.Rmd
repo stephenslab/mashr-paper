@@ -6,14 +6,8 @@ output: html_document
 First, we want to load the code:
 
 ```{r}
-setwd("~/Dropbox/test")
-devtools::install_github("surbut/matrix_ash")
+#devtools::install_github("surbut/matrix_ash")
 library("mash")
-
-
-source("~/matrix_ash/R/main.R")
-source("~/matrix_ash/R/mixEm.R")
-
 library("bigmemory")
 library("SQUAREM")
 library("mvtnorm")
@@ -25,7 +19,6 @@ Then, we need to load our matrix of 'strong' t statistics to create the covarian
 ```{r}
 
 set.seed(123)
-setwd("~/Dropbox/test/")
 R=5
 
 
@@ -140,3 +133,4 @@ post.weights=readRDS("post.weight.filename.rds")
 (post.means[j,])
 
 lapply(seq(1:R),function(r){plot(b.truth.test[1:100,r],post.means[,r])})
+```
