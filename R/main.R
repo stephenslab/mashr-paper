@@ -886,7 +886,8 @@ factor_sim=function(n,d=3,betasd,esd=0.3,K=10){
     k=z[j]
     mvrnorm(1,mu=rep(0,d),Sigma=covmat[[k]])
   }))
-  sebetahat=abs(matrix(runif(n*d,esd-0.05,esd+0.05),ncol=d))
+  #sebetahat=abs(matrix(rnorm(n*d,esd),ncol=d))
+  sebetahat=abs(matrix(runif(n*d,esd-0.05,esd+0.05),ncol=d))##use uniform to simulate 'shrunken'
   betahat = beta + sebetahat
   tstat=betahat/sebetahat
   lambda=possible_loadings[z,]
