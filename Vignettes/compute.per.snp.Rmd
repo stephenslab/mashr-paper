@@ -5,6 +5,7 @@ output: html_document
 
 Here, we show how we can compute the prior weights on a large number of gene snp pairs and compute the weighted quanities one snp at a time.
 ```{r}
+devtools::install_github("surbut/matrix_ash")
 library("mash")
 library("bigmemory")
 library("SQUAREM")
@@ -92,11 +93,11 @@ barplot(t(as.matrix(pis)))
 (covmat[[which.max(pis)]])
 ```
 
-Now, we can compute the posterior quanitites for each gene snp pair. Here, we'll test it on 10 gene snp pairs.
+Now, we can compute the posterior quanitites for each gene snp pair. Here, we'll test it on 100 gene snp pairs.
 
 ```{r}
 
-lapply(seq(1:100),function(j){total.quant.per.snp(j,covmat,b.gp.hat=b.test,se.gp.hat = se.test,pis,checkpoint = FALSE)})
+weightedquants=lapply(seq(1:100),function(j){total.quant.per.snp(j,covmat,b.gp.hat=b.test,se.gp.hat = se.test,pis,checkpoint = FALSE)})
 ```
 
 Note that we create a file of posterior weighted means, lfsr and marginal variances.
@@ -128,6 +129,9 @@ post.weights=as.matrix(read.table("post.weights.txt")[,-1])
 plot(post.means[j,],post.weights[j,]%*%all.arrays$post.means)
 (post.means[j,])
 (post.weights[j,]%*%all.arrays$post.means)
+
+
+lapply(seq(1:R),function(r){plot(b.truth.test[1:100,r],post.means[,r])})
 
 ```
 
