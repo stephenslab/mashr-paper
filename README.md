@@ -9,10 +9,10 @@ library("mash")
 
 ```
 
-The intention of this package is to produce an estimate of the posterior effect of a SNP on gene expression across multiple subgroups by modeling these effects as distributed according to a mixture of multivariate normals where each component of the mixture is specified by its prior covariance matrix specifying the relationship in effect sizes between tissues. 
+The intention of this package is to produce an estimate of the posterior effect of a SNP on gene expression across multiple subgroups by modeling these effects as distributed according to a mixture of multivariate normals where each component of the mixture is specified by its prior covariance matrix specifying the relationship in effect sizes between tissues. $\omega$
  
 
- $$ \bm{b} | \bm{\pi},\bf{U} \sim \sum_{k,l} \pi_{k,l} \;{\it N}_R(\bm{0}, \omega_l U_{k})$$
+ $\bm{b} | \bm{\pi},\bf{U} \sim \sum_{k,l} \pi_{k,l} \;{\it N}_R(\bm{0}, \omega_l U_{k})$
 
 
 
