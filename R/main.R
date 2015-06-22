@@ -544,8 +544,8 @@ checkfunc=function(j,b.gp.hat,se.gp.hat,A,k ) {
 
 post.array.per.snp=function(j,covmat,b.gp.hat,se.gp.hat){
 
-
   
+  R=ncol(b.gp.hat)
   K=length(covmat)
   post.means=array(NA,dim=c(K,R))
   post.covs=array(NA,dim=c(K,R))
@@ -578,28 +578,28 @@ post.array.per.snp=function(j,covmat,b.gp.hat,se.gp.hat){
   return(list(post.means=post.means,post.ups=post.ups,post.downs=post.downs,post.covs=post.covs,post.nulls=post.nulls))
 }
 
-total.mean.per.snp=function(j,post.weights,post.means){
-  post.weights[j,]%*%post.means
+total.mean.per.snp=function(post.weights,post.means){
+  post.weights%*%post.means
 }
 
 
-total.null.per.snp=function(j,post.weights,post.nulls){
-  post.weights[j,]%*%post.nulls
+total.null.per.snp=function(post.weights,post.nulls){
+  post.weights%*%post.nulls
 }
 
 
-total.up.per.snp=function(j,post.weights,post.ups){
-  post.weights[j,]%*%post.ups
+total.up.per.snp=function(post.weights,post.ups){
+  post.weights%*%post.ups
 }
 
 
-total.down.per.snp=function(j,post.weights,post.downs){
-  post.weights[j,]%*%post.downs
+total.down.per.snp=function(post.weights,post.downs){
+  post.weights%*%post.downs
 }
 
 
-total.covs.partone.persnp=function(j,post.means,post.covs,post.weights){
-  post.weights[j,]%*%(post.covs+post.means^2)
+total.covs.partone.persnp=function(post.means,post.covs,post.weights){
+  post.weights%*%(post.covs+post.means^2)
 }
 
 lfsr.per.snp=function(all.ups,all.downs){
@@ -610,9 +610,21 @@ lfsr.per.snp=function(all.ups,all.downs){
 
 
 #'@title total.quant.per.snp
+#'@param covmat a K list of covariance matrices
+#'@param b.gp.hat JxR matrix of mles
+#'@param se.gp.hat JxR matrix of standard errs
+#'@param pis Kx1 matrix of prior weights
+#'@return writes the posterior weighted quantities to a file
 #'@export
 
-total.quant.per.snp=function(j,covmat,b.gp.hat,se.gp.hat,post.weights){
+total.quant.per.snp=function(j,covmat,b.gp.hat,se.gp.hat,pis){
+  gene.snp.name=rownames(b.gp.hat)[j]
+  V.gp.hat=diag(se.gp.hat[j,])^2
+  b.mle=b.gp.hat[j,]
+  R=ncol(b.mle)
+  lik.snp=lik.func(b.mle,V.gp.hat,covmat)
+  post.weights=t(lik.snp*pis/sum(lik.snp*pis))
+                            
   all.arrays=post.array.per.snp(j,covmat,b.gp.hat,se.gp.hat)
   post.means=all.arrays$post.means
   post.ups=all.arrays$post.ups
@@ -620,16 +632,27 @@ total.quant.per.snp=function(j,covmat,b.gp.hat,se.gp.hat,post.weights){
   post.covs=all.arrays$post.covs
   post.nulls=all.arrays$post.nulls
   
-  all.mus=total.mean.per.snp(j,post.weights,post.means)
-  all.lows=total.down.per.snp(j,post.weights,post.downs)
-  all.ups=total.up.per.snp(j,post.weights,post.ups)
-  lfsr=lfsr.per.snp(all.ups,all.downs)
-  all.covs.partone=total.covs.partone.persnp(j,post.means,post.covs,post.weights)
+  all.mus=total.mean.per.snp(post.weights,post.means)
+  all.ups=total.up.per.snp(post.weights,post.ups)
+  all.downs=total.down.per.snp(post.weights,post.downs )
+  lfsr=t(lfsr.per.snp(all.ups,all.downs))
+  all.covs.partone=total.covs.partone.persnp(post.means,post.covs,post.weights)
   marginal.var=all.covs.partone-all.mus^2
+  rownames(all.mus)=gene.snp.name
+  rownames(all.ups)=gene.snp.name
+  rownames(all.downs)=gene.snp.name
+  rownames(lfsr)=gene.snp.name
+  rownames(marginal.var)=gene.snp.name
+
+  write.table(all.mus,"posterior.means.txt",append=TRUE,col.names=FALSE)
+  write.table(all.ups,"posterior.ups.txt",append=TRUE,col.names=FALSE)
+  write.table(all.downs,"posterior.downs.txt",append=TRUE,col.names=FALSE)
+  write.table(marginal.var,"marginal.var.txt",append=TRUE,col.names=FALSE)
+  write.table(lfsr,"lfsr.txt",append=TRUE,col.names=FALSE)
+  write.table(post.weights,"post.weights.txt",append=TRUE,col.names=FALSE)
+  ##For testing purposes
+  ##return(list(posterior.means=all.mus,posterior.downs=all.downs,posterior.ups=all.ups,lfsr=lfsr,marginal.var=marginal.var))
 }
-
-
-
 
 
 #'@title plotting.func
@@ -843,7 +866,6 @@ compute.lik.test=function(b.test,J,se.test,covmat,A,pis){
   
   if(file.exists(paste0("liketest",A,".rds"))==FALSE){
     lik.mat=t(sapply(seq(1:J),function(x){lik.func(b.mle=b.test[x,],V.gp.hat=diag(se.test[x,])^2,covmat)}))
-    
     saveRDS(lik.mat,paste0("liketest",A,".rds"))}
   
   else(lik.mat=readRDS(paste0("liketest",A,".rds")))
