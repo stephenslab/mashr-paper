@@ -4,7 +4,19 @@
 \alias{total.quant.per.snp}
 \title{total.quant.per.snp}
 \usage{
-total.quant.per.snp(j, covmat, b.gp.hat, se.gp.hat, post.weights)
+total.quant.per.snp(j, covmat, b.gp.hat, se.gp.hat, pis)
+}
+\arguments{
+\item{covmat}{a K list of covariance matrices}
+
+\item{b.gp.hat}{JxR matrix of mles}
+
+\item{se.gp.hat}{JxR matrix of standard errs}
+
+\item{pis}{Kx1 matrix of prior weights}
+}
+\value{
+writes the posterior weighted quantities to a file
 }
 \description{
 total.quant.per.snp
