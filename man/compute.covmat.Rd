@@ -7,6 +7,19 @@
 compute.covmat(b.gp.hat, sebetahat, Q, X.c, lambda.mat, P, A, factor.mat,
   bma = TRUE)
 }
+\arguments{
+\item{b.gp.hat}{a JxR matrix of betahats}
+
+\item{sebetahat}{a JxR matrix of their standard errors}
+
+\item{Q}{number of factors to consider}
+
+\item{X.c}{matric of strong t statistics}
+
+\item{factor}{mat a fxR matrix of factors}
+
+\item{BMA=true}{wheter or not to use singleton and shared config}
+}
 \value{
 A list of covariance matrices
 }

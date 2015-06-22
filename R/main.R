@@ -830,6 +830,11 @@ compute.hm.train=function(train.b,se.train,covmat,A){
 }
 
 #'@title compute.lik.test
+#'@param b.test JxR matrix with the mles for test gene-snp pairs
+#'@param J number of gene snp pairs to consider
+#'@param se.test JxR matrix of standard errors of the test set
+#'@param covmat K list of covariance matrices
+#'@param pis K matrix of HM weights form compute.hm.train
 #'@export
 compute.lik.test=function(b.test,J,se.test,covmat,A,pis){
   

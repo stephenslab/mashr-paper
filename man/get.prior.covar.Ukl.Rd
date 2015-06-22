@@ -9,15 +9,15 @@ get.prior.covar.Ukl(P, lambda.mat, Q, factor.mat, omega.table, bma = TRUE)
 \arguments{
 \item{P}{number of pcs}
 
-\item{lambda.mat}{matrix of lambdas}
+\item{lambda.mat}{matrix of JxQ lambdas}
 
-\item{Q}{number factor}
+\item{Q}{number of single rank factor matrices}
 
-\item{factor.mat}{}
+\item{factor.mat}{nfactors x R tissue matrix of factors}
 
-\item{omega.table}{}
+\item{omega.table}{Lx2 table of grid weights}
 
-\item{bma=TRUE}{}
+\item{bma}{whether or not to use singleton and shared configurations}
 }
 \value{
 U.0kl

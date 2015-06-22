@@ -6,7 +6,21 @@
 \usage{
 compute.mixture.dist(b.gp.hat, J, se.gp.hat, covmat, A, save = FALSE)
 }
+\arguments{
+\item{b.gp.hat}{JxR matrix of MLE betahats}
+
+\item{J}{number of gene snp pairs to consider}
+
+\item{se.gp.hat}{JxR matrix of standard errors}
+
+\item{A}{file name to save things in}
+
+\item{save=FALSE}{whether to save array binaries (can be large memory constraint)}
+}
+\value{
+all.arrays a list of JxKxR arrays of posterior quantities
+}
 \description{
-compute.mixture.dist
+compute a list of JxKxR arrays with componenet specific quanitites and a JxK matrix of posterior weights
 }
 

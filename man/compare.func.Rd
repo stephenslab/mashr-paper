@@ -7,7 +7,7 @@
 compare.func(j, all.upper, all.lower)
 }
 \arguments{
-\item{all.upper}{and all.lower are JxR matrices of upper and lower tail probabilities for all gene pairs}
+\item{all.upper}{and all.lower are JxR matrices of weighted upper and lower tail probabilities for all gene pairs}
 }
 \value{
 1 x R vector of lfsr at each tissue

@@ -6,6 +6,15 @@
 \usage{
 compute.total.quant(A, J, all.arrays)
 }
+\arguments{
+\item{A}{filename to save weighted quantities in}
+
+\item{J}{number of gene snp pairs to consider}
+
+\item{all.arrays}{list of JxKxR arrays of posterior componenet-specific quantities}
+
+\item{If}{file present, read array file; else use list in memory}
+}
 \description{
 compute.total.quant
 }

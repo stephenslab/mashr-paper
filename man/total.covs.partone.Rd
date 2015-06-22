@@ -6,7 +6,12 @@
 \usage{
 total.covs.partone(j, post.means, post.covs, post.weights)
 }
+\arguments{
+\item{post.covs}{J x K x R arrays of posterior marginal variance (diagonals of posteior covmat) for each snp in each component in each tissue}
+
+\item{post.weights}{J x K matrix of posterior weights for each componenet and for each snp}
+}
 \description{
-total.covs.partone
+generate a K x R matrix of post.weighted marginal variances and sum them to get total weighted
 }
 

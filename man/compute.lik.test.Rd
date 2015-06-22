@@ -4,7 +4,18 @@
 \alias{compute.lik.test}
 \title{compute.lik.test}
 \usage{
-compute.lik.test(b.gp.hat, J, se.gp.hat, covmat, A, pis)
+compute.lik.test(b.test, J, se.test, covmat, A, pis)
+}
+\arguments{
+\item{b.test}{JxR matrix with the mles for test gene-snp pairs}
+
+\item{J}{number of gene snp pairs to consider}
+
+\item{se.test}{JxR matrix of standard errors of the test set}
+
+\item{covmat}{K list of covariance matrices}
+
+\item{pis}{K matrix of HM weights form compute.hm.train}
 }
 \description{
 compute.lik.test

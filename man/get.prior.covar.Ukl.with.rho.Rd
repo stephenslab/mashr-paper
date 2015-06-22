@@ -9,7 +9,9 @@ get.prior.covar.Ukl.with.rho(P, lambda.mat, Q, factor.mat, omega.table, rhos)
 \arguments{
 \item{P}{integer number of PCs}
 
-\item{L}{integer number of gridweights}
+\item{omega.table}{table of grid weights}
+
+\item{rhos}{correlation factor for morphed matrices}
 }
 \value{
 U.0kl L dimensional list of K dimensional list with prior covairnace matrix for each grid weight, prior covariance pair

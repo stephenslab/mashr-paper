@@ -10,12 +10,6 @@ total.mean(j, post.means, post.weights)
 \item{post.means}{J x K x R arrays of posterior means for each snp in each component in each tissue}
 
 \item{post.weights}{J x K matrix of posterior weights for each componenet and for each snp}
-
-\item{post.cov}{J x K x R arrays of posterior variance for each snp in each component in each tissue}
-
-\item{post.ups}{J x K x R arrays of posterior upper tail probabilities for each snp in each component in each tissue}
-
-\item{post.downs}{J x K x R arrays of posterior lower tail probabilities for each snp in each component in each tissue}
 }
 \value{
 get vector of total weighted quanties for each gene SNP pair
