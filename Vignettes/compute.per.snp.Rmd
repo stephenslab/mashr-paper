@@ -83,7 +83,7 @@ se.test=se.hat[1001:nrow(se.hat),]
 b.truth.test=newdat$beta[1001:nrow(b.hat),]
 ````
 
-We read in the previously computed pis and the covariane matrix and compute the test likelihood and corresponding weights. Note the return of a file of test likeilihoods and posterior weights. Here, I will only do the computation for 10 gene-snp pairs. 
+We read in the previously computed pis and the covariane matrix and compute the test likelihood and corresponding weights. Note the return of a file of test likeilihoods and posterior weights. Here, I will only do the computation for 100 gene-snp pairs. 
 
 ```{r}
 A="Simulations"
