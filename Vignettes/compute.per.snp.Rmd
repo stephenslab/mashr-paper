@@ -1,0 +1,133 @@
+---
+title: "PerSnpVignette"
+output: html_document
+---
+
+Here, we show how we can compute the prior weights on a large number of gene snp pairs and compute the weighted quanities one snp at a time.
+```{r}
+library("mash")
+library("bigmemory")
+library("SQUAREM")
+library("mvtnorm")
+```
+
+Then, we need to load our matrix of 'strong' t statistics to create the covariance matrices as well as the matrix of factors from our SFA model. In this example, we will not use the additional BMA configurations (i.e., bma=FALSE). Also load the maximum beta hats and t statistics for grid selection.
+
+```{r}
+
+set.seed(123)
+R=5
+
+
+covdat = factor_sim(n=1000,K=10,betasd=1,esd=0.3,d=5)
+b.gp.hat=covdat$betahat
+se.gp.hat=covdat$sebetahat
+t.stat=covdat$tstat
+
+
+R=ncol(b.gp.hat)#number of tissues
+X.t=as.matrix(t.stat)
+#X.real=X.t[which(truth$config!=0),]
+X.real=X.t
+X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
+R=ncol(X.t)
+M=nrow(X.c)
+
+
+
+
+lambda=covdat$lambda
+factors=covdat$factors
+
+covmat=compute.covmat(b.gp.hat,se.gp.hat,Q=5,X.c,lambda,P=2,A="simulation",factor.mat=factors,bma=TRUE)
+
+K=length(covmat)
+K
+covmat[[K]]
+
+```
+Now, we let's remove these strong tstats and split simulate new data into test and training. This will compute the HM weights on training data and return a file of likelihoods for the training data. I use my factor simulator to simulate true betas and betahats. 
+
+```{r}
+rm(b.gp.hat)
+rm(se.gp.hat)
+
+newdat = factor_sim(n=10000,K=10,betasd=0.5,esd=0.3,d=5)
+b.hat=newdat$betahat
+se.hat=newdat$sebetahat
+
+
+J=nrow(b.hat)
+
+b.train=b.hat[1:1000,]
+se.train=se.hat[1:1000,]
+
+compute.hm.train(train.b = b.train,se.train = se.train,covmat = covmat,A="Simulations")
+##compute the HM weights on training data
+##check to show that the likelihood computatations are correct
+A="Simulations"
+likmat=readRDS(paste0("liketrain",A,".rds"))
+likmat[1,1:10]
+lik.func(b.mle = b.train[1,],V.gp.hat = diag(se.train[1,])^2,covmat)[1:10]
+```
+Note creation of three files: pis, a pdf of pis, and a matrix  of likelihoods of training data.
+Now,we remove the training data and create our test data.
+
+```{r}
+rm(b.train)
+rm(se.train)
+
+b.test=b.hat[1001:nrow(b.hat),]
+se.test=se.hat[1001:nrow(se.hat),]
+b.truth.test=newdat$beta[1001:nrow(b.hat),]
+````
+
+We read in the previously computed pis and the covariane matrix and compute the test likelihood and corresponding weights. Note the return of a file of test likeilihoods and posterior weights. Here, I will only do the computation for 10 gene-snp pairs. 
+
+```{r}
+A="Simulations"
+pis=readRDS(paste0("pis",A,".rds"))$pihat
+
+barplot(t(as.matrix(pis)))
+(covmat[[which.max(pis)]])
+```
+
+Now, we can compute the posterior quanitites for each gene snp pair. Here, we'll test it on 10 gene snp pairs.
+
+```{r}
+
+lapply(seq(1:100),function(j){total.quant.per.snp(j,covmat,b.gp.hat=b.test,se.gp.hat = se.test,pis,checkpoint = FALSE)})
+```
+
+Note that we create a file of posterior weighted means, lfsr and marginal variances.
+       
+       
+To make sure that these computations are correct,
+
+```{r}
+
+
+
+j=sample.int(100,1)
+all.arrays=post.array.per.snp(j=j,covmat = covmat,b.gp.hat = b.test,se.gp.hat = se.test)
+
+b.mle=as.vector(t(b.test[j,]))##turn i into a R x 1 vector
+V.gp.hat=diag(se.test[j,])^2
+V.gp.hat.inv <- solve(V.gp.hat)
+k=17
+
+U.gp1kl <- (post.b.gpkl.cov(V.gp.hat.inv, covmat[[k]]))
+(mu.gp1kl <- as.array(post.b.gpkl.mean(b.mle, V.gp.hat.inv, U.gp1kl)))
+(all.arrays$post.means[k,])
+plot(all.arrays$post.means[k,],mu.gp1kl)
+
+##Now, check to make sure weighting is correct
+post.means=as.matrix(read.table("posterior.means.txt")[,-1])
+post.weights=as.matrix(read.table("post.weights.txt")[,-1])
+
+plot(post.means[j,],post.weights[j,]%*%all.arrays$post.means)
+(post.means[j,])
+(post.weights[j,]%*%all.arrays$post.means)
+
+```
+

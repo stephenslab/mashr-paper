@@ -578,29 +578,45 @@ post.array.per.snp=function(j,covmat,b.gp.hat,se.gp.hat){
   return(list(post.means=post.means,post.ups=post.ups,post.downs=post.downs,post.covs=post.covs,post.nulls=post.nulls))
 }
 
+
+#'@title total.mean.per.snp
+#'@export
+
 total.mean.per.snp=function(post.weights,post.means){
   post.weights%*%post.means
 }
+
+#'@title total.null.per.snp
+#'@export
 
 
 total.null.per.snp=function(post.weights,post.nulls){
   post.weights%*%post.nulls
 }
 
+#'@title total.up.per.snp
+#'@export
 
 total.up.per.snp=function(post.weights,post.ups){
   post.weights%*%post.ups
 }
 
+#'@title total.down.per.snp
+#'@export
 
 total.down.per.snp=function(post.weights,post.downs){
   post.weights%*%post.downs
 }
 
+#'@title total.covs.partone.persnp
+#'@export
 
 total.covs.partone.persnp=function(post.means,post.covs,post.weights){
   post.weights%*%(post.covs+post.means^2)
 }
+
+#'@title lfsr.per.snp
+#'@export
 
 lfsr.per.snp=function(all.ups,all.downs){
   tailprob=rbind(all.ups,all.downs)
@@ -617,7 +633,7 @@ lfsr.per.snp=function(all.ups,all.downs){
 #'@return writes the posterior weighted quantities to a file
 #'@export
 
-total.quant.per.snp=function(j,covmat,b.gp.hat,se.gp.hat,pis){
+total.quant.per.snp=function(j,covmat,b.gp.hat,se.gp.hat,pis,checkpoint=FALSE){
   gene.snp.name=rownames(b.gp.hat)[j]
   V.gp.hat=diag(se.gp.hat[j,])^2
   b.mle=b.gp.hat[j,]
@@ -644,14 +660,14 @@ total.quant.per.snp=function(j,covmat,b.gp.hat,se.gp.hat,pis){
   rownames(lfsr)=gene.snp.name
   rownames(marginal.var)=gene.snp.name
 
+  if(checkpoint==FALSE){
   write.table(all.mus,"posterior.means.txt",append=TRUE,col.names=FALSE)
   write.table(all.ups,"posterior.ups.txt",append=TRUE,col.names=FALSE)
   write.table(all.downs,"posterior.downs.txt",append=TRUE,col.names=FALSE)
   write.table(marginal.var,"marginal.var.txt",append=TRUE,col.names=FALSE)
   write.table(lfsr,"lfsr.txt",append=TRUE,col.names=FALSE)
-  write.table(post.weights,"post.weights.txt",append=TRUE,col.names=FALSE)
-  ##For testing purposes
-  ##return(list(posterior.means=all.mus,posterior.downs=all.downs,posterior.ups=all.ups,lfsr=lfsr,marginal.var=marginal.var))
+  write.table(post.weights,"post.weights.txt",append=TRUE,col.names=FALSE)}
+  else{return(list(posterior.means=all.mus,posterior.downs=all.downs,posterior.ups=all.ups,lfsr=lfsr,marginal.var=marginal.var))}
 }
 
 
