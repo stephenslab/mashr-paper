@@ -460,6 +460,7 @@ compute.mixture.dist=function(b.gp.hat,J,se.gp.hat,covmat,A,save=FALSE){
 #'@param all.arrays list of JxKxR arrays of posterior componenet-specific quantities
 #'@param J number of gene snp pairs to consider
 #'@param A filename to save weighted quantities in
+#'@param If file present, read array file; else use list in memory
 #'@export
 compute.total.quant=function(A,J,all.arrays){
    
@@ -600,6 +601,36 @@ total.down.per.snp=function(j,post.weights,post.downs){
 total.covs.partone.persnp=function(j,post.means,post.covs,post.weights){
   post.weights[j,]%*%(post.covs+post.means^2)
 }
+
+lfsr.per.snp=function(all.ups,all.downs){
+  tailprob=rbind(all.ups,all.downs)
+  as.matrix(apply(tailprob,2,function(r){1-max(r)}))
+}
+
+
+
+#'@title total.quant.per.snp
+#'@export
+
+total.quant.per.snp=function(j,covmat,b.gp.hat,se.gp.hat,post.weights){
+  all.arrays=post.array.per.snp(j,covmat,b.gp.hat,se.gp.hat)
+  post.means=all.arrays$post.means
+  post.ups=all.arrays$post.ups
+  post.downs=all.arrays$post.downs
+  post.covs=all.arrays$post.covs
+  post.nulls=all.arrays$post.nulls
+  
+  all.mus=total.mean.per.snp(j,post.weights,post.means)
+  all.lows=total.down.per.snp(j,post.weights,post.downs)
+  all.ups=total.up.per.snp(j,post.weights,post.ups)
+  lfsr=lfsr.per.snp(all.ups,all.downs)
+  all.covs.partone=total.covs.partone.persnp(j,post.means,post.covs,post.weights)
+  marginal.var=all.covs.partone-all.mus^2
+}
+
+
+
+
 
 #'@title plotting.func
 #'@export
