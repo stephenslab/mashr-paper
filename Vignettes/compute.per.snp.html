@@ -70,7 +70,7 @@ img {
 ## Installing mash
 ## '/Library/Frameworks/R.framework/Resources/bin/R' --no-site-file  \
 ##   --no-environ --no-save --no-restore CMD INSTALL  \
-##   '/private/var/folders/2h/6fmv9psj32v9mzpd6nkrn7zr0000gn/T/RtmpXP1jCK/devtools4740301b727/surbut-matrix_ash-31d6241'  \
+##   '/private/var/folders/2h/6fmv9psj32v9mzpd6nkrn7zr0000gn/T/Rtmpz3jwcw/devtools48dc12ea0380/surbut-matrix_ash-03e3877'  \
 ##   --library='/Library/Frameworks/R.framework/Versions/3.2/Resources/library'  \
 ##   --install-tests</code></pre>
 <pre class="r"><code>library(&quot;mash&quot;)
@@ -153,7 +153,7 @@ rm(se.train)
 b.test=b.hat[1001:nrow(b.hat),]
 se.test=se.hat[1001:nrow(se.hat),]
 b.truth.test=newdat$beta[1001:nrow(b.hat),]</code></pre>
-<p>We read in the previously computed pis and the covariane matrix and compute the test likelihood and corresponding weights. Note the return of a file of test likeilihoods and posterior weights. Here, I will only do the computation for 10 gene-snp pairs.</p>
+<p>We read in the previously computed pis and the covariane matrix and compute the test likelihood and corresponding weights. Note the return of a file of test likeilihoods and posterior weights. Here, I will only do the computation for 100 gene-snp pairs.</p>
 <pre class="r"><code>A=&quot;Simulations&quot;
 pis=readRDS(paste0(&quot;pis&quot;,A,&quot;.rds&quot;))$pihat
 

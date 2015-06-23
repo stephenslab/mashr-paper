@@ -140,6 +140,26 @@ get.prior.covar.Ukl <- function(P, lambda.mat, Q, factor.mat,omega.table,bma=TRU
   return(U.0kl=test)
 }
 
+#' @title get.prior.covar.bma.only
+#' @param R number of tissues
+#' @param omega.table L vector grid weights
+#' @return a L x K list of covariance matrices
+#' @export
+get.prior.covar.bma.only <- function(R,omega.table)  {
+  test=list()
+  for(l in 1:nrow(omega.table)){
+    test[[l]]=list()
+    omega=omega.table[l,]
+  
+    configs=matrix(0,nrow=R,ncol=R)
+    for(r in 1:R){
+        configs[r,r]=1}
+      configs=rbind(configs,rep(1,R))
+      for(c in 1:nrow(configs)) {
+        mat=(configs[c,]%*%t(configs[c,]))
+      test[[l]][[c]]=omega*mat}}
+  return(U.0kl=test)
+}
 
 #' @title autoselect.mix.sd 
 #' @param betahat is an J x R matrix of betahats (or t statistics)
@@ -398,6 +418,31 @@ U.0kl=get.prior.covar.Ukl(P=2,lambda=lambda,Q=Q,factor.mat=factor.mat, omega.tab
   saveRDS(covmat,paste0("covmat",A,".rds"))
   
   return(covmat)}
+
+
+#' @title compute.covmat.bma.only
+#' @param b.gp.hat a JxR matrix of betahats
+#' @param sebetahat a JxR matrix of their standard errors
+#' @return A list of covariance matrices
+#' @export
+
+
+compute.covmat.bma.only = function(b.gp.hat,sebetahat,A){
+  
+  omega=mult.tissue.grid(mult=sqrt(2),b.gp.hat,sebetahat)
+  
+  omega.table=data.frame(omega)
+  
+    
+  U.0=get.prior.covar.bma.only(R = ncol(b.gp.hat),omega.table = omega.table)
+  
+  
+  covmat=unlist(U.0,recursive=F)
+  saveRDS(covmat,paste0("covmat",A,".rds"))
+  
+  return(covmat)}
+
+
 
 
 #' @title compute.mixture.dist
