@@ -1,0 +1,111 @@
+\documentclass[11pt, oneside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
+
+\usepackage{amsmath}
+
+% EPS and PDF figures
+\usepackage{graphicx}
+
+% EPS and PDF figures
+%\usepackage[nomarkers,figuresonly]{endfloat}
+
+
+\usepackage{amssymb}
+\usepackage{bm}
+% \graphicspath{{./figures/}} % save all figures in the same directory
+\usepackage{color} 
+\usepackage{hyperref}
+\usepackage{parskip}
+\nonstopmode
+\title{Brief Article}
+\author{The Author}
+%\date{}							% Activate to display a given date or no date
+\title{Modeling Posterior Effects: A Continuous Journey ....}
+\author{Sarah Urbut}
+\date{\today}
+\begin{document}
+\section{The EM Algorithm}
+\subsection{Purpose}
+
+The purpose of this document is to express a way of selecting a set of covariance matrices for fitting a mixture of multivariate normals. Previously, we have used a fixed grid of $U_k$ to represent the prior covariance matrices on the vector of `true' effects across tissues, $\bm{b}$. We then estimate the weights on each of these matrices $\pi$ hierarchically, using the EM algorithm. Here, we propose to estimates these covariance matrices simultaneously, thus reflecting the ideal patterns of covariance present in the data.
+
+
+\subsection{Defining the Model}
+
+For a given gene-snp pair, $\bm{b}$ represents the $R$ vector of unknown standardized effect. We model the prior distribution from which $\bm{b}$ is drawn as a mixture of multivariate {\it Normals}.
+ 
+ \begin{equation}
+  \label{prior_b_mixt_grid}
+  \bm{b} | \bm{\pi},\bf{U} \sim \sum_{k,l} \pi_{k,l} \;{\it N}_R(\bm{0}, \omega_l U_{k})
+\end{equation}
+
+\begin{itemize}  
+\item Choice of $U_k$ determines the direction, while $\omega_l$ determines the 'stretch' or 'tails' of each distribution
+\item $\pi_{k,l}$ to represent the (unknown) prior weight on prior covariance matrix $U_{k,l}$ 
+\item  Use the EM algorithm to estimate the optimal combination of weights: How often does this particular pattern of sharing  occur in the data?
+\item Now, we will also the EM algorithm to estimate these prior covariance matrices, thus simultaneously inferring both the patterns and the relative frequencies that maximize the likelihood of the data set
+\end{itemize} 
+
+Furthermore, for a given gene-snp pair, the Likelihood on $\bm{b}$: 
+\begin{equation}
+  \label{new_lik}
+  \hat{\bm{b}} | \bm{b} \sim {\it N}_R(\bm{b}, \hat{V})
+\end{equation}
+
+We know that for a single multivariate {\it Normal}  the posterior on  $\bm{b} | U_0$ is  simply: 
+\[
+\bm{b} | \hat{\bm{b}} \sim {\it N}_R(\bm{\mu}_{1}, U_{1})
+\]
+where:
+\begin{itemize}
+\item $\bm{\mu}_{1} = U_{1} (\hat{V}^{-1} \hat{\bm{b}})$;
+\item $U_{1} = (U_{0}^{-1} + \hat{V}^{-1})^{-1}$.
+\end{itemize}
+}
+
+If we added the subscript k, then for each component, we have a component specific posterior covariance matrix $U__{1k}$ and a component specific posterior mean $\bm{\mu_{1k}}$, as in the JxKxR \begin{verbatim}all.arrays$post.means\end{verbatim} object, where the [j,k,] element represents the posterior mean for the $jth$ snp across all $R$ tissues.
+
+\section{Algorithm}
+\subsection{E-Step}
+For a data set with J gene snp pairs and $K$ components:
+\begin{itemize}
+\item $U_{k}$ to represent the `true' covariance matrix of effects,
+\item$B_{jk}$ to represent the $RxR$ posterior conditional covariance matrix for each gene-snp pair at each component ($U_{1}$ above) 
+\item$\bm{b_{jk}}$ to represent the $R$-dimensional posterior mean for each gene-snp pair at each component (analogous $\bm{\mu_{1}$) above.
+\item $\pi_{k}$ to represent the mixture proportions.
+\end{itemize}
+
+In the E- step, using the same notation as the authors Bovy et al where $q_{jk}$ represents the latent 'label' of each gene-snp pair according to its membership:
+
+\begin{equation}
+\begin{align*}
+q_{jk} &= \frac{\pi_{k} N (  \hat{\bm{b}} |0,U_{k}+V_{j})}{\sum_{k}{\pi_{k} N (\hat{\bm{b_{j}}}|0,U_{k}+V_{j}})} \\
+\bm{b_{jk}} &=  B_{jk} (U_{k}^{-1} \bm{m_{k}}+\hat{V}^{-1}  \hat{\bm{b}}) \\
+B_{jk}&=(U_{k}^{-1} + \hat{V_{j}^{-1}})^{-1}
+\end{align*}
+\end{equation}
+
+Quite simply, the latent indicator label is simply the likelihood at a particular component times the current update of the prior weight $\pi_{k}$ at that component, divided by the marginal probability of observing that gene snp pair.
+
+The current component specific posterior covariance $B_{jk}$ is the posterior covariance matrix of a single multivariate normal distribution and the current component-specific posterior mean $\bm{b_{jk}}$ is the posterior mean of a single multivariate normal. \begin{verbatim} (see https://en.wikipedia.org/wiki/Conjugate_prior)\end{verbatim}
+
+Note that this is slightly different than our expression for the posterior conditional mean $\bm{\mu_{1k}}$ above because in the previous model, we assumed that each $\bm{b_{j}} \sim N(0,U_{k})$ (i.e., the prior mean was $\bm{0}$) where here we estimate the underlying mean for each component, $\bm{m_{k}}$ using the EM algorithm and so we need to use the full formula for a multivariate normal with known residual matrix $V_{j}$ [in Wiki notation, $\Sigma$]: $(\left(\boldsymbol\Sigma_0^{-1} + \boldsymbol\Sigma^{-1}\right)^{-1}\left( \boldsymbol\Sigma_0^{-1}\boldsymbol\mu_0 +  \boldsymbol\Sigma^{-1} \mathbf{\hat{b}} \right),
+\left(\boldsymbol\Sigma_0^{-1} + \boldsymbol\Sigma^{-1}\right)^{-1}$, where 
+$\mathbf{\hat{b}}$ is the vector of MLEs for a given gene-snp pair).
+
+\subsection{M-Step}
+Now, let $q_{k}$ = $\sum_{j}{q_{j,k}}$. We can write the following expectation step down.
+
+
+\begin{equation}
+\begin{align*}
+\pi_{k} &= \frac{1}{J}\sum_{j} {q_{jk}}\\
+\bm{m_{k}}&=\frac{1}{q_{k}}\sum_{j}{\bm{b_{jk}}}\\
+U_{k} &= \frac{1}{q_{k}}\sum_{j} {q_{jk}[(\bm{m_{k}}-\bm{b_{jk}})(\bm{m_{j}}-\bm{b_{jk}})^{T}+B_{jk}}]
+\end{align*}
+\end{equation}
+
+
+
+\end{document}  
