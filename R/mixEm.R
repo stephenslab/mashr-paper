@@ -45,6 +45,97 @@ fixpoint = function(pi, matrix_lik, prior){
   return(pinew)
 }
 
+
+#' @title post.b.jk.cov
+#' @return RxR posterior covariance matrix for a given prior covariance matrix
+#' @export
+post.b.jk.cov=function(V.j.hat.inv, U.0k){
+  U.j1k <- U.0k %*% solve(V.j.hat.inv %*% U.0k + diag(nrow(U.0k)))
+  return(U.j1k)
+}
+
+
+#' @title post.b.jk.mean
+#' @param U.0k.l let U.0k.l represent a specific matrix in U.0kl (.e.g, U.0kl[[l]][[k]])
+#' @return return a 1 * R vector of posterior means for a given prior covariance matrix
+#' @export
+post.b.jk.mean = function(b.mle, V.j.hat.inv, U.1jk){
+  mu.j1k <- U.j1k %*% V.j.hat.inv %*% b.mle
+  return(mu.j1k)}
+
+
+
+#' @title em.array.generator
+#' @param b.j.hat = 1xR vector of MLEs
+#' @param se.j.jat=1xR vector of their standard errors
+#' @param covmat = K dimensional list
+#' @param lik.mat JxK matrix of likelihoods
+#' @return list of JxKxR conditional posterior means, JxKxRxR covariance matries and JxK normalized likelihoods
+#' @export
+
+
+
+em.array.generator=function(b.j.hat,J,A,se.j.hat,covmat,lik.mat){
+  R=ncol(b.j.hat)
+  K=length(covmat)
+  post.means=array(NA,dim=c(J,K,R))
+  post.covs=array(NA,dim=c(J,K,R,R))
+  q.mat=array(NA,dim=c(J,K))
+  
+  for(j in 1:J){
+    b.mle=as.vector(t(b.j.hat[j,]))##turn i into a R x 1 vector
+    V.j.hat=diag(se.j.hat[j,])^2
+    V.j.hat.inv <- solve(V.j.hat)
+    
+    for(k in 1:K){
+      U.j1k <- (post.b.jk.cov(V.j.hat.inv, covmat[[k]]))
+      mu.j1k <- as.array(post.b.jk.mean(b.mle, V.j.hat.inv, U.j1k))
+      
+      post.means[j,k,]=mu.j1k
+      post.covs[j,k,,]=U.j1k ##critically, now store the actual matrix rather than just its diagonal
+      q.mat[j,]=pi*lik.mat[j,]/sum(pi*lik.mat[j,])
+    }}
+  return(list(post.means=post.means,post.covs=post.covs,q.mat=q.mat))
+}
+
+
+#' @title max.step.func 
+#' @param post.means JxKxR matrix of posterior means
+#' @param post.covs JxKxR matrix of posterior covariances
+#' @param q.mat JxK matrix of normalixed likelihoods e.g., p(K|D)
+#' @return K x R xR array of 'true covariance matrices' and Kx1 vector of pis
+#' @export
+max.step.func = function(post.means,post.covs,q.mat){
+  J=dim(post.means)[1]
+  #true.means=array(NA,dim=c(K,R)) but we force to be 0
+  true.covs=array(NA,dim=c(K,R,R))
+  q=colSums(q.mat)
+  pis=q/J
+  d=array(NA,dim=c(J,R,R))
+  if(q[k]==0){
+    #true.means[k,]=rep(0,R)
+    true.covs[k,,]=array(rep(0,R*R),dim=c(R,R))}
+  else{
+  #true.means[k,]=1/q[k]*(q.mat[,k]*post.means[,k,])
+  for(j in seq(1:J)){
+    d[j,,]=q.mat[j,k]*(post.means[j,k,]%*%t(-post.means[j,k,])+post.covs[j,k,,])##produce a RxR matrix of weighted 'truth' for each individual
+  }
+  true.covs[k,,]=1/q[k]*sum(d[j,,])}##get the latent identifier weighted sum of all J individuals to produce 1 RxR matrix of truth
+  
+  return(list(true.covs=true.covs,pis=pis))
+}
+
+
+
+
+
+
+
+
+
+
+
+
 negpenloglik = function(pi,matrix_lik,prior){return(-penloglik(pi,matrix_lik,prior))}
 
 penloglik = function(pi, matrix_lik, prior){
