@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  24 JUN 2015 08:37
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  24 JUN 2015 11:49
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -280,23 +280,27 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 (/usr/local/texlive/2014/texmf-dist/tex/latex/parskip/parskip.sty
 Package: parskip 2001/04/09 non-zero parskip adjustments
 )
-(./EMUpdates.aux)
+(./EMUpdates.aux
+
+LaTeX Warning: Label `new_lik' multiply defined.
+
+)
 \openout1 = `EMUpdates.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -361,7 +365,7 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 \AtBeginShipoutBox=\box29
-Package hyperref Info: Link coloring OFF on input line 26.
+Package hyperref Info: Link coloring OFF on input line 35.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
@@ -371,54 +375,54 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count119
 )
-LaTeX Info: Redefining \ref on input line 26.
-LaTeX Info: Redefining \pageref on input line 26.
-LaTeX Info: Redefining \nameref on input line 26.
+LaTeX Info: Redefining \ref on input line 35.
+LaTeX Info: Redefining \pageref on input line 35.
+LaTeX Info: Redefining \nameref on input line 35.
 
 (./EMUpdates.out) (./EMUpdates.out)
 \@outlinefile=\write3
 \openout3 = `EMUpdates.out'.
 
-LaTeX Font Info:    Try loading font information for U+msa on input line 28.
+LaTeX Font Info:    Try loading font information for U+msa on input line 37.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 28.
+LaTeX Font Info:    Try loading font information for U+msb on input line 37.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 44.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 53.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 44.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 53.
  [1
 
 {/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-./EMUpdates.tex:65: Too many }'s.
-l.65 }
+./EMUpdates.tex:74: Too many }'s.
+l.74 }
       
 You've closed more groups than you opened.
 Such booboos are generally harmless, so keep going.
 
-./EMUpdates.tex:67: Missing { inserted.
+./EMUpdates.tex:76: Missing { inserted.
 <to be read again> 
                    _
-l.67 ... specific posterior covariance matrix $U__
+l.76 ... specific posterior covariance matrix $U__
                                                   {1k}$ and a component spec...
 A left brace was mandatory here, so I've put one in.
 You might want to delete and/or insert some corrections
 so that I will find a matching right brace soon.
 (If you're confused by all this, try typing `I}' now.)
 
-./EMUpdates.tex:67: Missing } inserted.
+./EMUpdates.tex:76: Missing } inserted.
 <inserted text> 
                 }
-l.67 ...ific posterior covariance matrix $U__{1k}$
+l.76 ...ific posterior covariance matrix $U__{1k}$
                                                    and a component specific ...
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -426,49 +430,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-Runaway argument?
-{\mu _{1}$) above. \item $\pi _{k}$ to represent the mixture proporti\ETC.
-./EMUpdates.tex:78: Paragraph ended before \bm was complete.
-<to be read again> 
-                   \par 
-l.78 
-     
-I suspect you've forgotten a `}', causing me to apply this
-control sequence to too much text. How can we recover?
-My plan is to forget the whole thing and hope for the best.
 
-./EMUpdates.tex:78: Missing $ inserted.
-<inserted text> 
-                $
-l.78 
-     
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-./EMUpdates.tex:78: Missing } inserted.
-<inserted text> 
-                }
-l.78 
-     
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
-./EMUpdates.tex:78: Extra }, or forgotten \endgroup.
-\par ...m \@noitemerr {\@@par }\fi \else {\@@par }
-                                                  \fi 
-l.78 
-     
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
-
-
-./EMUpdates.tex:86: Package amsmath Error: Erroneous nesting of equation struct
+./EMUpdates.tex:95: Package amsmath Error: Erroneous nesting of equation struct
 ures;
 (amsmath)                trying to recover with `aligned'.
 
@@ -476,20 +439,14 @@ See the amsmath package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.86 \end{align*}
+l.95 \end{align*}
                  
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 [2]
-Overfull \hbox (49.05092pt too wide) in paragraph at lines 93--96
-\OT1/cmr/m/n/10.95 known resid-ual ma-trix $\OML/cmm/m/it/10.95 V[]$ \OT1/cmr/m
-/n/10.95 [in Wiki no-ta-tion, $^^F$]: $([][] [] \OML/cmm/m/it/10.95 ; [][]$\OT1
-/cmr/m/n/10.95 ,
- []
 
-
-./EMUpdates.tex:106: Package amsmath Error: Erroneous nesting of equation struc
+./EMUpdates.tex:113: Package amsmath Error: Erroneous nesting of equation struc
 tures;
 (amsmath)                trying to recover with `aligned'.
 
@@ -497,473 +454,117 @@ See the amsmath package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.106 \end{align*}
+l.113 \end{align*}
                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./EMUpdates.tex:117: Undefined control sequence.
-l.117 ...imes R$ matrix noted $\hat{V}_{gp} = \Var
-                                                  (\hat{\bm{b}}_{gp})$.
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[3]
-./EMUpdates.tex:123: Undefined control sequence.
-l.123   \hat{\bm{b}}_{gp} | \bm{b}_{gp} \sim \Norm
-                                                  _R(\bm{b}_{gp}, \hat{V}_{gp})
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:128: Undefined control sequence.
-l.128 ... a single Normal: $\bm{b}_{gp} \sim \Norm
-                                                  _R(\bm{0}, U_{0})$.
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:131: Undefined control sequence.
-l.131 \bm{b}_{gp} | \hat{\bm{b}}_{gp} \sim \Norm
-                                                _R(\bm{\mu}_{gp1}, U_{gp1})
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-
-LaTeX Warning: Reference `prior_b_mixt_grid_config' on page 4 undefined on inpu
-t line 139.
-
-./EMUpdates.tex:141: Undefined control sequence.
-l.141   \bm{b}_{gp} | \bm{\eta},\bm{\lambda},\Uv
-                                                _0 \sim \sum_{j=1}^J \sum_{l...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:141: Undefined control sequence.
-l.141 ...^J \sum_{l=1}^L \eta_j \lambda_l \; \Norm
-                                                  _R(\bm{0}, U_{0jl})
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:143: Undefined control sequence.
-<recently read> \Uv 
-                    
-l.143 ...e hyper-parameters are either fixed ($\Uv
-                                                  _0$) or estimated ($\bm{\e...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:150: Undefined control sequence.
-l.150 ...lambda}}, v_{gp}=1) &= \sum_j \sum_l \Prd
-                                                  (c_{gpj}=1, d_{gpl}=1 | \h...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-
-Overfull \hbox (95.8863pt too wide) detected at line 152
-[][] []
- []
-
-./EMUpdates.tex:158: Undefined control sequence.
-l.158     &\propto \Lik
-                       (\bm{b}_{gp}) p(\bm{b}_{gp} | U_{0jl}) \\
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[4]
-./EMUpdates.tex:187: Undefined control sequence.
-l.187 ..., c_{gpj}=1, d_{gpl}=1 \;  &\sim \; \Norm
-                                                  _R(\bm{\mu}_{gp1jl}, U_{gp...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-
-LaTeX Warning: Reference `post_b_cond_v_init' on page 5 undefined on input line
- 207.
-
-./EMUpdates.tex:211: Undefined control sequence.
-l.211     \tilde{w}_{jl} &= \Prd
-                                (c_{gpj}=1, d_{gpl}=1 | \hat{\bm{b}}_{gp}, \...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-
-LaTeX Warning: Reference `bf_gpjl' on page 5 undefined on input line 216.
-
-./EMUpdates.tex:218: Undefined control sequence.
-<argument> ... {\eta }_j \hat {\lambda }_l \; \BF 
-                                                  _{gpjl}
-l.218 ..._{j'} \hat{\lambda}_{l'} \; \BF_{gpj'l'}}
-                                                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:218: Undefined control sequence.
-<argument> ... }_{j'} \hat {\lambda }_{l'} \; \BF 
-                                                  _{gpj'l'}
-l.218 ..._{j'} \hat{\lambda}_{l'} \; \BF_{gpj'l'}}
-                                                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
+[3] [4]
 
 LaTeX Warning: Reference `prior_b_mixt_grid_config' on page 5 undefined on inpu
-t line 224.
-
-./EMUpdates.tex:227: Undefined control sequence.
-<recently read> \Exp 
-                     
-l.227     \Exp
-              [\hat{\bm{b}}_{gp} | \hat{V}_{gp}, c_{gpj}=1, d_{gpl}=1] &= \E...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:227: Undefined control sequence.
-l.227 ...at{V}_{gp}, c_{gpj}=1, d_{gpl}=1] &= \Exp
-                                                  _{\bm{b}_{gp}}[ \Exp[\hat{...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:227: Undefined control sequence.
-l.227 ...1, d_{gpl}=1] &= \Exp_{\bm{b}_{gp}}[ \Exp
-                                                  [\hat{\bm{b}}_{gp} | \hat{...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:228: Undefined control sequence.
-l.228     &= \Exp
-                 _{\bm{b}_{gp}}[\bm{b}_{gp} | c_{gpj}=1, d_{gpl}=1] \\
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
+t line 243.
 
 [5]
 
-LaTeX Warning: Reference `prior_b_mixt_grid_config' on page 6 undefined on inpu
-t line 233.
-
-./EMUpdates.tex:236: Undefined control sequence.
-<recently read> \Var 
-                     
-l.236     \Var
-              [\hat{\bm{b}}_{gp} | \hat{V}_{gp}, c_{gpj}=1, d_{gpl}=1] &= \E...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:236: Undefined control sequence.
-l.236 ...at{V}_{gp}, c_{gpj}=1, d_{gpl}=1] &= \Exp
-                                                  _{\bm{b}_{gp}}[ \Var[\hat{...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:236: Undefined control sequence.
-l.236 ...1, d_{gpl}=1] &= \Exp_{\bm{b}_{gp}}[ \Var
-                                                  [\hat{\bm{b}}_{gp} | \hat{...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:237: Undefined control sequence.
-l.237     &+ \Var
-                 _{\bm{b}_{gp}}[ \Exp[\hat{\bm{b}}_{gp} | \hat{V}_{gp}, c_{g...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:237: Undefined control sequence.
-l.237     &+ \Var_{\bm{b}_{gp}}[ \Exp
-                                     [\hat{\bm{b}}_{gp} | \hat{V}_{gp}, c_{g...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:238: Undefined control sequence.
-l.238     &= \Exp
-                 _{\bm{b}_{gp}}[\hat{V}_{gp}] \\
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:239: Undefined control sequence.
-l.239     &+ \Var
-                 _{\bm{b}_{gp}}[\bm{b}_{gp} | c_{gpj}=1, d_{gpl}=1] \\
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:248: Undefined control sequence.
-<argument> ...\eta }_j \hat {\lambda }_l \; \Norm 
-                                                  _R(\hat {\bm {b}}_{gp}; \b...
-l.248 ..._{gp}; \bm{0}, U_{0j'l'} + \hat{V}_{gp})}
-                                                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:248: Undefined control sequence.
-<argument> ...}_{j'}\hat {\lambda }_{l'} \; \Norm 
-                                                  _R(\hat {\bm {b}}_{gp}; \b...
-l.248 ..._{gp}; \bm{0}, U_{0j'l'} + \hat{V}_{gp})}
-                                                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:252: Undefined control sequence.
-<recently read> \Norm 
-                      
-l.252 The notation $\Norm
-                         _R(\hat{\bm{b}}_{gp}; \bm{0}, U_{0jl} + \hat{V}_{gp...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-
-LaTeX Warning: Reference `post_b_jl_mean' on page 6 undefined on input line 265
-.
-
-./EMUpdates.tex:269: Undefined control sequence.
-l.269     \bm{\mu}_{gp1} &= \Exp
-                                [\bm{b}_{gp} | \hat{\bm{b}}_{gp}, \hat{V}_{g...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:270: Undefined control sequence.
-l.270     &= \Exp
-                 _{Z_{jl}}[ \Exp[\bm{b}_{gp} | \hat{\bm{b}}_{gp}, \hat{V}_{g...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:270: Undefined control sequence.
-l.270     &= \Exp_{Z_{jl}}[ \Exp
-                                [\bm{b}_{gp} | \hat{\bm{b}}_{gp}, \hat{V}_{g...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:271: Undefined control sequence.
-l.271     &= \Exp
-                 _{Z_{jl}}[ \bm{\mu}_{gp1jl} ] \\
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:280: Undefined control sequence.
-l.280     U_{gp1} &= \Cov
-                         [ \bm{b}_{gp} | \hat{\bm{b}}_{gp}, \hat{V}_{gp}, \h...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:281: Undefined control sequence.
-l.281     &= \Exp
-                 _{Z_{jl}}[ \Var[\bm{b}_{gp} | \hat{\bm{b}}_{gp}, \hat{V}_{g...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:281: Undefined control sequence.
-l.281     &= \Exp_{Z_{jl}}[ \Var
-                                [\bm{b}_{gp} | \hat{\bm{b}}_{gp}, \hat{V}_{g...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:281: Undefined control sequence.
-l.281 ..., \hat{\bm{\lambda}}, v_{gp}=1 ] ] - \Var
-                                                  _{Z_{jl}}[ \Exp[\bm{b}_{gp...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:281: Undefined control sequence.
-l.281 ...bda}}, v_{gp}=1 ] ] - \Var_{Z_{jl}}[ \Exp
-                                                  [\bm{b}_{gp} | \hat{\bm{b}...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:282: Undefined control sequence.
-l.282     &= \Exp
-                 _{Z_{jl}}[ U_{gp1jl} ] + \Var_{Z_{jl}}[ \bm{\mu}_{gp1jl} ] \\
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./EMUpdates.tex:282: Undefined control sequence.
-l.282     &= \Exp_{Z_{jl}}[ U_{gp1jl} ] + \Var
-                                              _{Z_{jl}}[ \bm{\mu}_{gp1jl} ] \\
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[6]
-
-./EMUpdates.tex:287: LaTeX Error: \begin{itemize} on input line 72 ended by \en
-d{document}.
+./EMUpdates.tex:264: LaTeX Error: Bad math environment delimiter.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.287 \end{document}
+l.264 \end{equation}
                     
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 287.
-[7]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 287.
+
+./EMUpdates.tex:264: LaTeX Error: \begin{document} ended by \end{equation}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.264 \end{equation}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./EMUpdates.tex:264: Missing $ inserted.
+<inserted text> 
+                $
+l.264 \end{equation}
+                    
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+./EMUpdates.tex:264: Display math should end with $$.
+<to be read again> 
+                   \endgroup 
+l.264 \end{equation}
+                    
+The `$' that I just saw supposedly matches a previous `$$'.
+So I shall assume that you typed `$$' both times.
+
+./EMUpdates.tex:264: Extra \endgroup.
+<recently read> \endgroup 
+                          
+l.264 \end{equation}
+                    
+Things are pretty mixed up, but I think the worst is over.
+
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 268.
+[6]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 268.
  (./EMUpdates.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 287.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 287.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 268.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 268.
+Package rerunfilecheck Info: File `EMUpdates.out' has not changed.
+(rerunfilecheck)             Checksum: FDD8F5D53A552ADF42003370186BE4C0;482.
 
-
-Package rerunfilecheck Warning: File `EMUpdates.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `EMUpdates.out':
-(rerunfilecheck)             Before: 310E0F165F52F58E5A3EBD66A1E07909;328
-(rerunfilecheck)             After:  FDD8F5D53A552ADF42003370186BE4C0;482.
 
 LaTeX Warning: There were undefined references.
 
 
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 287.
- )
-(\end occurred inside a group at level 1)
-
-### semi simple group (level 1) entered at line 72 (\begingroup)
-### bottom level 
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 268.
+ ) 
 Here is how much of TeX's memory you used:
- 6589 strings out of 493117
- 95097 string characters out of 6135433
- 194277 words of memory out of 5000000
+ 6583 strings out of 493117
+ 94991 string characters out of 6135433
+ 191764 words of memory out of 5000000
  9931 multiletter control sequences out of 15000+600000
  15642 words of font info for 57 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 29i,15n,28p,663b,423s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts
-/cm/cmbx10.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmbx12.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/c
-m/cmbx8.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmex10.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/c
-mmi10.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-mi6.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
-8.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib1
-0.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cmextra/c
-mmib8.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-r10.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr1
-2.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.
-pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb
-></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></
-usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></u
-sr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr
-/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/l
-ocal/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/lo
-cal/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on EMUpdates.pdf (7 pages, 211732 bytes).
+ 29i,15n,28p,563b,335s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
+></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
+</usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></
+usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></u
+sr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></us
+r/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/
+local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/lo
+cal/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/lo
+cal/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib8.pfb></us
+r/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/
+local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/lo
+cal/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/loca
+l/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/t
+exlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texl
+ive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texli
+ve/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive
+/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/
+2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2
+014/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on EMUpdates.pdf (6 pages, 196634 bytes).
 PDF statistics:
- 176 PDF objects out of 1000 (max. 8388607)
- 146 compressed objects within 2 object streams
- 37 named destinations out of 1000 (max. 500000)
- 49 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 171 PDF objects out of 1000 (max. 8388607)
+ 142 compressed objects within 2 object streams
+ 31 named destinations out of 1000 (max. 500000)
+ 65 words of extra memory for PDF output out of 10000 (max. 10000000)
 

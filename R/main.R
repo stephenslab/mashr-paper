@@ -412,7 +412,7 @@ compute.covmat = function(b.gp.hat,sebetahat,Q,X.c,lambda.mat,P,A,factor.mat,bma
   Q=Q
   R=ncol(b.gp.hat)
   
-U.0kl=get.prior.covar.Ukl(P=2,lambda.mat=lambda.mat,Q=Q,factor.mat=factor.mat, omega.table=omega.table,bma)
+U.0kl=get.prior.covar.Ukl(P,lambda.mat=lambda.mat,Q=Q,factor.mat=factor.mat, omega.table=omega.table,bma)
     
    
     covmat=unlist(U.0kl,recursive=F)
