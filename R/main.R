@@ -1129,7 +1129,7 @@ compute.covmat.nopc = function(b.gp.hat,sebetahat,Q,X.c,lambda.mat,A,factor.mat,
   Q=Q
   R=ncol(b.gp.hat)
   
-  U.0kl=get.prior.covar.(lambda.mat=lambda.mat,Q=Q,factor.mat=factor.mat, omega.table=omega.table,bma)
+  U.0kl=get.prior.covar.nopcs(lambda.mat=lambda.mat,Q=Q,factor.mat=factor.mat, omega.table=omega.table,bma)
   
   
   covmat=unlist(U.0kl,recursive=F)
