@@ -7,11 +7,11 @@
 get.prior.covar.Ukl(P, lambda.mat, Q, factor.mat, omega.table, bma = TRUE)
 }
 \arguments{
-\item{P}{number of pcs}
+\item{P}{number of pcs (must be greater than 1)}
 
 \item{lambda.mat}{matrix of JxQ lambdas}
 
-\item{Q}{number of single rank factor matrices}
+\item{Q}{number of single rank factor matrices (if 0, then only the rank 5 approximation wil be used)}
 
 \item{factor.mat}{nfactors x R tissue matrix of factors}
 

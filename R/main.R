@@ -75,9 +75,9 @@ get.prior.covar.Ukl.with.rho <- function(P, lambda.mat, Q, factor.mat,omega.tabl
 
 
 #' @title get.prior.covar.Ukl
-#' @param P number of pcs
+#' @param P number of pcs (must be greater than 1)
 #' @param lambda.mat matrix of JxQ lambdas
-#' @param Q number of single rank factor matrices
+#' @param Q number of single rank factor matrices (if 0, then only the rank 5 approximation wil be used)
 #' @param factor.mat nfactors x R tissue matrix of factors
 #' @param omega.table Lx2 table of grid weights
 #' @param bma whether or not to use singleton and shared configurations
@@ -1062,4 +1062,78 @@ convert.liks=function(se.gp.hat,test.lik,pis){
   sum(log(test.liks))+sum(log(conversion.factor))
   
 }
+
+#' @title get.prior.covar.nopcs
+#' @description get.prior.covar.nopcs
+#' @export 
+get.prior.covar.nopcs <- function(lambda.mat, Q, factor.mat,omega.table,bma=TRUE)  {
+  test=list()
+  for(l in 1:nrow(omega.table)){
+    test[[l]]=list()
+    omega=omega.table[l,]
+    test[[l]][[1]]=omega*diag(1,R)
+    data.prox=((t(X.c)%*%X.c)/M)
+    d.norm=data.prox/max(diag(data.prox))
+    
+    
+    test[[l]][[2]]=omega*d.norm
+    
+    
+        if(Q!=0){for(q in 1:Q){
+      
+      load=as.matrix(lambda.mat[,q])
+      fact=as.matrix(factor.mat[q,])
+      rank.prox=load%*%t(fact)
+      a=(1/M*(t(rank.prox)%*% rank.prox))
+      a[is.nan(a)] = 0
+      a.norm=a/max(diag(a))
+      test[[l]][[q+2]]=omega*a.norm
+    }}
+    full.rank=as.matrix(lambda.mat)%*%as.matrix(factor.mat)
+    b=(1/M*(t(full.rank)%*%full.rank))
+    b[is.nan(b)]=0
+    b.norm=b/max(diag(b))
+    test[[l]][[Q+3]]=omega*b.norm
+    
+    if(bma==TRUE){
+      configs=matrix(0,nrow=R,ncol=R)
+      
+      R=ncol(factor.mat)
+      for(r in 1:R){
+        configs[r,r]=1}
+      
+      configs=rbind(configs,rep(1,R))
+      for(c in 1:nrow(configs)) {
+        
+        mat=(configs[c,]%*%t(configs[c,]))
+        
+        test[[l]][[Q+3+c]]=omega*mat}}}
+  return(U.0kl=test)
+}
+
+
+#' @title get.prior.covar.nopcs
+#' @description get.prior.covar.nopcs
+#' @export 
+
+compute.covmat.nopc = function(b.gp.hat,sebetahat,Q,X.c,lambda.mat,A,factor.mat,bma=TRUE){
+  
+  omega=mult.tissue.grid(mult=sqrt(2),b.gp.hat,sebetahat)
+  
+  omega.table=data.frame(omega)
+  
+  lambda.mat=lambda.mat
+  A=A
+  factor.mat=factor.mat
+  X.c=X.c
+  Q=Q
+  R=ncol(b.gp.hat)
+  
+  U.0kl=get.prior.covar.(lambda.mat=lambda.mat,Q=Q,factor.mat=factor.mat, omega.table=omega.table,bma)
+  
+  
+  covmat=unlist(U.0kl,recursive=F)
+  saveRDS(covmat,paste0("covmat",A,".rds"))
+  
+  return(covmat)}
 
