@@ -110,19 +110,19 @@ get.prior.covar.Ukl <- function(P, lambda.mat, Q, factor.mat,omega.table,bma=TRU
     test[[l]][[3]]=omega*(cov.pc.norm)
     if(Q!=0){for(q in 1:Q){
       fact=factor.mat
-      load=as.matrix(lambda[,q])
-      fact=t((as.matrix(fact[q,])))
+      load=as.matrix(lambda.mat[,q])
+      fact=((as.matrix(fact[q,])))
       rank.prox=load%*%fact
       a=(1/M*(t(rank.prox)%*% rank.prox))
       a[is.nan(a)] = 0
       a.norm=a/max(diag(a))
       test[[l]][[q+3]]=omega*a.norm
-    }
-    full.rank=as.matrix(lambda)%*%as.matrix(factor.mat)
+    }}
+    full.rank=as.matrix(lambda.mat)%*%as.matrix(factor.mat)
     b=(1/M*(t(full.rank)%*%full.rank))
     b[is.nan(b)]=0
     b.norm=b/max(diag(b))
-    test[[l]][[Q+4]]=omega*b.norm}
+    test[[l]][[Q+4]]=omega*b.norm
     
     if(bma==TRUE){
       configs=matrix(0,nrow=R,ncol=R)
@@ -405,13 +405,14 @@ compute.covmat = function(b.gp.hat,sebetahat,Q,X.c,lambda.mat,P,A,factor.mat,bma
   
   omega.table=data.frame(omega)
  
-  lambda=lambda
+  lambda.mat=lambda.mat
   A=A
   factor.mat=factor.mat
   X.c=X.c
   Q=Q
+  R=ncol(b.gp.hat)
   
-U.0kl=get.prior.covar.Ukl(P=2,lambda=lambda,Q=Q,factor.mat=factor.mat, omega.table=omega.table,bma)
+U.0kl=get.prior.covar.Ukl(P=2,lambda.mat=lambda.mat,Q=Q,factor.mat=factor.mat, omega.table=omega.table,bma)
     
    
     covmat=unlist(U.0kl,recursive=F)

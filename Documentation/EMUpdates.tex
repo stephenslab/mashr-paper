@@ -95,7 +95,7 @@ Note that this is slightly different than our expression for the posterior condi
 $\mathbf{\hat{b}}$ is the vector of MLEs for a given gene-snp pair).
 
 \subsection{M-Step}
-Now, let $q_{k}$ = $\sum_{j}{q_{j,k}}$. We can write the following expectation step down.
+Now, let $q_{k}$ = $\sum_{j}{q_{j,k}}$. We can write the following Maximization step down.
 
 
 \begin{equation}
@@ -106,6 +106,173 @@ U_{k} &= \frac{1}{q_{k}}\sum_{j} {q_{jk}[(\bm{m_{k}}-\bm{b_{jk}})(\bm{m_{j}}-\bm
 \end{align*}
 \end{equation}
 
+\section{Derivation of Conditional Posterior}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Posteriors on genotype effect sizes}
+
+Also of interest are the posterior probabilities of the genotype effect sizes per gene-SNP pair in each tissue. This section was written with Sarah Urbut.
+
+By maximum likelihood in each tissue separately, we can easily obtain the estimates of the standardized genotype effect sizes, $\hat{\bm{b}}_{gp}$, and their standard errors recorded on the diagonal of an $R \times R$ matrix noted $\hat{V}_{gp} = \Var(\hat{\bm{b}}_{gp})$.
+Using each pair of tissues, we can also fill the off-diagonal elements of $\hat{V}_{gp}$.
+
+If we now view $\hat{\bm{b}}_{gp}$ and $\hat{V}_{gp}$ as \emph{observations} (i.e. known), we can ``forget'' about the original data $X_p,X_c$ and $Y_g$, and  write a new ``likelihood'' (using only the sufficient statistics):
+\begin{equation}
+  \label{new_lik}
+  \hat{\bm{b}}_{gp} | \bm{b}_{gp} \sim \Norm_R(\bm{b}_{gp}, \hat{V}_{gp})
+\end{equation}
+
+% This is similar to using Laplace's method to approximate the ``real'' likelihood (i.e. the one using the original data) with a Normal centered on $\hat{\bm{b}}_{gp}$ and $\hat{V}_{gp}$ as covariance matrix. ($\rightarrow$ from William I think, not checked)
+
+Let us imagine first that the prior on $\bm{b}_{gp}$ is not a mixture but a single Normal: $\bm{b}_{gp} \sim \Norm_R(\bm{0}, U_{0})$.
+As this prior is conjuguate to the ``likelihood'' above, the posterior simply is (see \href{http://en.wikipedia.org/wiki/Conjugate_prior#Continuous_distributions}{Wikipedia}):
+\[
+\bm{b}_{gp} | \hat{\bm{b}}_{gp} \sim \Norm_R(\bm{\mu}_{gp1}, U_{gp1})
+\]
+where:
+\begin{itemize}
+\item $\bm{\mu}_{j1} = U_{j1} (\hat{V}_{j}^{-1} \hat{\bm{b}}_{j})$;
+\item $U_{j} = (U_{0}^{-1} + \hat{V}_{j}^{-1})^{-1}$.
+\end{itemize}
+
+In practice however, we use a mixture, as defined at the beginning of the document.
+
+
+Inside the sums, the posterior of the effect size for component $j,l$ can be written as:
+\begin{equation}
+  \begin{aligned}
+    p(\bm{b}_{j} | \hat{\bm{b}}_{j}, \hat{V}_{j}, K) &= p(\bm{b}_{j} | \hat{\bm{b}}_{j}, \hat{V}_{j}, U_{0k}) \\
+    &\propto \Lik(\bm{b}_{j}) p(\bm{b}_{j} | U_{0k}) \\
+    &\propto \exp[(\hat{\bm{b}}_{j} - \bm{b}_{j})^T \hat{V}_{j}^{-1} (\hat{\bm{b}}_{j} - \bm{b}_{j})] \; \exp(\bm{b}_{gp}^T U_{0k}^{-1} \bm{b}_{j}) \\
+    &\propto \exp[\bm{b}_{gp}^T (\hat{V}_{j}^{-1} + U_{0jl}^{-1}) \bm{b}_{gp} - \hat{\bm{b}}_{gp}^T \hat{V}_{gp}^{-1} \bm{b}_{gp} - \bm{b}_{gp}^T \hat{V}_{gp}^{-1} \hat{\bm{b}}_{gp}]
+  \end{aligned}
+\end{equation}
+
+Defining $\Omega = (\hat{V}_{gp}^{-1} + U_{0jl}^{-1})^{-1}$ and noting that it is symmetric, we can use the property $\Omega^{-1} \Omega^T = I$ to factorize everything (and ``complete the square''):
+\begin{equation}
+  \begin{aligned}
+    p(\bm{b}_{gp} | \hat{\bm{b}}_{gp}, \hat{V}_{gp}, U_{0jl}) &\propto \exp[(\bm{b}_{gp} - \Omega \hat{V}_{gp}^{-1} \hat{\bm{b}}_{gp})^T \Omega^{-1} (\bm{b}_{gp} - \Omega \hat{V}_{gp}^{-1} \hat{\bm{b}}_{gp})]
+  \end{aligned}
+\end{equation}
+
+For some configurations, $U_{0jl}$ may not be positive-definite, and thus not invertible.
+We therefore need to avoid writing $\Omega$ as a function of $U^{-1}$ in favor of $U$:
+\begin{equation}
+  \label{omega}
+  \begin{aligned}
+    \Omega &= (V^{-1} + U^{-1})^{-1} \\
+    &= ((V^{-1} + U^{-1}) U U^{-1})^{-1} \\
+    &= ((V^{-1} U + I) U^{-1})^{-1} \\
+    &= U (V^{-1} U + I)^{-1}
+  \end{aligned}
+\end{equation}
+
+Recognizing the kernel of a Normal distribution, we get:
+\begin{equation}
+  \label{post_b_jl}
+  \begin{aligned}
+    \bm{b}_{gp} | \hat{\bm{b}}_{gp}, \hat{V}_{gp}, c_{gpj}=1, d_{gpl}=1 \;  &\sim \; \Norm_R(\bm{\mu}_{gp1jl}, U_{gp1jl})
+  \end{aligned}
+\end{equation}
+where
+\begin{equation}
+  \label{post_b_jl_covar}
+  \begin{aligned}
+    U_{gp1jl} &= \Omega \\
+    &= U_{0jl} \left( \hat{V}_{gp}^{-1} U_{0jl} + I \right)^{-1}
+  \end{aligned}
+\end{equation}
+and
+\begin{equation}
+  \label{post_b_jl_mean}
+  \begin{aligned}
+    \bm{\mu}_{gp1jl} &= \Omega \hat{V}_{gp}^{-1} \hat{\bm{b}}_{gp} \\
+    &= U_{gp1jl} \hat{V}_{gp}^{-1} \hat{\bm{b}}_{gp} \\
+  \end{aligned}
+\end{equation}
+
+Furthermore, also inside the sums of \ref{post_b_cond_v_init}, the posterior mixture weight for component $j,l$, here noted $\tilde{w}_{jl}$, can be written as:
+\begin{equation}
+  \label{post_w_jl_init}
+  \begin{aligned}
+    \tilde{w}_{jl} &= \Prd(c_{gpj}=1, d_{gpl}=1 | \hat{\bm{b}}_{gp}, \hat{V}_{gp}, \hat{\bm{\eta}}, \hat{\bm{\lambda}}, v_{gp}=1) \\
+    &= \frac{\hat{\eta}_j \hat{\lambda}_l \; p(\hat{\bm{b}}_{gp} | \hat{V}_{gp}, c_{gpj}=1, d_{gpl}=1)}{p(\hat{\bm{b}}_{gp} | \hat{V}_{gp}, \hat{\bm{\eta}}, \hat{\bm{\lambda}}, v_{gp}=1)}
+  \end{aligned}
+\end{equation}
+
+We recognize the marginal likelihood, and thus the Bayes factor \ref{bf_gpjl}, leading to:
+\begin{equation}
+  \tilde{w}_{jl} = \frac{\hat{\eta}_j \hat{\lambda}_l \; \BF_{gpjl}}{\sum_{j'} \sum_{l'} \hat{\eta}_{j'} \hat{\lambda}_{l'} \; \BF_{gpj'l'}}
+\end{equation}
+
+However, here, thinking about the implementation (i.e. to avoid reloading all the BFs when computing the posteriors), we will rather exploit the fact that the marginal likelihood corresponds to a Normal density when the conditional likelihood is Normal with known variance and the prior of its mean is also Normal (see Berger, 1985, example 1 in section 4.2).
+This means that we only need the mean and covariance matrix of this Normal density.
+
+With a small abuse of notation, let us consider below that $\hat{\bm{b}}_{gp}$ is random and, using the law of total expectation with $\bm{b}_{gp}$ as well as \ref{new_lik} and then \ref{prior_b_mixt_grid_config}, we obtain:
+\begin{equation}
+  \begin{aligned}
+    \Exp[\hat{\bm{b}}_{gp} | \hat{V}_{gp}, c_{gpj}=1, d_{gpl}=1] &= \Exp_{\bm{b}_{gp}}[ \Exp[\hat{\bm{b}}_{gp} | \hat{V}_{gp}, c_{gpj}=1, d_{gpl}=1, \bm{b}_{gp}] ]\\
+    &= \Exp_{\bm{b}_{gp}}[\bm{b}_{gp} | c_{gpj}=1, d_{gpl}=1] \\
+    &= \bm{0}
+  \end{aligned}
+\end{equation}
+
+Now using the law of total variance with $\bm{b}_{gp}$ as well as \ref{new_lik} and \ref{prior_b_mixt_grid_config}, we obtain:
+\begin{equation}
+  \begin{aligned}
+    \Var[\hat{\bm{b}}_{gp} | \hat{V}_{gp}, c_{gpj}=1, d_{gpl}=1] &= \Exp_{\bm{b}_{gp}}[ \Var[\hat{\bm{b}}_{gp} | \hat{V}_{gp}, c_{gpj}=1, d_{gpl}=1, \bm{b}_{gp}] ] \\
+    &+ \Var_{\bm{b}_{gp}}[ \Exp[\hat{\bm{b}}_{gp} | \hat{V}_{gp}, c_{gpj}=1, d_{gpl}=1, \bm{b}_{gp}] ] \\
+    &= \Exp_{\bm{b}_{gp}}[\hat{V}_{gp}] \\
+    &+ \Var_{\bm{b}_{gp}}[\bm{b}_{gp} | c_{gpj}=1, d_{gpl}=1] \\
+    &= \hat{V}_{gp} + U_{0jl}
+  \end{aligned}
+\end{equation}
+
+Therefore the posterior weight is:
+\begin{equation}
+  \label{post_w_jl}
+  \begin{aligned}
+    \tilde{w}_{jl} = \frac{\hat{\eta}_j \hat{\lambda}_l \; \Norm_R(\hat{\bm{b}}_{gp}; \bm{0}, U_{0jl} + \hat{V}_{gp})}{\sum_{j'} \sum_{l'} \hat{\eta}_{j'}\hat{\lambda}_{l'} \; \Norm_R(\hat{\bm{b}}_{gp}; \bm{0}, U_{0j'l'} + \hat{V}_{gp})}
+  \end{aligned}
+\end{equation}
+
+The notation $\Norm_R(\hat{\bm{b}}_{gp}; \bm{0}, U_{0jl} + \hat{V}_{gp})$ means that we calculate the multivariate Normal density with mean $\bm{0}$ and covariance matrix $U_{0jl} + \hat{V}_{gp}$ at the point $\hat{\bm{b}}_{gp}$.
+
+In the end, the posterior of the effect size is:
+\begin{equation}
+  \label{post_b_cond_v}
+  \begin{aligned}
+    \bm{b}_{gp} | \hat{\bm{b}}_{gp}, \hat{V}_{gp}, \hat{\bm{\eta}}, \hat{\bm{\lambda}}, v_{gp}=1 \; &\sim \; \sum_{j=1}^J \sum_{l=1}^L \tilde{w}_{jl} \; \bm{b}_{gp} | \hat{\bm{b}}_{gp}, \hat{V}_{gp}, c_{gpj}=1, d_{gpl}=1
+  \end{aligned}
+\end{equation}
+
+In practice, we may be interested in reporting the grand mean of this posterior, noted $\bm{\mu}_{gp1}$, and its grand covariance matrix, noted $U_{gp1}$.
+
+Let us introduce $Z_{jl}$ the indicator variable equal to $1$ if the variable $\bm{b}_{gp} | \hat{\bm{b}}_{gp}, \hat{V}_{gp}, \hat{\bm{\eta}}, \hat{\bm{\lambda}}, v_{gp}=1$ comes from the $j,l$-th component.
+Using the law of total expectations by conditioning on $Z_{jl}$, the grand mean simply is a weighted sum of \ref{post_b_jl_mean}:
+\begin{equation}
+  \label{post_b_cond_v_mean}
+  \begin{aligned}
+    \bm{\mu}_{gp1} &= \Exp[\bm{b}_{gp} | \hat{\bm{b}}_{gp}, \hat{V}_{gp}, \hat{\bm{\eta}}, \hat{\bm{\lambda}}, v_{gp}=1] \\
+    &= \Exp_{Z_{jl}}[ \Exp[\bm{b}_{gp} | \hat{\bm{b}}_{gp}, \hat{V}_{gp}, \hat{\bm{\eta}}, \hat{\bm{\lambda}}, c_{gpj}=1, d_{gpl}=1 ] ] \\
+    &= \Exp_{Z_{jl}}[ \bm{\mu}_{gp1jl} ] \\
+    &= \sum_{j,l} \tilde{w}_{jl} \; \bm{\mu}_{gp1jl}
+  \end{aligned}
+\end{equation}
+
+Similarly, for the grand covariance matrix, we can use the law of total covariances:
+\begin{equation}
+  \label{post_b_j_covar}
+  \begin{aligned}
+    U_{gp1} &= \Cov[ \bm{b}_{gp} | \hat{\bm{b}}_{gp}, \hat{V}_{gp}, \hat{\bm{\eta}}, \hat{\bm{\lambda}}, v_{gp}=1 ] \\
+    &= \Exp_{Z_{jl}}[ \Var[\bm{b}_{gp} | \hat{\bm{b}}_{gp}, \hat{V}_{gp}, \hat{\bm{\eta}}, \hat{\bm{\lambda}}, v_{gp}=1 ] ] - \Var_{Z_{jl}}[ \Exp[\bm{b}_{gp} | \hat{\bm{b}}_{gp}, \hat{V}_{gp}, \hat{\bm{\eta}}, \hat{\bm{\lambda}}, v_{gp}=1 ] ] \\
+    &= \Exp_{Z_{jl}}[ U_{gp1jl} ] + \Var_{Z_{jl}}[ \bm{\mu}_{gp1jl} ] \\
+    &= \sum_{j,l} \tilde{w}_{jl} \; U_{gp1jl} + \sum_{j,l} \tilde{w}_{jl} \; (\bm{\mu}_{gp1jl} - \bm{\mu}_{gp1})(\bm{\mu}_{gp1jl} - \bm{\mu}_{gp1})^T
+  \end{aligned}
+\end{equation}
+
+\end{document}
 
 
 \end{document}  
