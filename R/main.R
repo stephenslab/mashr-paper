@@ -109,10 +109,10 @@ get.prior.covar.Ukl <- function(P, lambda.mat, Q, factor.mat,omega.table,bma=TRU
     
     test[[l]][[3]]=omega*(cov.pc.norm)
     if(Q!=0){for(q in 1:Q){
-      fact=factor.mat
+    
       load=as.matrix(lambda.mat[,q])
-      fact=((as.matrix(fact[q,])))
-      rank.prox=load%*%fact
+      fact=as.matrix(factor.mat[q,])
+      rank.prox=load%*%t(fact)
       a=(1/M*(t(rank.prox)%*% rank.prox))
       a[is.nan(a)] = 0
       a.norm=a/max(diag(a))
