@@ -65,6 +65,18 @@ post.b.jk.mean = function(b.mle, V.j.hat.inv, U.1jk){
 
 
 
+tinv=solve(U.k+V.j.hat)
+
+post.b.jk.ed.mean = function(b.mle, tinv,U.k){
+b.jk=U.k%*%tinv%*%b.mle
+  return(b.jk)}
+
+
+post.b.jk.ed.cov = function(b.mle, tinv,U.k){
+  B.jk=U.k-U.k%*%tinv%*%U.k
+  return(B.jk)}
+
+
 #' @title em.array.generator
 #' @param b.j.hat = 1xR vector of MLEs
 #' @param se.j.jat=1xR vector of their standard errors
@@ -84,8 +96,8 @@ em.array.generator=function(b.j.hat,J,A,se.j.hat,covmat,lik.mat){
   
   for(j in 1:J){
     b.mle=as.vector(t(b.j.hat[j,]))##turn i into a R x 1 vector
-    V.j.hat=diag(se.j.hat[j,])^2
-    V.j.hat.inv <- solve(V.j.hat)
+    V.j.hat=diag(se.j.hat[j,]^2)
+    #V.j.hat.inv <- diag(se.j.hat[j,]^-2)##to avoid having to 'solve' since we know that it is simply diag(1/s^2)
     
     for(k in 1:K){
       U.j1k <- (post.b.jk.cov(V.j.hat.inv, covmat[[k]]))
