@@ -112,16 +112,17 @@ max.step.func = function(post.means,post.covs,q.mat){
   q=colSums(q.mat)
   pis=q/J
   d=array(NA,dim=c(J,R,R))
-  if(q[k]==0){
+  for(k in 1:K){
+    if(q[k]==0){
     #true.means[k,]=rep(0,R)
     true.covs[k,,]=array(rep(0,R*R),dim=c(R,R))}
   else{
   #true.means[k,]=1/q[k]*(q.mat[,k]*post.means[,k,])
   for(j in seq(1:J)){
-    d[j,,]=q.mat[j,k]*(post.means[j,k,]%*%t(-post.means[j,k,])+post.covs[j,k,,])##produce a RxR matrix of weighted 'truth' for each individual
+    d[j,,]=q.mat[j,k]*(-post.means[j,k,]%*%t(-post.means[j,k,])+post.covs[j,k,,])##produce a RxR matrix of weighted 'truth' for each individual
   }
-  true.covs[k,,]=1/q[k]*sum(d[j,,])}##get the latent identifier weighted sum of all J individuals to produce 1 RxR matrix of truth
-  
+  true.covs[k,,]=1/q[k]*apply(d, MARGIN=c(2, 3), sum)}##get the latent identifier weighted sum of all J individuals to produce 1 RxR matrix of truth
+  }
   return(list(true.covs=true.covs,pis=pis))
 }
 
