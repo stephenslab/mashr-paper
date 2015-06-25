@@ -76,6 +76,11 @@ post.b.jk.ed.cov = function(b.mle, tinv,U.k){
   B.jk=U.k-U.k%*%tinv%*%U.k
   return(B.jk)}
 
+#' @title tarray
+#' @export
+tarray <- function(x) aperm(x, rev(seq_along(dim(x))))
+
+
 
 #' @title em.array.generator
 #' @param b.j.hat = 1xR vector of MLEs
@@ -87,9 +92,9 @@ post.b.jk.ed.cov = function(b.mle, tinv,U.k){
 
 
 
-em.array.generator=function(b.j.hat,J,A,se.j.hat,covmat,lik.mat){
+em.array.generator=function(b.j.hat,J,se.j.hat,true.covs,pi){
   R=ncol(b.j.hat)
-  K=length(covmat)
+  K=dim(true.covs)[1]
   post.means=array(NA,dim=c(J,K,R))
   post.covs=array(NA,dim=c(J,K,R,R))
   q.mat=array(NA,dim=c(J,K))
@@ -98,15 +103,25 @@ em.array.generator=function(b.j.hat,J,A,se.j.hat,covmat,lik.mat){
     b.mle=as.vector(t(b.j.hat[j,]))##turn i into a R x 1 vector
     V.j.hat=diag(se.j.hat[j,]^2)
     #V.j.hat.inv <- diag(se.j.hat[j,]^-2)##to avoid having to 'solve' since we know that it is simply diag(1/s^2)
+    lik=sapply(seq(1:K),function(k){dmvnorm(x=b.mle, sigma=true.covs[k,,] + V.j.hat)})##compute K element likeilihood for each idndiviual
+    a=(lapply(seq(1:K),function(k){post.b.jk.ed.cov(b.mle,tinv=solve(true.covs[k,,]+V.j.hat),true.covs[k,,])}))##create a K dimensional list of covariance matrices 
     
-    for(k in 1:K){
-      U.j1k <- (post.b.jk.cov(V.j.hat.inv, covmat[[k]]))
-      mu.j1k <- as.array(post.b.jk.mean(b.mle, V.j.hat.inv, U.j1k))
-      
-      post.means[j,k,]=mu.j1k
-      post.covs[j,k,,]=U.j1k ##critically, now store the actual matrix rather than just its diagonal
-      q.mat[j,]=pi*lik.mat[j,]/sum(pi*lik.mat[j,])
-    }}
+    post.covs[j,,,] <- tarray(array(unlist(a), c( 44, 44,K))) ###store a K dimensional list of posterior covariances for each J (KxRxR)
+    
+    pm=(lapply(seq(1:K),function(k){t(post.b.jk.ed.mean(b.mle,tinv=solve(true.covs[k,,]+V.j.hat),true.covs[k,,]))}))##compute a K dimensional list of posterior means for each J
+    post.means[j,,]=matrix(unlist(pm),ncol=44,byrow=TRUE) ##store as KxR matrix for each indiviudal
+    q.mat[j,]=pi*lik/sum(pi*lik)##compute a k dimensional normalixed likelihood for each individual 
+#     for(k in 1:K){
+#       
+#       U.k=true.covs[k,,]
+#       tinv=solve(true.covs[k,,]+V.j.hat)
+#       U.j1k <- post.b.jk.ed.cov(b.mle,tinv,U.k)
+#       mu.j1k <- post.b.jk.ed.mean(b.mle,tinv,U.k)
+#       post.means[j,k,]=mu.j1k
+#       post.covs[j,k,,]=U.j1k ##critically, now store the actual matrix rather than just its diagonal
+#       q.mat[j,]=pi*lik/sum(pi*lik)
+#     }
+  }
   return(list(post.means=post.means,post.covs=post.covs,q.mat=q.mat))
 }
 
@@ -121,8 +136,8 @@ max.step.func = function(post.means,post.covs,q.mat){
   J=dim(post.means)[1]
   #true.means=array(NA,dim=c(K,R)) but we force to be 0
   true.covs=array(NA,dim=c(K,R,R))
-  q=colSums(q.mat)
-  pis=q/J
+  q=colSums(q.mat) ##compute the sum of the posterior weights across individuals
+  pis=q/J ##normalise
   d=array(NA,dim=c(J,R,R))
   for(k in 1:K){
     if(q[k]==0){
@@ -131,7 +146,7 @@ max.step.func = function(post.means,post.covs,q.mat){
   else{
   #true.means[k,]=1/q[k]*(q.mat[,k]*post.means[,k,])
   for(j in seq(1:J)){
-    d[j,,]=q.mat[j,k]*(-post.means[j,k,]%*%t(-post.means[j,k,])+post.covs[j,k,,])##produce a RxR matrix of weighted 'truth' for each individual
+      d[j,,]=q.mat[j,k]*(-post.means[j,k,]%*%t(-post.means[j,k,])+post.covs[j,k,,])##produce a RxR matrix of weighted 'truth' for each individual
   }
   true.covs[k,,]=1/q[k]*apply(d, MARGIN=c(2, 3), sum)}##get the latent identifier weighted sum of all J individuals to produce 1 RxR matrix of truth
   }
