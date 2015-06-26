@@ -80,28 +80,17 @@ em.array.generator=function(max.step,b.j.hat,se.j.hat){
       post.b.jk.ed.cov(tinv=tinv,true.covs[k,,])
     }
     ))##create a K dimensional list of covariance matrices 
-    post.covs[j,,,] <- tarray(array(unlist(B.j.), c( R, R,K))) ###store a K dimensional list of posterior covariances for each J (JxKxRxR)
+    post.covs[j,,,] <- tarray(array(unlist(B.j.), c( R, R,K))) ###store a K dimensional list of posterior covariances for each J (JxKxRxR) in the post.means array
     
     ##compute a K dimensional list of posterior means for each J
-    
-    
-    b.j.=(lapply(seq(1:K),function(k){
+   b.j.=(lapply(seq(1:K),function(k){
       tinv=solve(true.covs[k,,]+V.j.hat)##covariance matrix of the marginal distribution
-      post.b.jk.ed.mean(b.mle,tinv=tinv,true.covs[k,,])
+      post.b.jk.ed.mean(b.mle,tinv=tinv,true.covs[k,,])##for each component, compute posterior mean
     }
     ))
     post.means[j,,]=matrix(unlist(b.j.),ncol=R,byrow=TRUE) ##store as KxR matrix for each indiviudal
-    q.mat[j,]=pi*lik/sum(pi*lik)##compute a k dimensional normalixed likelihood for each individual 
-    #     for(k in 1:K){
-    #       
-    #       U.k=true.covs[k,,]
-    #       tinv=solve(true.covs[k,,]+V.j.hat)
-    #       U.j1k <- post.b.jk.ed.cov(b.mle,tinv,U.k)
-    #       mu.j1k <- post.b.jk.ed.mean(b.mle,tinv,U.k)
-    #       post.means[j,k,]=mu.j1k
-    #       post.covs[j,k,,]=U.j1k ##critically, now store the actual matrix rather than just its diagonal
-    #       q.mat[j,]=pi*lik/sum(pi*lik)
-    #     }
+    q.mat[j,]=pi*lik/sum(pi*lik)##compute a k dimensional normalized likelihood for each individual 
+
   }
   return(list(post.means=post.means,post.covs=post.covs,q.mat=q.mat))
 }
@@ -193,9 +182,9 @@ prior=rep(1,K)
 
 
 ###To test, set 
-max.step=par.init
+#max.step=par.init
 ##and then run the fixpoint function for the first iteration##
-fixpoint.cov(b.j.hat,se.j.hat,max.step)
+#a=fixpoint.cov(b.j.hat,se.j.hat,max.step)
 
-squarem(par=par.init,fixptfn=fixpoint.cov, objfn=negpenlogliksarah,b.j.hat=b.j.hat,se.j.hat=se.j.hat, prior=prior)
+#squarem(par=par.init,fixptfn=fixpoint.cov, objfn=negpenlogliksarah,b.j.hat=b.j.hat,se.j.hat=se.j.hat, prior=prior)
 
