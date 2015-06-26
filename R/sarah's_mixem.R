@@ -171,6 +171,7 @@ penlogliksarah = function(max.step,b.j.hat,se.j.hat){
     return(loglik)
 }
 
+normalize = function(x){return(x/sum(x))}
 
 ##################
 ###################
@@ -192,16 +193,18 @@ prior=rep(1,K)
 
 ###To test, set 
 max.step=par.init
+niter=10
+neglik=rep(0,length(niter))
 ##and then run the fixpoint function for the first iteration##
-a=fixpoint.cov(max.step,b.j.hat,se.j.hat)
-normalize = function(x){return(x/sum(x))}
+for(i in 1:niter){
+  a=fixpoint.cov(max.step,b.j.hat,se.j.hat)
+  #normalize = function(x){return(x/sum(x))}
+  neglik[i]=negpenlogliksarah(max.step = a,b.j.hat = b.j.hat,se.j.hat = se.j.hat)
+  #print(neglik)
+  max.step=a
+  }
 
-control.funccontrol=list()
-control.default=list(K = 1, method=3, square=TRUE, step.min0=1, step.max0=1, mstep=4, kr=1, objfn.inc=1,tol=1.e-07, maxiter=5000, trace=FALSE)
-namc=names(control)
-if (!all(namc %in% names(control.default))) 
-  stop("unknown names in control: ", namc[!(namc %in% names(control.default))])
-controlinput=modifyList(control.default, control)
 
-squarem(par=par.init,b.j.hat=b.j.hat,se.j.hat=se.j.hat,fixptfn=fixpoint.cov, objfn=negpenlogliksarah)
+
+##squarem(par=par.init,b.j.hat=b.j.hat,se.j.hat=se.j.hat,fixptfn=fixpoint.cov, objfn=negpenlogliksarah)
 
