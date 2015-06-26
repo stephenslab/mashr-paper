@@ -138,14 +138,11 @@ fixpoint.cov = function(max.step,b.j.hat,se.j.hat){
   post.covs=e.step$post.covs;
   q.mat=e.step$q.mat
   
-  max.step=max.step.func(post.means =post.means,post.covs = post.covs,q.mat = q.mat)
+  max.step=max.step.func(post.means=post.means,post.covs = post.covs,q.mat = q.mat)
   return(max.step)
 }
 
-
-
-
-
+normalize = function(x){return(x/sum(x))}
 
 
 
@@ -171,7 +168,6 @@ penlogliksarah = function(max.step,b.j.hat,se.j.hat){
     return(loglik)
 }
 
-normalize = function(x){return(x/sum(x))}
 
 ##################
 ###################
@@ -191,20 +187,54 @@ K=dim(par.init$true.covs)[1]
 prior=rep(1,K)
 
 
+
 ###To test, set 
 max.step=par.init
-niter=10
-neglik=rep(0,length(niter))
+(dim(max.step$true.covs))##check to make sure [K,R,R]
+(length(max.step$pi))
+niter=100
+neglik=rep(0,niter)
 ##and then run the fixpoint function for the first iteration##
 for(i in 1:niter){
   a=fixpoint.cov(max.step,b.j.hat,se.j.hat)
-  #normalize = function(x){return(x/sum(x))}
   neglik[i]=negpenlogliksarah(max.step = a,b.j.hat = b.j.hat,se.j.hat = se.j.hat)
-  #print(neglik)
-  max.step=a
+max.step=a
   }
 
+##the neg lik should be deceasing
+plot(neglik)
+##test to make sure that the results of computations are stored properly for the jth individual and kth componenet
+test.funct=function(j,max.step,k){
+
+true.covs=max.step$true.covs
+pi=max.step$pi
+
+b.mle=as.vector(t(b.j.hat[j,]))##turn i into a R x 1 vector
+V.j.hat=diag(se.j.hat[j,]^2)
+lik=sapply(seq(1:K),function(k){dmvnorm(x=b.mle, sigma=true.covs[k,,] + V.j.hat)})##compute K element likeilihood for each idndiviual
+B.j.=(lapply(seq(1:K),function(k){
+ tinv=solve(true.covs[k,,]+V.j.hat)##covariance matrix of the marginal distribution
+  post.b.jk.ed.cov(tinv=tinv,true.covs[k,,])
+}
+))##create a K dimensional list of covariance matrices 
+
+##compute a K dimensional list of posterior means for each J
+b.j.=(lapply(seq(1:K),function(k){
+  tinv=solve(true.covs[k,,]+V.j.hat)##covariance matrix of the marginal distribution
+  post.b.jk.ed.mean(b.mle,tinv=tinv,true.covs[k,,])##for each component, compute posterior mean
+}
+))
 
 
-##squarem(par=par.init,b.j.hat=b.j.hat,se.j.hat=se.j.hat,fixptfn=fixpoint.cov, objfn=negpenlogliksarah)
+
+test=em.array.generator(max.step = max.step,b.j.hat = b.j.hat,se.j.hat = se.j.hat)
+pm=test$post.means;pc=test$post.covs;q.mat=test$q.mat
+
+par(mfrow=c(1,2))
+plot(pm[j,k,],b.j.[[k]])##test to make sure posterior mean is stored properly
+plot(diag(pc[j,k,,]),diag(B.j.[[k]]))##test to make sure posterior covariance is stored properly
+}
+
+test.funct(j = 1,max.step = par.init,k=3)
+#squarem(par=par.init,b.j.hat=b.j.hat,se.j.hat=se.j.hat,fixptfn=fixpoint.cov, objfn=negpenlogliksarah)
 
