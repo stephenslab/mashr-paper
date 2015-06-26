@@ -126,8 +126,12 @@ max.step.func = function(post.means,post.covs,q.mat){
 }
 
 
-
-fixpoint.cov = function(b.j.hat,se.j.hat,max.step){  
+#' @title fixpoint.cov
+#' @details combines e and m step
+#' @param max.step a list of K pis and the true.covs arrays KxRxR which will be parsed by the e.step
+#' @return a 2 element list of K pis and the KxRxR true.covariance arrays
+#' @export
+fixpoint.cov = function(max.step,b.j.hat,se.j.hat){  
   e.step=em.array.generator(max.step=max.step,b.j.hat = b.j.hat,se.j.hat = se.j.hat)
   
   post.means=e.step$post.means;
@@ -145,9 +149,9 @@ fixpoint.cov = function(b.j.hat,se.j.hat,max.step){
 
 
 
-negpenlogliksarah = function(max.step,b.j.hat,se.j.hat,prior){return(-penlogliksarah(max.step,b.j.hat,se.j.hat,prior))}
+negpenlogliksarah = function(max.step,b.j.hat,se.j.hat){return(-penlogliksarah(max.step,b.j.hat,se.j.hat))}
 
-penlogliksarah = function(max.step,b.j.hat,se.j.hat,prior){
+penlogliksarah = function(max.step,b.j.hat,se.j.hat){
   pi=max.step$pi
   true.covs=max.step$true.covs
   
@@ -164,12 +168,17 @@ penlogliksarah = function(max.step,b.j.hat,se.j.hat,prior){
   m  = pi*matrix_lik # matrix_lik is n by k; so this is also n by k
   m.rowsum = rowSums(m)
   loglik = sum(log(m.rowsum))
-  subset = (prior != 1.0)
-  priordens = sum((prior-1)[subset]*log(pi[subset]))
-  return(loglik+priordens)
+    return(loglik)
 }
 
-#Here's How I USE IT
+
+##################
+###################
+#Testing Section###
+
+##################
+###################
+
 
 b.j.hat=matrix(rnorm(100),ncol=10)
 se.j.hat=matrix(rep(1,100),ncol=10)
@@ -182,9 +191,17 @@ prior=rep(1,K)
 
 
 ###To test, set 
-#max.step=par.init
+max.step=par.init
 ##and then run the fixpoint function for the first iteration##
-#a=fixpoint.cov(b.j.hat,se.j.hat,max.step)
+a=fixpoint.cov(max.step,b.j.hat,se.j.hat)
+normalize = function(x){return(x/sum(x))}
 
-#squarem(par=par.init,fixptfn=fixpoint.cov, objfn=negpenlogliksarah,b.j.hat=b.j.hat,se.j.hat=se.j.hat, prior=prior)
+control.funccontrol=list()
+control.default=list(K = 1, method=3, square=TRUE, step.min0=1, step.max0=1, mstep=4, kr=1, objfn.inc=1,tol=1.e-07, maxiter=5000, trace=FALSE)
+namc=names(control)
+if (!all(namc %in% names(control.default))) 
+  stop("unknown names in control: ", namc[!(namc %in% names(control.default))])
+controlinput=modifyList(control.default, control)
+
+squarem(par=par.init,b.j.hat=b.j.hat,se.j.hat=se.j.hat,fixptfn=fixpoint.cov, objfn=negpenlogliksarah)
 
