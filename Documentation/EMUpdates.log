@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  24 JUN 2015 16:55
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  25 JUN 2015 15:01
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -445,8 +445,26 @@ Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 [2]
+./EMUpdates.tex:98: Extra }, or forgotten $.
+l.98 ...tribution $\hat{\bm{b_{j}}}|0,U_{k}+V_{j}}
+                                                  )} $ results from integrat...
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
 
-./EMUpdates.tex:113: Package amsmath Error: Erroneous nesting of equation struc
+./EMUpdates.tex:98: Extra }, or forgotten $.
+l.98 ...ibution $\hat{\bm{b_{j}}}|0,U_{k}+V_{j}})}
+                                                   $ results from integratin...
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+
+./EMUpdates.tex:114: Package amsmath Error: Erroneous nesting of equation struc
 tures;
 (amsmath)                trying to recover with `aligned'.
 
@@ -454,47 +472,46 @@ See the amsmath package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.113 \end{align*}
+l.114 \end{align*}
                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-[3] [4]
+[3] [4] [5]
 
-LaTeX Warning: Reference `prior_b_mixt_grid_config' on page 5 undefined on inpu
-t line 243.
+LaTeX Warning: Reference `prior_b_mixt_grid_config' on page 6 undefined on inpu
+t line 244.
 
-[5]
 
-./EMUpdates.tex:264: LaTeX Error: Bad math environment delimiter.
+./EMUpdates.tex:265: LaTeX Error: Bad math environment delimiter.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.264 \end{equation}
+l.265 \end{equation}
                     
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 
-./EMUpdates.tex:264: LaTeX Error: \begin{document} ended by \end{equation}.
+./EMUpdates.tex:265: LaTeX Error: \begin{document} ended by \end{equation}.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.264 \end{equation}
+l.265 \end{equation}
                     
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
-./EMUpdates.tex:264: Missing $ inserted.
+./EMUpdates.tex:265: Missing $ inserted.
 <inserted text> 
                 $
-l.264 \end{equation}
+l.265 \end{equation}
                     
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -502,29 +519,30 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./EMUpdates.tex:264: Display math should end with $$.
+./EMUpdates.tex:265: Display math should end with $$.
 <to be read again> 
                    \endgroup 
-l.264 \end{equation}
+l.265 \end{equation}
                     
 The `$' that I just saw supposedly matches a previous `$$'.
 So I shall assume that you typed `$$' both times.
 
-./EMUpdates.tex:264: Extra \endgroup.
+./EMUpdates.tex:265: Extra \endgroup.
 <recently read> \endgroup 
                           
-l.264 \end{equation}
+l.265 \end{equation}
                     
 Things are pretty mixed up, but I think the worst is over.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 268.
 [6]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 268.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 286.
+ [7]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 286.
  (./EMUpdates.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 268.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 268.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 286.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 286.
 Package rerunfilecheck Info: File `EMUpdates.out' has not changed.
-(rerunfilecheck)             Checksum: FDD8F5D53A552ADF42003370186BE4C0;482.
+(rerunfilecheck)             Checksum: 8BA38569FD9F070B454281A1CC846655;536.
 
 
 LaTeX Warning: There were undefined references.
@@ -532,16 +550,16 @@ LaTeX Warning: There were undefined references.
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 268.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 286.
  ) 
 Here is how much of TeX's memory you used:
- 6583 strings out of 493117
- 94991 string characters out of 6135433
+ 6588 strings out of 493117
+ 95043 string characters out of 6135433
  191764 words of memory out of 5000000
- 9931 multiletter control sequences out of 15000+600000
+ 9932 multiletter control sequences out of 15000+600000
  15642 words of font info for 57 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 29i,15n,28p,563b,335s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 29i,15n,28p,598b,335s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></
@@ -561,10 +579,10 @@ ve/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive
 /2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/
 2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2
 014/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on EMUpdates.pdf (6 pages, 196635 bytes).
+Output written on EMUpdates.pdf (7 pages, 198721 bytes).
 PDF statistics:
- 171 PDF objects out of 1000 (max. 8388607)
- 142 compressed objects within 2 object streams
- 31 named destinations out of 1000 (max. 500000)
- 65 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 183 PDF objects out of 1000 (max. 8388607)
+ 153 compressed objects within 2 object streams
+ 35 named destinations out of 1000 (max. 500000)
+ 73 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,0 +1,201 @@
+
+###REcall that T is the variance of the marginal distribution of $hat{b}$ (i.e., integrating over the uncertainty in B)
+#tinv=solve(U.k+V.j.hat)
+
+post.b.jk.ed.mean = function(b.mle, tinv,U.k){
+  b.jk=U.k%*%tinv%*%b.mle
+  return(b.jk)}
+
+
+post.b.jk.ed.cov = function(tinv,U.k){
+  B.jk=U.k-U.k%*%tinv%*%U.k
+  return(B.jk)}
+
+#' @title tarray
+#' @details ensures that the unlisted k dimensional lists are properly sotred
+#' @export
+tarray <- function(x) aperm(x, rev(seq_along(dim(x))))
+
+
+#' @title init.covmat
+#' @export
+
+init.covmat=function(t.stat=t.stat,factor.mat=factors,lambda.mat=lambda,K=3,P=2){
+  K=K
+  R=ncol(t.stat)#number of tissues
+  true.covs=array(NA,dim=c(K,R,R))
+  
+  X.t=as.matrix(t.stat)
+  #X.real=X.t[which(truth$config!=0),]
+  X.real=X.t
+  X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
+  
+  M=nrow(X.c)
+  data.prox=((t(X.c)%*%X.c)/M)
+  true.covs[1,,]=data.prox
+  full.rank=lambda.mat%*%factor.mat
+  sfa.prox=(t(full.rank)%*%full.rank)/(M)
+  true.covs[2,,]=sfa.prox
+  
+  svd.X=svd(X.c)
+  v=svd.X$v;u=svd.X$u;d=svd.X$d
+  cov.pc=1/M*v[,1:P]%*%diag(d[1:P])%*%t(u[,1:P])%*%t(v[,1:P]%*%diag(d[1:P])%*%t(u[,1:P]))
+  true.covs[3,,]=cov.pc
+  return(true.covs)
+}
+
+
+
+#' @title em.array.generator
+#' @param b.j.hat = 1xR vector of MLEs
+#' @param se.j.hat=1xR vector of their standard errors
+#' @param max.step=list containing two arrays: true.covs= KxRxR arrays of prior covariance matrices
+#' @param pi K vector of prior weights
+#' @return list of 3 arrays: JxKxR conditional posterior means, JxKxRxR posterior covariance matries and JxK normalized likelihoods (P(K|Data))
+#' @export
+
+
+
+em.array.generator=function(max.step,b.j.hat,se.j.hat){
+  true.covs=max.step$true.covs
+  pi=max.step$pi
+  R=ncol(b.j.hat)
+  K=dim(true.covs)[1]
+  J=nrow(b.j.hat)
+  
+  post.means=array(NA,dim=c(J,K,R))
+  post.covs=array(NA,dim=c(J,K,R,R))
+  q.mat=array(NA,dim=c(J,K))
+  
+  
+  for(j in 1:J){
+    b.mle=as.vector(t(b.j.hat[j,]))##turn i into a R x 1 vector
+    V.j.hat=diag(se.j.hat[j,]^2)
+    #V.j.hat.inv <- diag(se.j.hat[j,]^-2)##to avoid having to 'solve' since we know that it is simply diag(1/s^2)
+    lik=sapply(seq(1:K),function(k){dmvnorm(x=b.mle, sigma=true.covs[k,,] + V.j.hat)})##compute K element likeilihood for each idndiviual
+    
+    B.j.=(lapply(seq(1:K),function(k){
+      
+      tinv=solve(true.covs[k,,]+V.j.hat)##covariance matrix of the marginal distribution
+      post.b.jk.ed.cov(tinv=tinv,true.covs[k,,])
+    }
+    ))##create a K dimensional list of covariance matrices 
+    post.covs[j,,,] <- tarray(array(unlist(B.j.), c( R, R,K))) ###store a K dimensional list of posterior covariances for each J (JxKxRxR)
+    
+    ##compute a K dimensional list of posterior means for each J
+    
+    
+    b.j.=(lapply(seq(1:K),function(k){
+      tinv=solve(true.covs[k,,]+V.j.hat)##covariance matrix of the marginal distribution
+      post.b.jk.ed.mean(b.mle,tinv=tinv,true.covs[k,,])
+    }
+    ))
+    post.means[j,,]=matrix(unlist(b.j.),ncol=R,byrow=TRUE) ##store as KxR matrix for each indiviudal
+    q.mat[j,]=pi*lik/sum(pi*lik)##compute a k dimensional normalixed likelihood for each individual 
+    #     for(k in 1:K){
+    #       
+    #       U.k=true.covs[k,,]
+    #       tinv=solve(true.covs[k,,]+V.j.hat)
+    #       U.j1k <- post.b.jk.ed.cov(b.mle,tinv,U.k)
+    #       mu.j1k <- post.b.jk.ed.mean(b.mle,tinv,U.k)
+    #       post.means[j,k,]=mu.j1k
+    #       post.covs[j,k,,]=U.j1k ##critically, now store the actual matrix rather than just its diagonal
+    #       q.mat[j,]=pi*lik/sum(pi*lik)
+    #     }
+  }
+  return(list(post.means=post.means,post.covs=post.covs,q.mat=q.mat))
+}
+
+
+#' @title max.step.func 
+#' @param post.means JxKxR matrix of posterior means
+#' @param post.covs JxKxR matrix of posterior covariances
+#' @param q.mat JxK matrix of normalixed likelihoods e.g., p(K|D)
+#' @return K x R xR array of 'true covariance matrices' and Kx1 vector of pis
+#' @export
+max.step.func = function(post.means,post.covs,q.mat){
+  J=dim(post.means)[1]
+  K=dim(post.means)[2]
+  R=dim(post.means)[3]
+  #true.means=array(NA,dim=c(K,R)) but we force to be 0
+  true.covs=array(NA,dim=c(K,R,R))
+  q=colSums(q.mat) ##compute the sum of the posterior weights across individuals
+  pi=q/J ##normalise
+  d=array(NA,dim=c(J,R,R))##create an array to store the componenet specific true covariance for each gene snp pair which will be summed
+  for(k in 1:K){##loop through to compute a true covariance matrix for each Q
+    if(q[k]==0){##ask about this
+      #true.means[k,]=rep(0,R)
+      true.covs[k,,]=array(rep(0,R*R),dim=c(R,R))}
+    else{
+      #true.means[k,]=1/q[k]*(q.mat[,k]*post.means[,k,])
+      for(j in seq(1:J)){
+        d[j,,]=q.mat[j,k]*(-post.means[j,k,]%*%t(-post.means[j,k,])+post.covs[j,k,,])##produce a RxR matrix of weighted 'truth' for each individual
+      }
+      true.covs[k,,]=1/q[k]*apply(d, MARGIN=c(2, 3), sum)}##get the latent identifier weighted sum of all J individuals to produce 1 RxR matrix of truth
+  }
+  return(list(true.covs=true.covs,pi=pi))
+}
+
+
+
+fixpoint.cov = function(b.j.hat,se.j.hat,max.step){  
+  e.step=em.array.generator(max.step=max.step,b.j.hat = b.j.hat,se.j.hat = se.j.hat)
+  
+  post.means=e.step$post.means;
+  post.covs=e.step$post.covs;
+  q.mat=e.step$q.mat
+  
+  max.step=max.step.func(post.means =post.means,post.covs = post.covs,q.mat = q.mat)
+  return(max.step)
+}
+
+
+
+
+
+
+
+
+negpenlogliksarah = function(max.step,b.j.hat,se.j.hat,prior){return(-penlogliksarah(max.step,b.j.hat,se.j.hat,prior))}
+
+penlogliksarah = function(max.step,b.j.hat,se.j.hat,prior){
+  pi=max.step$pi
+  true.covs=max.step$true.covs
+  
+  J=nrow(b.j.hat)
+  K=dim(true.covs)[1]
+  matrix_lik=array(NA,dim=c(J,K))
+  for(j in 1:J){##the likelihood matrix will have to be recomputed at each step
+    b.mle=as.vector(t(b.j.hat[j,]))##turn i into a R x 1 vector
+    V.j.hat=diag(se.j.hat[j,]^2)
+    lik=sapply(seq(1:K),function(k){dmvnorm(x=b.mle, sigma=true.covs[k,,] + V.j.hat)})##compute K element likeilihood for each idndiviual
+    matrix_lik[j,]=lik}
+  
+  pi = (normalize(pmax(0,pi)))
+  m  = pi*matrix_lik # matrix_lik is n by k; so this is also n by k
+  m.rowsum = rowSums(m)
+  loglik = sum(log(m.rowsum))
+  subset = (prior != 1.0)
+  priordens = sum((prior-1)[subset]*log(pi[subset]))
+  return(loglik+priordens)
+}
+
+#Here's How I USE IT
+
+b.j.hat=matrix(rnorm(100),ncol=10)
+se.j.hat=matrix(rep(1,100),ncol=10)
+factor.mat=matrix(rnorm(50),ncol=10)
+lambda.mat=matrix(rnorm(500),ncol=5)
+K=3
+par.init=list(true.covs=init.covmat(t.stat = b.j.hat,factor.mat = factor.mat,lambda.mat = lambda.mat,K = 3,P=2),pi=rep(1/K,K))###output a list of K covariance matrices and initial pis 
+K=dim(par.init$true.covs)[1]
+prior=rep(1,K)
+
+
+###To test, set 
+max.step=par.init
+##and then run the fixpoint function for the first iteration##
+fixpoint.cov(b.j.hat,se.j.hat,max.step)
+
+squarem(par=par.init,fixptfn=fixpoint.cov, objfn=negpenlogliksarah,b.j.hat=b.j.hat,se.j.hat=se.j.hat, prior=prior)
+
