@@ -679,7 +679,7 @@ lfsr.per.snp=function(all.ups,all.downs){
 #'@return writes the posterior weighted quantities to a file
 #'@export
 
-total.quant.per.snp=function(j,covmat,b.gp.hat,se.gp.hat,pis,checkpoint=FALSE){
+total.quant.per.snp=function(j,covmat,b.gp.hat,se.gp.hat,pis,A,checkpoint=FALSE){
   gene.snp.name=rownames(b.gp.hat)[j]
   V.gp.hat=diag(se.gp.hat[j,])^2
   b.mle=b.gp.hat[j,]
@@ -707,12 +707,12 @@ total.quant.per.snp=function(j,covmat,b.gp.hat,se.gp.hat,pis,checkpoint=FALSE){
   rownames(marginal.var)=gene.snp.name
 
   if(checkpoint==FALSE){
-  write.table(all.mus,"posterior.means.txt",append=TRUE,col.names=FALSE)
-  write.table(all.ups,"posterior.ups.txt",append=TRUE,col.names=FALSE)
-  write.table(all.downs,"posterior.downs.txt",append=TRUE,col.names=FALSE)
-  write.table(marginal.var,"marginal.var.txt",append=TRUE,col.names=FALSE)
-  write.table(lfsr,"lfsr.txt",append=TRUE,col.names=FALSE)
-  write.table(post.weights,"post.weights.txt",append=TRUE,col.names=FALSE)}
+  write.table(all.mus,paste0(A,"posterior.means.txt"),append=TRUE,col.names=FALSE)
+  write.table(all.ups,paste0(A,"posterior.ups.txt"),append=TRUE,col.names=FALSE)
+  write.table(all.downs,paste0(A,"posterior.downs.txt"),append=TRUE,col.names=FALSE)
+  write.table(marginal.var,paste0(A,"marginal.var.txt"),append=TRUE,col.names=FALSE)
+  write.table(lfsr,paste0(A,"lfsr.txt"),append=TRUE,col.names=FALSE)
+  write.table(post.weights,paste0(A,"post.weights.txt"),append=TRUE,col.names=FALSE)}
   else{return(list(posterior.means=all.mus,posterior.downs=all.downs,posterior.ups=all.ups,lfsr=lfsr,marginal.var=marginal.var))}
 }
 

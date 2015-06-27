@@ -1,4 +1,4 @@
-
+library("mvtnorm")
 ###REcall that T is the variance of the marginal distribution of $hat{b}$ (i.e., integrating over the uncertainty in B)
 #tinv=solve(U.k+V.j.hat)
 
@@ -129,9 +129,11 @@ max.step.func = function(post.means,post.covs,q.mat){
 #' @title fixpoint.cov
 #' @details combines e and m step
 #' @param max.step a list of K pis and the true.covs arrays KxRxR which will be parsed by the e.step
+#' @param dim.true.covs=kxrxr
 #' @return a 2 element list of K pis and the KxRxR true.covariance arrays
 #' @export
-fixpoint.cov = function(max.step,b.j.hat,se.j.hat){  
+fixpoint.cov = function(max.step.unlist,b.j.hat,se.j.hat){  
+  max.step = list(true.covs = array(max.step.unlist[1:prod(dim.true.covs)], dim = dim.true.covs), pi = max.step.unlist[(prod(dim.true.covs)+1):(prod(dim.true.covs)+pi.length)])
   e.step=em.array.generator(max.step=max.step,b.j.hat = b.j.hat,se.j.hat = se.j.hat)
   
   post.means=e.step$post.means;
@@ -139,16 +141,19 @@ fixpoint.cov = function(max.step,b.j.hat,se.j.hat){
   q.mat=e.step$q.mat
   
   max.step=max.step.func(post.means=post.means,post.covs = post.covs,q.mat = q.mat)
-  return(max.step)
+  max.step.unlist=unlist(max.step)
+  return(max.step.unlist)
 }
 
 normalize = function(x){return(x/sum(x))}
 
 
 
-negpenlogliksarah = function(max.step,b.j.hat,se.j.hat){return(-penlogliksarah(max.step,b.j.hat,se.j.hat))}
+negpenlogliksarah = function(max.step.unlist,b.j.hat,se.j.hat){return(-penlogliksarah(max.step.unlist,b.j.hat,se.j.hat))}
 
-penlogliksarah = function(max.step,b.j.hat,se.j.hat){
+penlogliksarah = function(max.step.unlist,b.j.hat,se.j.hat){
+  
+  max.step = list(true.covs = array(max.step.unlist[1:prod(dim.true.covs)], dim = dim.true.covs), pi = max.step.unlist[(prod(dim.true.covs)+1):(prod(dim.true.covs)+pi.length)])
   pi=max.step$pi
   true.covs=max.step$true.covs
   
@@ -183,6 +188,7 @@ factor.mat=matrix(rnorm(50),ncol=10)
 lambda.mat=matrix(rnorm(500),ncol=5)
 K=3
 par.init=list(true.covs=init.covmat(t.stat = b.j.hat,factor.mat = factor.mat,lambda.mat = lambda.mat,K = 3,P=2),pi=rep(1/K,K))###output a list of K covariance matrices and initial pis 
+par.init.unlist=unlist(par.init)
 K=dim(par.init$true.covs)[1]
 prior=rep(1,K)
 
@@ -194,11 +200,12 @@ max.step=par.init
 (length(max.step$pi))
 niter=100
 neglik=rep(0,niter)
+max.step.unlist=par.init.unlist
 ##and then run the fixpoint function for the first iteration##
 for(i in 1:niter){
-  a=fixpoint.cov(max.step,b.j.hat,se.j.hat)
-  neglik[i]=negpenlogliksarah(max.step = a,b.j.hat = b.j.hat,se.j.hat = se.j.hat)
-max.step=a
+  a=fixpoint.cov(max.step.unlist,b.j.hat,se.j.hat)
+  neglik[i]=negpenlogliksarah(max.step.unlist=a,b.j.hat = b.j.hat,se.j.hat = se.j.hat)
+max.step.unlist=a
   }
 
 ##the neg lik should be deceasing
@@ -236,5 +243,6 @@ plot(diag(pc[j,k,,]),diag(B.j.[[k]]))##test to make sure posterior covariance is
 }
 
 test.funct(j = 1,max.step = par.init,k=3)
-#squarem(par=par.init,b.j.hat=b.j.hat,se.j.hat=se.j.hat,fixptfn=fixpoint.cov, objfn=negpenlogliksarah)
-
+s=squarem(par=par.init.unlist,b.j.hat=b.j.hat,se.j.hat=se.j.hat,fixptfn=fixpoint.cov, objfn=negpenlogliksarah)
+max.step.unlist=s$par
+max.step = list(true.covs = array(max.step.unlist[1:prod(dim.true.covs)], dim = dim.true.covs), pi = max.step.unlist[(prod(dim.true.covs)+1):(prod(dim.true.covs)+pi.length)])
