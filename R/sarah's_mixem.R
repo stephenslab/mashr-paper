@@ -109,6 +109,7 @@ em.array.generator=function(max.step,b.j.hat,se.j.hat){
     b.mle=as.vector(t(b.j.hat[j,]))##turn i into a R x 1 vector
     V.j.hat=diag(se.j.hat[j,]^2)
     lik=lik.func.em(true.covs,b.mle,V.j.hat)
+    ##compute a K dimensional list of posterior covariance for each J, this is faster than for looping over the K, but in the main function we have to do within R also
     B.j.=lapply(seq(1:K),function(k){
       
       tinv=solve(true.covs[k,,]+V.j.hat)##covariance matrix of the marginal distribution
@@ -117,8 +118,9 @@ em.array.generator=function(max.step,b.j.hat,se.j.hat){
     }
     )##create a K dimensional list of covariance matrices 
     post.covs[j,,,] <- tarray(array(unlist(B.j.), c( R, R,K))) ###store a K dimensional list of posterior covariances for each J (JxKxRxR) in the post.means array
+    ##this is different than in my maincode, where I forloop through each K, because there i need to compute the tail probabilities for each r within a k and so I would have to forloop inside K which is ugly
     
-    ##compute a K dimensional list of posterior means for each J
+    ##compute a K dimensional list of posterior means for each J, again this is faster than for looping over the K, but in the main function we have to do within R also
    b.j.=(lapply(seq(1:K),function(k){
       tinv=solve(true.covs[k,,]+V.j.hat)##covariance matrix of the marginal distribution
       b=post.b.jk.ed.mean(b.mle,tinv=tinv,true.covs[k,,])##for each component, compute posterior mean

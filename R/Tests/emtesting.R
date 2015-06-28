@@ -74,7 +74,17 @@ test.funct=function(j,max.step.unlist,k,R){
   plot(diag(pc[j,k,,]),diag(B.j.[[k]]))##test to make sure posterior covariance is stored properly
 }
 
-test.funct(j = 1,max.step.unlist = par.init.unlist,k=3)
-s=squarem(par=par.init.unlist,b.j.hat=b.j.hat,se.j.hat=se.j.hat,fixptfn=fixpoint.cov, objfn=negpenlogliksarah)
+test.funct(j = 1,max.step.unlist = par.init.unlist,k=3,R=R)
+#s=squarem(par=par.init.unlist,b.j.hat=b.j.hat,se.j.hat=se.j.hat,fixptfn=fixpoint.cov, objfn=negpenlogliksarah)
 max.step.unlist=s$par
+dim.true.covs=c(K,R,R)
 max.step = list(true.covs = array(max.step.unlist[1:prod(dim.true.covs)], dim = dim.true.covs), pi = max.step.unlist[(prod(dim.true.covs)+1):(prod(dim.true.covs)+pi.length)])
+
+
+dim.true.cov.fun=function(b.j.hat,se.j,hat,max.step.unlist){
+  L=length(max.step.unlist)
+  K=L/(R^2+1)
+  dim.true.covs=c(K,R,R)
+  pi.length=K
+  return(list(dim.true.covs=dim.true.covs,pi.length=pi.length))
+  }
