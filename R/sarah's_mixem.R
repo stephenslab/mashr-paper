@@ -6,6 +6,8 @@ post.b.jk.ed.mean = function(b.mle, tinv,U.k){
   b.jk=U.k%*%tinv%*%b.mle
   return(b.jk)}
 
+lik.func.em=function(true.covs,b.mle,V.j.hat){sapply(seq(1:K),function(k){dmvnorm(x=b.mle, sigma=true.covs[k,,] + V.j.hat)})}
+
 
 post.b.jk.ed.cov = function(tinv,U.k){
   B.jk=U.k-U.k%*%tinv%*%U.k
@@ -71,21 +73,21 @@ em.array.generator=function(max.step,b.j.hat,se.j.hat){
   for(j in 1:J){
     b.mle=as.vector(t(b.j.hat[j,]))##turn i into a R x 1 vector
     V.j.hat=diag(se.j.hat[j,]^2)
-    #V.j.hat.inv <- diag(se.j.hat[j,]^-2)##to avoid having to 'solve' since we know that it is simply diag(1/s^2)
-    lik=sapply(seq(1:K),function(k){dmvnorm(x=b.mle, sigma=true.covs[k,,] + V.j.hat)})##compute K element likeilihood for each idndiviual
-    
-    B.j.=(lapply(seq(1:K),function(k){
+    lik=lik.func.em(true.covs,b.mle,V.j.hat)
+    B.j.=lapply(seq(1:K),function(k){
       
       tinv=solve(true.covs[k,,]+V.j.hat)##covariance matrix of the marginal distribution
       post.b.jk.ed.cov(tinv=tinv,true.covs[k,,])
+        
     }
-    ))##create a K dimensional list of covariance matrices 
+    )##create a K dimensional list of covariance matrices 
     post.covs[j,,,] <- tarray(array(unlist(B.j.), c( R, R,K))) ###store a K dimensional list of posterior covariances for each J (JxKxRxR) in the post.means array
     
     ##compute a K dimensional list of posterior means for each J
    b.j.=(lapply(seq(1:K),function(k){
       tinv=solve(true.covs[k,,]+V.j.hat)##covariance matrix of the marginal distribution
-      post.b.jk.ed.mean(b.mle,tinv=tinv,true.covs[k,,])##for each component, compute posterior mean
+      b=post.b.jk.ed.mean(b.mle,tinv=tinv,true.covs[k,,])##for each component, compute posterior mean
+      
     }
     ))
     post.means[j,,]=matrix(unlist(b.j.),ncol=R,byrow=TRUE) ##store as KxR matrix for each indiviudal
@@ -133,6 +135,12 @@ max.step.func = function(post.means,post.covs,q.mat){
 #' @return a 2 element list of K pis and the KxRxR true.covariance arrays
 #' @export
 fixpoint.cov = function(max.step.unlist,b.j.hat,se.j.hat){  
+  L=length(max.step.unlist)
+  R=ncol(b.j.hat)
+  r2=R^2
+  K=L/(r2+1)
+  dim.true.covs=c(K,R,R)
+  pi.length=K
   max.step = list(true.covs = array(max.step.unlist[1:prod(dim.true.covs)], dim = dim.true.covs), pi = max.step.unlist[(prod(dim.true.covs)+1):(prod(dim.true.covs)+pi.length)])
   e.step=em.array.generator(max.step=max.step,b.j.hat = b.j.hat,se.j.hat = se.j.hat)
   
@@ -147,25 +155,25 @@ fixpoint.cov = function(max.step.unlist,b.j.hat,se.j.hat){
 
 normalize = function(x){return(x/sum(x))}
 
-
+lik.func.em=function(true.covs,b.mle,V.j.hat){sapply(seq(1:K),function(k){dmvnorm(x=b.mle, sigma=true.covs[k,,] + V.j.hat)})}
 
 negpenlogliksarah = function(max.step.unlist,b.j.hat,se.j.hat){return(-penlogliksarah(max.step.unlist,b.j.hat,se.j.hat))}
 
 penlogliksarah = function(max.step.unlist,b.j.hat,se.j.hat){
   
+  
+  L=length(max.step.unlist)
+  R=ncol(b.j.hat)
+  r2=R^2
+  K=L/(r2+1)
+  dim.true.covs=c(K,R,R)
+
+  pi.length=K
+  
   max.step = list(true.covs = array(max.step.unlist[1:prod(dim.true.covs)], dim = dim.true.covs), pi = max.step.unlist[(prod(dim.true.covs)+1):(prod(dim.true.covs)+pi.length)])
   pi=max.step$pi
   true.covs=max.step$true.covs
-  
-  J=nrow(b.j.hat)
-  K=dim(true.covs)[1]
-  matrix_lik=array(NA,dim=c(J,K))
-  for(j in 1:J){##the likelihood matrix will have to be recomputed at each step
-    b.mle=as.vector(t(b.j.hat[j,]))##turn i into a R x 1 vector
-    V.j.hat=diag(se.j.hat[j,]^2)
-    lik=sapply(seq(1:K),function(k){dmvnorm(x=b.mle, sigma=true.covs[k,,] + V.j.hat)})##compute K element likeilihood for each idndiviual
-    matrix_lik[j,]=lik}
-  
+  matrix_lik=t(sapply(seq(1:J),function(x){lik.func.em(true.covs,b.mle=b.j.hat[x,],V.j.hat=diag(se.j.hat[x,])^2)}))
   pi = (normalize(pmax(0,pi)))
   m  = pi*matrix_lik # matrix_lik is n by k; so this is also n by k
   m.rowsum = rowSums(m)
@@ -173,76 +181,3 @@ penlogliksarah = function(max.step.unlist,b.j.hat,se.j.hat){
     return(loglik)
 }
 
-
-##################
-###################
-#Testing Section###
-
-##################
-###################
-
-
-b.j.hat=matrix(rnorm(100),ncol=10)
-se.j.hat=matrix(rep(1,100),ncol=10)
-factor.mat=matrix(rnorm(50),ncol=10)
-lambda.mat=matrix(rnorm(500),ncol=5)
-K=3
-par.init=list(true.covs=init.covmat(t.stat = b.j.hat,factor.mat = factor.mat,lambda.mat = lambda.mat,K = 3,P=2),pi=rep(1/K,K))###output a list of K covariance matrices and initial pis 
-par.init.unlist=unlist(par.init)
-K=dim(par.init$true.covs)[1]
-prior=rep(1,K)
-
-
-
-###To test, set 
-max.step=par.init
-(dim(max.step$true.covs))##check to make sure [K,R,R]
-(length(max.step$pi))
-niter=100
-neglik=rep(0,niter)
-max.step.unlist=par.init.unlist
-##and then run the fixpoint function for the first iteration##
-for(i in 1:niter){
-  a=fixpoint.cov(max.step.unlist,b.j.hat,se.j.hat)
-  neglik[i]=negpenlogliksarah(max.step.unlist=a,b.j.hat = b.j.hat,se.j.hat = se.j.hat)
-max.step.unlist=a
-  }
-
-##the neg lik should be deceasing
-plot(neglik)
-##test to make sure that the results of computations are stored properly for the jth individual and kth componenet
-test.funct=function(j,max.step,k){
-
-true.covs=max.step$true.covs
-pi=max.step$pi
-
-b.mle=as.vector(t(b.j.hat[j,]))##turn i into a R x 1 vector
-V.j.hat=diag(se.j.hat[j,]^2)
-lik=sapply(seq(1:K),function(k){dmvnorm(x=b.mle, sigma=true.covs[k,,] + V.j.hat)})##compute K element likeilihood for each idndiviual
-B.j.=(lapply(seq(1:K),function(k){
- tinv=solve(true.covs[k,,]+V.j.hat)##covariance matrix of the marginal distribution
-  post.b.jk.ed.cov(tinv=tinv,true.covs[k,,])
-}
-))##create a K dimensional list of covariance matrices 
-
-##compute a K dimensional list of posterior means for each J
-b.j.=(lapply(seq(1:K),function(k){
-  tinv=solve(true.covs[k,,]+V.j.hat)##covariance matrix of the marginal distribution
-  post.b.jk.ed.mean(b.mle,tinv=tinv,true.covs[k,,])##for each component, compute posterior mean
-}
-))
-
-
-
-test=em.array.generator(max.step = max.step,b.j.hat = b.j.hat,se.j.hat = se.j.hat)
-pm=test$post.means;pc=test$post.covs;q.mat=test$q.mat
-
-par(mfrow=c(1,2))
-plot(pm[j,k,],b.j.[[k]])##test to make sure posterior mean is stored properly
-plot(diag(pc[j,k,,]),diag(B.j.[[k]]))##test to make sure posterior covariance is stored properly
-}
-
-test.funct(j = 1,max.step = par.init,k=3)
-s=squarem(par=par.init.unlist,b.j.hat=b.j.hat,se.j.hat=se.j.hat,fixptfn=fixpoint.cov, objfn=negpenlogliksarah)
-max.step.unlist=s$par
-max.step = list(true.covs = array(max.step.unlist[1:prod(dim.true.covs)], dim = dim.true.covs), pi = max.step.unlist[(prod(dim.true.covs)+1):(prod(dim.true.covs)+pi.length)])
