@@ -1,13 +1,30 @@
 library("mvtnorm")
-###REcall that T is the variance of the marginal distribution of $hat{b}$ (i.e., integrating over the uncertainty in B)
+###Recall that T is the variance of the marginal distribution of $hat{b}$ (i.e., integrating over the uncertainty in B)
 #tinv=solve(U.k+V.j.hat)
+
+
+#' @title post.b.jk.ed.mean
+#' @param b.mle=Rx1 vector of mles
+#' @param tinv = variance of marginal distirbution of bhat, RxR matrix (e.g.,tinv=solve(U.k+V.j.hat)) )
+#' @param U.k = RxR prior covariance matrix
+#' @return component specific vector of posterior means for the jth gene snp pair
 
 post.b.jk.ed.mean = function(b.mle, tinv,U.k){
   b.jk=U.k%*%tinv%*%b.mle
   return(b.jk)}
 
+#' @title lik.func.em
+#' @param b.mle=Rx1 vector of mles
+#' @param B.j.hat = matrix of squared standard erros
+#' @param true.covs = KxRxR array of prior covariance matrices
+#' @return 1xK vector of likelihoods for the jth gene snp pair across all K covariance matrices
+
 lik.func.em=function(true.covs,b.mle,V.j.hat){sapply(seq(1:K),function(k){dmvnorm(x=b.mle, sigma=true.covs[k,,] + V.j.hat)})}
 
+#' @title post.b.jk.ed.cov
+#' @param tinv = variance of marginal distirbution of bhat, RxR matrix (e.g.,tinv=solve(U.k+V.j.hat)) )
+#' @param U.k = prior covariance matrix (RxR)
+#' @return RxR posterior covariance matrix for the Jth gene snp pair at the kth componenet
 
 post.b.jk.ed.cov = function(tinv,U.k){
   B.jk=U.k-U.k%*%tinv%*%U.k
@@ -19,7 +36,26 @@ post.b.jk.ed.cov = function(tinv,U.k){
 tarray <- function(x) aperm(x, rev(seq_along(dim(x))))
 
 
+#' @title dim.true.cov.fun
+#' @details outputs a list of dimensions for both the true covariance matrices and the vector of pis
+#' @export
+
+
+dim.true.cov.fun=function(b.j.hat,se.j,hat,max.step.unlist){
+  L=length(max.step.unlist)
+  K=L/(R^2+1)
+  dim.true.covs=c(K,R,R)
+  pi.length=K
+  return(list(dim.true.covs=dim.true.covs,pi.length=pi.length))
+}
+
 #' @title init.covmat
+#' @param t.stat matrix of strong t statistics (MxR) from which to derive covariance matrices
+#' @param factor.mat KxR matrix of factors from SFA
+#' @param lambda.mat KxR matric of loadings, also from SFA
+#' @param K number of components to fit (i.e., the first dimension of the array)
+#' @param P rank of SVD approximation
+#' @return KxRxR matric of prior covariance matrices to initialize the EM
 #' @export
 
 init.covmat=function(t.stat=t.stat,factor.mat=factors,lambda.mat=lambda,K=3,P=2){
@@ -28,7 +64,6 @@ init.covmat=function(t.stat=t.stat,factor.mat=factors,lambda.mat=lambda,K=3,P=2)
   true.covs=array(NA,dim=c(K,R,R))
   
   X.t=as.matrix(t.stat)
-  #X.real=X.t[which(truth$config!=0),]
   X.real=X.t
   X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
   

@@ -4,7 +4,8 @@
 \alias{total.quant.per.snp}
 \title{total.quant.per.snp}
 \usage{
-total.quant.per.snp(j, covmat, b.gp.hat, se.gp.hat, pis, checkpoint = FALSE)
+total.quant.per.snp(j, covmat, b.gp.hat, se.gp.hat, pis, A,
+  checkpoint = FALSE)
 }
 \arguments{
 \item{covmat}{a K list of covariance matrices}
