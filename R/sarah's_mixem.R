@@ -148,7 +148,8 @@ max.step.func = function(post.means,post.covs,q.mat){
   #true.means=array(NA,dim=c(K,R)) but we force to be 0
   true.covs=array(NA,dim=c(K,R,R))
   q=colSums(q.mat) ##compute the sum of the posterior weights across individuals
-  pi=q/J ##normalise
+  pi=q/J ## average across individuals (represents relative freqnecy in data se)
+  pi=normalize(pmax(0,pi))## to prevent rounding errors
   d=array(NA,dim=c(J,R,R))##create an array to store the componenet specific true covariance for each gene snp pair which will be summed
   for(k in 1:K){##loop through to compute a true covariance matrix for each Q
     if(q[k]==0){##ask about this
