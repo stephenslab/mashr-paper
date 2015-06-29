@@ -97,7 +97,7 @@ Now, we can compute the posterior quanitites for each gene snp pair. Here, we'll
 
 ```{r}
 
-weightedquants=lapply(seq(1:100),function(j){total.quant.per.snp(j,covmat,b.gp.hat=b.test,se.gp.hat = se.test,pis,checkpoint = FALSE)})
+weightedquants=lapply(seq(1:100),function(j){total.quant.per.snp(j,covmat,b.gp.hat=b.test,se.gp.hat = se.test,pis,A="Simulations",checkpoint = FALSE)})
 ```
 
 Note that we create a file of posterior weighted means, lfsr and marginal variances.
@@ -123,8 +123,8 @@ U.gp1kl <- (post.b.gpkl.cov(V.gp.hat.inv, covmat[[k]]))
 plot(all.arrays$post.means[k,],mu.gp1kl)
 
 ##Now, check to make sure weighting is correct
-post.means=as.matrix(read.table("posterior.means.txt")[,-1])
-post.weights=as.matrix(read.table("post.weights.txt")[,-1])
+post.means=as.matrix(read.table(paste0(A,"posterior.means.txt"))[,-1])
+post.weights=as.matrix(read.table(paste0(A,"post.weights.txt"))[,-1])
 
 plot(post.means[j,],post.weights[j,]%*%all.arrays$post.means)
 (post.means[j,])
