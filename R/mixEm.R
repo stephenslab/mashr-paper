@@ -47,6 +47,19 @@ fixpoint = function(pi, matrix_lik, prior){
 
 
 
+negpenloglik = function(pi,matrix_lik,prior){return(-penloglik(pi,matrix_lik,prior))}
+
+penloglik = function(pi, matrix_lik, prior){
+    pi = normalize(pmax(0,pi))
+    m  = t(pi * t(matrix_lik)) # matrix_lik is n by k; so this is also n by k
+    m.rowsum = rowSums(m)
+    loglik = sum(log(m.rowsum))
+    subset = (prior != 1.0)
+    priordens = sum((prior-1)[subset]*log(pi[subset]))
+    return(loglik+priordens)
+}
+
+
 #The kth element of this vector is the derivative 
 #of the loglik for $\pi=(\pi_0,...,1-\pi_0,...)$ with respect to $\pi_0$ at $\pi_0=1$.
 gradient = function(matrix_lik){
