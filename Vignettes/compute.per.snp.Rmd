@@ -4,12 +4,17 @@ output: html_document
 ---
 
 Here, we show how we can compute the prior weights on a large number of gene snp pairs and compute the weighted quanities one snp at a time.
-```{r}
+```{r,echo=FALSE}
 devtools::install_github("surbut/matrix_ash")
 library("mash")
 library("bigmemory")
 library("SQUAREM")
 library("mvtnorm")
+
+suppressPackageStartupMessages(require("mash"))
+suppressPackageStartupMessages(require("bigmemory"))
+suppressPackageStartupMessages(require("SQUAREM"))
+suppressPackageStartupMessages(require("mvtnorm"))
 ```
 
 Then, we need to load our matrix of 'strong' t statistics to create the covariance matrices as well as the matrix of factors from our SFA model. In this example, we will not use the additional BMA configurations (i.e., bma=FALSE). Also load the maximum beta hats and t statistics for grid selection.
@@ -47,7 +52,7 @@ K
 covmat[[K]]
 
 ```
-Now, we let's remove these strong tstats and split simulate new data into test and training. This will compute the HM weights on training data and return a file of likelihoods for the training data. I use my factor simulator to simulate true betas and betahats. 
+Now, we let's remove these strong tstats and split simulate new data into test and training. This will compute the HM weights on training data and return a file of likelihoods for the training data. I use my factor simulator to simulate true betas and betahats. Note that we want only the rownames to include meta data (and not an additional column) because this will impace the dimension compatibility of the prior covariance matrices and V.
 
 ```{r}
 rm(b.gp.hat)
@@ -58,7 +63,17 @@ b.hat=newdat$betahat
 se.hat=newdat$sebetahat
 
 
+##Not 
+indices=seq(1,nrow(b.hat))
+rownames(b.hat)=paste("gene_snp",indices,sep="")##now, we want our data frame to have rownames
+
 J=nrow(b.hat)
+head(b.hat)
+```
+
+Now, we separate into training data. I will train on 1000 gene snp Pairs.
+
+```{r}
 
 b.train=b.hat[1:1000,]
 se.train=se.hat[1:1000,]
@@ -72,7 +87,7 @@ likmat[1,1:10]
 lik.func(b.mle = b.train[1,],V.gp.hat = diag(se.train[1,])^2,covmat)[1:10]
 ```
 Note creation of three files: pis, a pdf of pis, and a matrix  of likelihoods of training data.
-Now,we remove the training data and create our test data.
+Now,we remove the training data and create our test data. We can see that it contains the gene snp pairs in the rows and the standardized effect across subgroups in the columns.
 
 ```{r}
 rm(b.train)

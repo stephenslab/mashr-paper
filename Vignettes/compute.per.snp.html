@@ -65,24 +65,20 @@ img {
 
 
 <p>Here, we show how we can compute the prior weights on a large number of gene snp pairs and compute the weighted quanities one snp at a time.</p>
-<pre class="r"><code>devtools::install_github(&quot;surbut/matrix_ash&quot;)</code></pre>
 <pre><code>## Downloading github repo surbut/matrix_ash@master
 ## Installing mash
 ## '/Library/Frameworks/R.framework/Resources/bin/R' --no-site-file  \
 ##   --no-environ --no-save --no-restore CMD INSTALL  \
-##   '/private/var/folders/63/g727cjqj2ndgd329qc6pg8lm0000gn/T/RtmpUz50MK/devtools185ec2ab73a51/surbut-matrix_ash-41ba288'  \
+##   '/private/var/folders/63/g727cjqj2ndgd329qc6pg8lm0000gn/T/RtmpL684bY/devtools1af4af96d3c/surbut-matrix_ash-ee5549e'  \
 ##   --library='/Library/Frameworks/R.framework/Versions/3.1/Resources/library'  \
-##   --install-tests</code></pre>
-<pre class="r"><code>library(&quot;mash&quot;)
-library(&quot;bigmemory&quot;)</code></pre>
-<pre><code>## Loading required package: bigmemory.sri
+##   --install-tests 
+## 
+## Loading required package: bigmemory.sri
 ## Loading required package: BH</code></pre>
 <pre><code>## Warning: package 'BH' was built under R version 3.1.2</code></pre>
 <pre><code>## 
 ## bigmemory &gt;= 4.0 is a major revision since 3.1.2; please see packages
 ## biganalytics and and bigtabulate and http://www.bigmemory.org for more information.</code></pre>
-<pre class="r"><code>library(&quot;SQUAREM&quot;)
-library(&quot;mvtnorm&quot;)</code></pre>
 <p>Then, we need to load our matrix of ‘strong’ t statistics to create the covariance matrices as well as the matrix of factors from our SFA model. In this example, we will not use the additional BMA configurations (i.e., bma=FALSE). Also load the maximum beta hats and t statistics for grid selection.</p>
 <pre class="r"><code>set.seed(123)
 R=5
@@ -121,7 +117,7 @@ K</code></pre>
 ## [3,] 11.6869 11.6869 11.6869 11.6869 11.6869
 ## [4,] 11.6869 11.6869 11.6869 11.6869 11.6869
 ## [5,] 11.6869 11.6869 11.6869 11.6869 11.6869</code></pre>
-<p>Now, we let’s remove these strong tstats and split simulate new data into test and training. This will compute the HM weights on training data and return a file of likelihoods for the training data. I use my factor simulator to simulate true betas and betahats.</p>
+<p>Now, we let’s remove these strong tstats and split simulate new data into test and training. This will compute the HM weights on training data and return a file of likelihoods for the training data. I use my factor simulator to simulate true betas and betahats. Note that we want only the rownames to include meta data (and not an additional column) because this will impace the dimension compatibility of the prior covariance matrices and V.</p>
 <pre class="r"><code>rm(b.gp.hat)
 rm(se.gp.hat)
 
@@ -130,9 +126,21 @@ b.hat=newdat$betahat
 se.hat=newdat$sebetahat
 
 
-J=nrow(b.hat)
+##Not 
+indices=seq(1,nrow(b.hat))
+rownames(b.hat)=paste(&quot;gene_snp&quot;,indices,sep=&quot;&quot;)##now, we want our data frame to have rownames
 
-b.train=b.hat[1:1000,]
+J=nrow(b.hat)
+head(b.hat)</code></pre>
+<pre><code>##                  [,1]       [,2]      [,3]       [,4]      [,5]
+## gene_snp1  0.32187515  0.2744041 0.2865693 0.32699701 0.3286154
+## gene_snp2 -0.06572664  0.7899911 0.2392088 0.36389640 0.1239658
+## gene_snp3  0.31165780  0.3172895 0.2819259 0.23455969 0.2816686
+## gene_snp4 -0.13046867 -0.1989802 0.5696145 0.08316710 2.5096929
+## gene_snp5  0.55740182  0.5029942 1.0813621 0.04775734 0.3276754
+## gene_snp6  0.35681726  0.3830105 0.2170534 0.33563349 0.3119321</code></pre>
+<p>Now, we separate into training data. I will train on 1000 gene snp Pairs.</p>
+<pre class="r"><code>b.train=b.hat[1:1000,]
 se.train=se.hat[1:1000,]
 
 compute.hm.train(train.b = b.train,se.train = se.train,covmat = covmat,A=&quot;Simulations&quot;)</code></pre>
@@ -148,7 +156,7 @@ likmat[1,1:10]</code></pre>
 <pre class="r"><code>lik.func(b.mle = b.train[1,],V.gp.hat = diag(se.train[1,])^2,covmat)[1:10]</code></pre>
 <pre><code>##  [1] 0.3009218 0.2847780 0.2610355 0.2877507 0.2736031 0.3107307 0.2705613
 ##  [8] 0.4530710 0.2851536 0.3024773</code></pre>
-<p>Note creation of three files: pis, a pdf of pis, and a matrix of likelihoods of training data. Now,we remove the training data and create our test data.</p>
+<p>Note creation of three files: pis, a pdf of pis, and a matrix of likelihoods of training data. Now,we remove the training data and create our test data. We can see that it contains the gene snp pairs in the rows and the standardized effect across subgroups in the columns.</p>
 <pre class="r"><code>rm(b.train)
 rm(se.train)
 
