@@ -19,11 +19,11 @@ factor.mat=as.matrix(read.table("~/Dropbox/AllGeneSNPStuff/tri_gtex_allstrongt_F
 
 
 ##Now, we perform the matric deconvolution in using the EM algorithm to estimate a 'denoised' empirical covariance matrix using the strongest 1000 gene snp pairs
-s=deconvolution.em(t.stat = t.stat,factor.mat = factor.mat,lambda.mat = lambda.mat,K = 1,P=2,permsnp = 1000)
+max.step=deconvolution.em(t.stat = t.stat,factor.mat = factor.mat,lambda.mat = lambda.mat,K = 1,P=2,permsnp = 1000)
 
 
 ##we now feed this object into our compute covariance matrices structure to produce the full set of covariance matrices
-covmat=compute.hm.covmat(t.stat,v.j,Q,lambda.mat,P,A,factor.mat,max.step=s)
+covmat=compute.hm.covmat(t.stat,v.j,Q,lambda.mat,P,A,factor.mat,max.step=max.step)
     
 u###We now proceeed as before, in estimating the weights on a set of largely null training data, 
 start="~/Dropbox/cyclingstatistician/beta_gp_continuous/matched/firstbatch"

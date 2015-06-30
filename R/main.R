@@ -970,6 +970,7 @@ compute.lik.test=function(b.test,J,se.test,covmat,A,pis){
 } 
 
 
+
 #'@title compute.mix.test
 #'@export
 compute.mix.test=function(b.gp.hat,J,se.gp.hat,covmat,A,save=FALSE){
