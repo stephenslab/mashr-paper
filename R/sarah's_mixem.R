@@ -71,13 +71,14 @@ init.covmat=function(t.stat=t.stat,factor.mat=factors,lambda.mat=lambda,K=3,P=2)
   data.prox=((t(X.c)%*%X.c)/M)
   true.covs[1,,]=data.prox
   full.rank=lambda.mat%*%factor.mat
+  if(K>1){
   sfa.prox=(t(full.rank)%*%full.rank)/(M)
   true.covs[2,,]=sfa.prox
   
   svd.X=svd(X.c)
   v=svd.X$v;u=svd.X$u;d=svd.X$d
   cov.pc=1/M*v[,1:P]%*%diag(d[1:P])%*%t(u[,1:P])%*%t(v[,1:P]%*%diag(d[1:P])%*%t(u[,1:P]))
-  true.covs[3,,]=cov.pc
+  true.covs[3,,]=cov.pc}
   return(true.covs)
 }
 
@@ -222,33 +223,118 @@ penlogliksarah = function(max.step.unlist,b.j.hat,se.j.hat){
 
 #' @title deconvolution.em
 #' @details wrapper to compute denoised estimates of the fuller rank covariance matrices
-#' @param b.j.hat
-#' @param se.j.hat
 #' @param t.stat
 #' @param P = rank of PC approxiatmion
 #' @param Q = rank of SFA approximation
+#' @param max = number of strong stats you want to train on (default is 1000)
 #' @return a 2 element list of K pis and the KxRxR true.covariance arrays
 #' @export
 
-deconvolution.em <- function(b.j.hat,se.j.hat,t.stat,factor.mat,lambda.mat,K,P){
-  init.cov=init.covmat(t.stat=t.stat,factor.mat = factor.mat,lambda.mat = lambda.mat,K = 3,P=2)
+deconvolution.em <- function(t.stat,factor.mat,lambda.mat,K,P,max){
+  init.cov=init.covmat(t.stat=t.stat,factor.mat = factor.mat,lambda.mat = lambda.mat,K=K,P=P)
   pi=rep(1/K,K)
-  R=nvol(b.j.hat)
+  R=ncol(b.j.hat)
   
-  par.init=list(true.covs=init.covmat(t.stat = b.j.hat,factor.mat = factor.mat,lambda.mat = lambda.mat,K = 3,P=2),pi=rep(1/K,K))
-  #par.init=list(true.covs=init.cov,pi=pi)
+  par.init=list(true.covs=init.cov,pi=rep(1/K,K))
   par.init.unlist=unlist(par.init)
   
   
-  maxes=apply(t.stat,1,function(x){mean(abs(x))})
+  maxes=apply(t.stat,1,function(x){mean(abs(x))})##takes the strongest t statistics
   a=cbind(t.stat,maxes)
   t=a[order(a$maxes,decreasing=TRUE),-45]
-  t.strong=t[1:100,]
+  t.strong=t[1:max,]
   v.strong=matrix(rep(1,R*nrow(t.strong)),nrow=nrow(t.strong))
 
   s=squarem(par=par.init.unlist,b.j.hat=t.strong,se.j.hat=v.strong,fixptfn=fixpoint.cov, objfn=negpenlogliksarah)
   max.step.unlist=s$par
   dim.true.covs=c(K,R,R)
+  pi.length=length(pi)
   max.step = list(true.covs = array(max.step.unlist[1:prod(dim.true.covs)], dim = dim.true.covs), pi = max.step.unlist[(prod(dim.true.covs)+1):(prod(dim.true.covs)+pi.length)])
   return(max.step)
 }
+
+
+
+
+get.prior.covar.with.max.step <- function(P, X.c,max.step,lambda.mat, Q, factor.mat,omega.table,bma=TRUE)  {
+  test=list()
+  for(l in 1:nrow(omega.table)){
+    test[[l]]=list()
+    omega=omega.table[l,]
+    test[[l]][[1]]=omega*diag(1,R)
+    data.prox=max.step$true.covs[1,,]
+    d.norm=data.prox/max(diag(data.prox))
+    
+    
+    test[[l]][[2]]=omega*d.norm
+    
+    
+    svd.X=svd(X.c)
+    
+    v=svd.X$v;u=svd.X$u;d=svd.X$d
+    
+    cov.pc=1/M*v[,1:P]%*%diag(d[1:P])%*%t(u[,1:P])%*%t(v[,1:P]%*%diag(d[1:P])%*%t(u[,1:P]))
+    
+    
+    cov.pc.norm=cov.pc/max(diag(cov.pc))
+    
+    
+    
+    test[[l]][[3]]=omega*(cov.pc.norm)
+    if(Q!=0){for(q in 1:Q){
+      
+      load=as.matrix(lambda.mat[,q])
+      fact=as.matrix(factor.mat[q,])
+      rank.prox=load%*%t(fact)
+      a=(1/M*(t(rank.prox)%*% rank.prox))
+      a[is.nan(a)] = 0
+      a.norm=a/max(diag(a))
+      test[[l]][[q+3]]=omega*a.norm
+    }}
+    full.rank=as.matrix(lambda.mat)%*%as.matrix(factor.mat)
+    b=(1/M*(t(full.rank)%*%full.rank))
+    b[is.nan(b)]=0
+    b.norm=b/max(diag(b))
+    test[[l]][[Q+4]]=omega*b.norm
+    
+    if(bma==TRUE){
+      configs=matrix(0,nrow=R,ncol=R)
+      
+      R=ncol(factor.mat)
+      for(r in 1:R){
+        configs[r,r]=1}
+      
+      configs=rbind(configs,rep(1,R))
+      for(c in 1:nrow(configs)) {
+        
+        mat=(configs[c,]%*%t(configs[c,]))
+        
+        test[[l]][[Q+4+c]]=omega*mat}}}
+  return(U.0kl=test)
+}
+
+
+#' @title compute.hm.covmat
+#' @details use a prespecified X`X
+#' @param max.step
+#' @param Q
+#' @param P
+#' @param BMA
+#' @return a list of covariance matrices
+ 
+compute.hm.covmat = function(t.stat,v.j,Q,X.c,lambda.mat,P,A,factor.mat,max.step){
+
+omega=mult.tissue.grid(mult=sqrt(2),t.stat,v.j)
+
+omega.table=data.frame(omega)
+
+lambda=lambda
+A=A
+factor.mat=factor.mat
+X.c=X.c
+Q=Q
+U.0kl=get.prior.covar.with.max.step(P = P,X.c,max.step = max.step,lambda.mat = lambda.mat,Q = Q,factor.mat = factor.mat,omega.table=omega.table,bma = TRUE)
+covmat=unlist(U.0kl,recursive=F)
+saveRDS(covmat,paste0("covmat",A,".rds"))
+
+return(covmat)}
