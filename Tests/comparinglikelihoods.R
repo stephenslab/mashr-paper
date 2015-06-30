@@ -25,7 +25,7 @@ s=deconvolution.em(t.stat = t.stat,factor.mat = factor.mat,lambda.mat = lambda.m
 ##we now feed this object into our compute covariance matrices structure to produce the full set of covariance matrices
 covmat=compute.hm.covmat(t.stat,v.j,Q,lambda.mat,P,A,factor.mat,max.step=s)
     
-###We now proceeed as before, in estimating the weights on a set of largely null training data, 
+u###We now proceeed as before, in estimating the weights on a set of largely null training data, 
 start="~/Dropbox/cyclingstatistician/beta_gp_continuous/matched/firstbatch"
 
 t.stat=na.omit(read.table(paste0(start,"t.stat.txt"),header=F,skip=1)[,-c(1,2)])
@@ -39,10 +39,20 @@ compute.hm.train(train.b = b.train,se.train = se.train,covmat = covmat,A="1000tr
 
 ###We can then compute the likelihood on the test data###
 b.test=t.stat[1001:nrow(t.stat),]
-se.test=se.test[1001:nrow(se.test),]
+se.test=v.j[1001:nrow(v.j),]
 
 A="1000trained"
 pis=readRDS(paste0("pis",A,".rds"))$pihat
 
 
 compute.lik.test(b.test = b.test,J = nrow(b.test),se.test = se.test,covmat,A,pis)
+
+
+###Now compute posterior quantities###
+A="1000trained"
+pis=readRDS(paste0("pis",A,".rds"))$pihat
+
+rownames(b.test)=genesnpnames
+weightedquants=lapply(seq(1:100),function(j){total.quant.per.snp(j,covmat,b.gp.hat=b.test,se.gp.hat = se.test,pis,A="Simulations",checkpoint = FALSE)})
+
+

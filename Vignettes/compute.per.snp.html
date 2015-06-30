@@ -69,7 +69,7 @@ img {
 ## Installing mash
 ## '/Library/Frameworks/R.framework/Resources/bin/R' --no-site-file  \
 ##   --no-environ --no-save --no-restore CMD INSTALL  \
-##   '/private/var/folders/63/g727cjqj2ndgd329qc6pg8lm0000gn/T/RtmpL684bY/devtools1af4af96d3c/surbut-matrix_ash-ee5549e'  \
+##   '/private/var/folders/63/g727cjqj2ndgd329qc6pg8lm0000gn/T/RtmprceSDt/devtools10e8d868a57/surbut-matrix_ash-8c52139'  \
 ##   --library='/Library/Frameworks/R.framework/Versions/3.1/Resources/library'  \
 ##   --install-tests 
 ## 
@@ -90,22 +90,10 @@ covdat = factor_sim(n=1000,K=10,betasd=1,esd=0.3,d=5)</code></pre>
 se.gp.hat=covdat$sebetahat
 t.stat=covdat$tstat
 
-
-R=ncol(b.gp.hat)#number of tissues
-X.t=as.matrix(t.stat)
-#X.real=X.t[which(truth$config!=0),]
-X.real=X.t
-X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
-R=ncol(X.t)
-M=nrow(X.c)
-
-
-
-
 lambda=covdat$lambda
 factors=covdat$factors
 
-covmat=compute.covmat(b.gp.hat,se.gp.hat,Q=5,X.c,lambda,P=2,A=&quot;simulation&quot;,factor.mat=factors,bma=TRUE)
+covmat=compute.covmat(b.gp.hat,se.gp.hat,Q=5,t.stat,lambda,P=2,A=&quot;simulation&quot;,factor.mat=factors,bma=TRUE)
 
 K=length(covmat)
 K</code></pre>

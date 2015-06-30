@@ -330,7 +330,7 @@ X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statisti
 R=ncol(X.c)
 omega=mult.tissue.grid(mult=sqrt(2),t.stat,v.j)
 omega.table=data.frame(omega)
-lambda=lambda
+lambda.mat=lambda.mat
 A=A
 factor.mat=factor.mat
 U.0kl=get.prior.covar.with.max.step(P = P,X.c,max.step = max.step,lambda.mat = lambda.mat,Q = Q,factor.mat = factor.mat,omega.table=omega.table,bma = TRUE)
