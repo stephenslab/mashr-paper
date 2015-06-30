@@ -338,3 +338,47 @@ covmat=unlist(U.0kl,recursive=F)
 saveRDS(covmat,paste0("covmat",A,".rds"))
 
 return(covmat)}
+
+#' @title test.funct
+#' @details shows that the e step properly stores the posterior mean for a given gene snp pair and componenet combination
+#' @param j gene snp pair of interest
+#' @param k componenet of interest
+#' @param R number of tissues
+
+test.funct=function(j,max.step.unlist,k,R){
+  
+  (L=length(max.step.unlist))
+  K=L/(R^2+1)
+  dim.true.covs=c(K,R,R)
+  pi.length=K
+  max.step = list(true.covs = array(max.step.unlist[1:prod(dim.true.covs)], dim = dim.true.covs), pi = max.step.unlist[(prod(dim.true.covs)+1):(prod(dim.true.covs)+pi.length)])
+  true.covs=max.step$true.covs
+  pi=max.step$pi
+  
+  b.mle=as.vector(t(b.j.hat[j,]))##turn i into a R x 1 vector
+  V.j.hat=diag(se.j.hat[j,]^2)
+  lik=sapply(seq(1:K),function(k){dmvnorm(x=b.mle, sigma=true.covs[k,,] + V.j.hat)})##compute K element likeilihood for each idndiviual
+  B.j.=(lapply(seq(1:K),function(k){
+    tinv=solve(true.covs[k,,]+V.j.hat)##covariance matrix of the marginal distribution
+    post.b.jk.ed.cov(tinv=tinv,true.covs[k,,])
+  }
+  ))##create a K dimensional list of covariance matrices 
+  
+  ##compute a K dimensional list of posterior means for each J
+  b.j.=(lapply(seq(1:K),function(k){
+    tinv=solve(true.covs[k,,]+V.j.hat)##covariance matrix of the marginal distribution
+    post.b.jk.ed.mean(b.mle,tinv=tinv,true.covs[k,,])##for each component, compute posterior mean
+  }))
+  
+  
+  test=em.array.generator(max.step = max.step,b.j.hat = b.j.hat,se.j.hat = se.j.hat)### show that the output of the posterior means in the E step matches the actual computation above
+  pm=test$post.means;pc=test$post.covs;q.mat=test$q.mat
+  
+  par(mfrow=c(1,2))
+  plot(pm[j,k,],b.j.[[k]])##test to make sure posterior mean is stored properly
+  plot(diag(pc[j,k,,]),diag(B.j.[[k]]))##test to make sure posterior covariance is stored properly
+}
+
+
+  
+  
