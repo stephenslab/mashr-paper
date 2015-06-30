@@ -23,11 +23,13 @@ post.b.gpkl.mean <- function(b.mle, V.gp.hat.inv, U.gp1kl){
 #' @param P integer number of PCs
 #' @param omega.table table of grid weights
 #' @param rhos correlation factor for morphed matrices
+#' @param X.c = column centered matrix of strong t statistics from which to derive covariance matrices
 #' @return U.0kl L dimensional list of K dimensional list with prior covairnace matrix for each grid weight, prior covariance pair
 #' @export
-get.prior.covar.Ukl.with.rho <- function(P, lambda.mat, Q, factor.mat,omega.table,rhos)  {
+get.prior.covar.Ukl.with.rho <- function(P, lambda.mat,X.c, Q, factor.mat,omega.table,rhos)  {
     test=list()
     id=diag(1,R)
+    M=nrow(X.c)
     for(l in 1:nrow(omega.table)){
         test[[l]]=list()
         omega=omega.table[l,]
@@ -81,10 +83,13 @@ get.prior.covar.Ukl.with.rho <- function(P, lambda.mat, Q, factor.mat,omega.tabl
 #' @param factor.mat nfactors x R tissue matrix of factors
 #' @param omega.table Lx2 table of grid weights
 #' @param bma whether or not to use singleton and shared configurations
+#' @param X.c = column centered matrix of strong t statistics from which to derive covariance matrices
 #' @return U.0kl
 #' @export
-get.prior.covar.Ukl <- function(P, lambda.mat, Q, factor.mat,omega.table,bma=TRUE)  {
+get.prior.covar.Ukl <- function(P, X.c,lambda.mat, Q, factor.mat,omega.table,bma=TRUE)  {
   test=list()
+  M=nrow(X.c)
+  R=ncol(X.c)
   for(l in 1:nrow(omega.table)){
     test[[l]]=list()
     omega=omega.table[l,]
@@ -367,9 +372,18 @@ compare.func=function(j,all.upper,all.lower){
 #' @title compute.covmat.with.rho
 #' @export
 
-compute.covmat.with.rho = function(b.gp.hat,sebetahat,Q,X.c,lambda.mat,P,A,factor.mat){
+compute.covmat.with.rho = function(b.gp.hat,sebetahat,Q,lambda.mat,P,A,factor.mat,t.stat){
   
-    omega=mult.tissue.grid(mult=sqrt(2),b.gp.hat,sebetahat)
+
+  R=ncol(t.stat)#number of tissues
+  
+  
+  X.t=as.matrix(t.stat)
+  X.real=X.t
+  X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
+  
+  M=nrow(X.c)
+  omega=mult.tissue.grid(mult=sqrt(2),b.gp.hat,sebetahat)
     
     omega.table=data.frame(omega)
     rhos=seq(0.1,1,by=0.1)
@@ -380,7 +394,7 @@ compute.covmat.with.rho = function(b.gp.hat,sebetahat,Q,X.c,lambda.mat,P,A,facto
     Q=Q
     
  
-    U.0kl=get.prior.covar.Ukl.with.rho(P=2,lambda=lambda,Q=Q,factor.mat=factor.mat, omega.table=omega.table,rhos=rhos)
+    U.0kl=get.prior.covar.Ukl.with.rho(P=2,lambda=lambda,Q=Q,factor.mat=factor.mat, X.c,omega.table=omega.table,rhos=rhos)
     
     covmat1=unlist(U.0kl,recursive=F)
     covmat=unlist(covmat1,recursive=F)
@@ -390,16 +404,16 @@ compute.covmat.with.rho = function(b.gp.hat,sebetahat,Q,X.c,lambda.mat,P,A,facto
 
 
 #' @title compute.covmat
-#' @param b.gp.hat a JxR matrix of betahats
-#' @param sebetahat a JxR matrix of their standard errors
+#' @param b.gp.hat a JxR matrix of betahats - necessary for grid computation
+#' @param sebetahat a JxR matrix of their standard errors - necessary for grid computation
 #' @param Q number of factors to consider
-#' @param X.c matric of strong t statistics
+#' @param t.stat matrix of strong t statistics (needs to be R in columns but not necessarily j in rows)
 #' @param factor mat a fxR matrix of factors
 #' @param BMA=true wheter or not to use singleton and shared config
 #' @return A list of covariance matrices
 #' @export
 
-compute.covmat = function(b.gp.hat,sebetahat,Q,X.c,lambda.mat,P,A,factor.mat,bma=TRUE){
+compute.covmat = function(b.gp.hat,sebetahat,Q,t.stat,lambda.mat,P,A,factor.mat,bma=TRUE){
   
   omega=mult.tissue.grid(mult=sqrt(2),b.gp.hat,sebetahat)
   
@@ -408,11 +422,22 @@ compute.covmat = function(b.gp.hat,sebetahat,Q,X.c,lambda.mat,P,A,factor.mat,bma
   lambda.mat=lambda.mat
   A=A
   factor.mat=factor.mat
-  X.c=X.c
+
   Q=Q
   R=ncol(b.gp.hat)
+  R=ncol(t.stat)#number of tissues
   
-U.0kl=get.prior.covar.Ukl(P,lambda.mat=lambda.mat,Q=Q,factor.mat=factor.mat, omega.table=omega.table,bma)
+  X.t=as.matrix(t.stat)
+  X.real=X.t
+  X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
+  
+  M=nrow(X.c)
+  
+  
+  
+  
+  
+U.0kl=get.prior.covar.Ukl(P,X.c,lambda.mat=lambda.mat,Q=Q,factor.mat=factor.mat, omega.table=omega.table,bma)
     
    
     covmat=unlist(U.0kl,recursive=F)
@@ -1066,8 +1091,10 @@ convert.liks=function(se.gp.hat,test.lik,pis){
 #' @title get.prior.covar.nopcs
 #' @description get.prior.covar.nopcs
 #' @export 
-get.prior.covar.nopcs <- function(lambda.mat, Q, factor.mat,omega.table,bma=TRUE)  {
+get.prior.covar.nopcs <- function(lambda.mat, Q, X.c,factor.mat,omega.table,bma=TRUE)  {
   test=list()
+  R=ncol(X.c)
+  M=nrow(X.c)
   for(l in 1:nrow(omega.table)){
     test[[l]]=list()
     omega=omega.table[l,]
@@ -1116,7 +1143,7 @@ get.prior.covar.nopcs <- function(lambda.mat, Q, factor.mat,omega.table,bma=TRUE
 #' @description get.prior.covar.nopcs
 #' @export 
 
-compute.covmat.nopc = function(b.gp.hat,sebetahat,Q,X.c,lambda.mat,A,factor.mat,bma=TRUE){
+compute.covmat.nopc = function(b.gp.hat,sebetahat,Q,t.stat,lambda.mat,A,factor.mat,bma=TRUE){
   
   omega=mult.tissue.grid(mult=sqrt(2),b.gp.hat,sebetahat)
   
@@ -1125,11 +1152,15 @@ compute.covmat.nopc = function(b.gp.hat,sebetahat,Q,X.c,lambda.mat,A,factor.mat,
   lambda.mat=lambda.mat
   A=A
   factor.mat=factor.mat
-  X.c=X.c
-  Q=Q
-  R=ncol(b.gp.hat)
+  R=ncol(t.stat)#number of tissues
   
-  U.0kl=get.prior.covar.nopcs(lambda.mat=lambda.mat,Q=Q,factor.mat=factor.mat, omega.table=omega.table,bma)
+  X.t=as.matrix(t.stat)
+  X.real=X.t
+  X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
+  
+  M=nrow(X.c)
+  
+  U.0kl=get.prior.covar.nopcs(lambda.mat=lambda.mat,Q=Q,X.c,factor.mat=factor.mat, omega.table=omega.table,bma)
   
   
   covmat=unlist(U.0kl,recursive=F)

@@ -30,22 +30,10 @@ b.gp.hat=covdat$betahat
 se.gp.hat=covdat$sebetahat
 t.stat=covdat$tstat
 
-
-R=ncol(b.gp.hat)#number of tissues
-X.t=as.matrix(t.stat)
-#X.real=X.t[which(truth$config!=0),]
-X.real=X.t
-X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
-R=ncol(X.t)
-M=nrow(X.c)
-
-
-
-
 lambda=covdat$lambda
 factors=covdat$factors
 
-covmat=compute.covmat(b.gp.hat,se.gp.hat,Q=5,X.c,lambda,P=2,A="simulation",factor.mat=factors,bma=TRUE)
+covmat=compute.covmat(b.gp.hat,se.gp.hat,Q=5,t.stat,lambda,P=2,A="simulation",factor.mat=factors,bma=TRUE)
 
 K=length(covmat)
 K
