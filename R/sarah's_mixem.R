@@ -41,7 +41,7 @@ tarray <- function(x) aperm(x, rev(seq_along(dim(x))))
 #' @export
 
 
-dim.true.cov.fun=function(b.j.hat,se.j,hat,max.step.unlist){
+dim.true.cov.fun=function(max.step.unlist){
   L=length(max.step.unlist)
   K=L/(R^2+1)
   dim.true.covs=c(K,R,R)
@@ -58,7 +58,7 @@ dim.true.cov.fun=function(b.j.hat,se.j,hat,max.step.unlist){
 #' @return KxRxR matric of prior covariance matrices to initialize the EM
 #' @export
 
-init.covmat=function(t.stat=t.stat,factor.mat=factors,lambda.mat=lambda,K=3,P=2){
+init.covmat=function(t.stat=t.stat,factor.mat=factors,lambda.mat=lambda,K,P){
   K=K
   R=ncol(t.stat)#number of tissues
   true.covs=array(NA,dim=c(K,R,R))
@@ -109,7 +109,7 @@ em.array.generator=function(max.step,b.j.hat,se.j.hat){
   for(j in 1:J){
     b.mle=as.vector(t(b.j.hat[j,]))##turn i into a R x 1 vector
     V.j.hat=diag(se.j.hat[j,]^2)
-    lik=lik.func.em(true.covs,b.mle,V.j.hat)
+    lik=lik.func.em(true.covs,b.mle,V.j.hat,K)
     ##compute a K dimensional list of posterior covariance for each J, this is faster than for looping over the K, but in the main function we have to do within R also
     B.j.=lapply(seq(1:K),function(k){
       
@@ -194,7 +194,7 @@ fixpoint.cov = function(max.step.unlist,b.j.hat,se.j.hat){
 
 normalize = function(x){return(x/sum(x))}
 
-lik.func.em=function(true.covs,b.mle,V.j.hat){sapply(seq(1:K),function(k){dmvnorm(x=b.mle, sigma=true.covs[k,,] + V.j.hat)})}
+lik.func.em=function(true.covs,b.mle,V.j.hat,K){sapply(seq(1:K),function(k){dmvnorm(x=b.mle, sigma=true.covs[k,,] + V.j.hat)})}
 
 negpenlogliksarah = function(max.step.unlist,b.j.hat,se.j.hat){return(-penlogliksarah(max.step.unlist,b.j.hat,se.j.hat))}
 
@@ -206,13 +206,13 @@ penlogliksarah = function(max.step.unlist,b.j.hat,se.j.hat){
   r2=R^2
   K=L/(r2+1)
   dim.true.covs=c(K,R,R)
-
+  J=nrow(b.j.hat)
   pi.length=K
   
   max.step = list(true.covs = array(max.step.unlist[1:prod(dim.true.covs)], dim = dim.true.covs), pi = max.step.unlist[(prod(dim.true.covs)+1):(prod(dim.true.covs)+pi.length)])
   pi=max.step$pi
   true.covs=max.step$true.covs
-  matrix_lik=t(sapply(seq(1:J),function(x){lik.func.em(true.covs,b.mle=b.j.hat[x,],V.j.hat=diag(se.j.hat[x,])^2)}))
+  matrix_lik=t(sapply(seq(1:J),function(x){lik.func.em(true.covs,b.mle=b.j.hat[x,],V.j.hat=diag(se.j.hat[x,])^2,K)}))
   pi = (normalize(pmax(0,pi)))
   m  = pi*matrix_lik # matrix_lik is n by k; so this is also n by k
   m.rowsum = rowSums(m)
@@ -226,14 +226,14 @@ penlogliksarah = function(max.step.unlist,b.j.hat,se.j.hat){
 #' @param t.stat
 #' @param P = rank of PC approxiatmion
 #' @param Q = rank of SFA approximation
-#' @param max = number of strong stats you want to train on (default is 1000)
+#' @param permsnp = number of strong stats you want to train on (default is 1000)
 #' @return a 2 element list of K pis and the KxRxR true.covariance arrays
 #' @export
 
-deconvolution.em <- function(t.stat,factor.mat,lambda.mat,K,P,max){
+deconvolution.em <- function(t.stat,factor.mat,lambda.mat,K,P,permsnp=1000){
   init.cov=init.covmat(t.stat=t.stat,factor.mat = factor.mat,lambda.mat = lambda.mat,K=K,P=P)
   pi=rep(1/K,K)
-  R=ncol(b.j.hat)
+  R=ncol(t.stat)
   
   par.init=list(true.covs=init.cov,pi=rep(1/K,K))
   par.init.unlist=unlist(par.init)
@@ -242,7 +242,7 @@ deconvolution.em <- function(t.stat,factor.mat,lambda.mat,K,P,max){
   maxes=apply(t.stat,1,function(x){mean(abs(x))})##takes the strongest t statistics
   a=cbind(t.stat,maxes)
   t=a[order(a$maxes,decreasing=TRUE),-45]
-  t.strong=t[1:max,]
+  t.strong=t[1:permsnp,]
   v.strong=matrix(rep(1,R*nrow(t.strong)),nrow=nrow(t.strong))
 
   s=squarem(par=par.init.unlist,b.j.hat=t.strong,se.j.hat=v.strong,fixptfn=fixpoint.cov, objfn=negpenlogliksarah)
@@ -258,6 +258,8 @@ deconvolution.em <- function(t.stat,factor.mat,lambda.mat,K,P,max){
 
 get.prior.covar.with.max.step <- function(P, X.c,max.step,lambda.mat, Q, factor.mat,omega.table,bma=TRUE)  {
   test=list()
+  R=ncol(X.c)
+  M=nrow(X.c)
   for(l in 1:nrow(omega.table)){
     test[[l]]=list()
     omega=omega.table[l,]
@@ -315,24 +317,22 @@ get.prior.covar.with.max.step <- function(P, X.c,max.step,lambda.mat, Q, factor.
 
 
 #' @title compute.hm.covmat
-#' @details use a prespecified X`X
-#' @param max.step
-#' @param Q
-#' @param P
-#' @param BMA
+#' @details use a prespecified X`X from the output of the 'deconvoluting EM'
+#' @param max.step: the list ouput of deconvolution EM (list of length 2, contains the denoised covariance  matrices and vector of pi)
+#' @param Q number of single rank factors to include in the set of covariance matrices
+#' @param P PC approximation
+#' @param BMA Whether or not to include singleton and full configurations
 #' @return a list of covariance matrices
  
-compute.hm.covmat = function(t.stat,v.j,Q,X.c,lambda.mat,P,A,factor.mat,max.step){
-
+compute.hm.covmat = function(t.stat,v.j,Q,lambda.mat,P,A,factor.mat,max.step){
+X.real=as.matrix(t.stat)
+X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
+R=ncol(X.c)
 omega=mult.tissue.grid(mult=sqrt(2),t.stat,v.j)
-
 omega.table=data.frame(omega)
-
 lambda=lambda
 A=A
 factor.mat=factor.mat
-X.c=X.c
-Q=Q
 U.0kl=get.prior.covar.with.max.step(P = P,X.c,max.step = max.step,lambda.mat = lambda.mat,Q = Q,factor.mat = factor.mat,omega.table=omega.table,bma = TRUE)
 covmat=unlist(U.0kl,recursive=F)
 saveRDS(covmat,paste0("covmat",A,".rds"))
