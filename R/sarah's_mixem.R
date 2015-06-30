@@ -219,3 +219,36 @@ penlogliksarah = function(max.step.unlist,b.j.hat,se.j.hat){
     return(loglik)
 }
 
+
+#' @title deconvolution.em
+#' @details wrapper to compute denoised estimates of the fuller rank covariance matrices
+#' @param b.j.hat
+#' @param se.j.hat
+#' @param t.stat
+#' @param P = rank of PC approxiatmion
+#' @param Q = rank of SFA approximation
+#' @return a 2 element list of K pis and the KxRxR true.covariance arrays
+#' @export
+
+deconvolution.em <- function(b.j.hat,se.j.hat,t.stat,factor.mat,lambda.mat,K,P){
+  init.cov=init.covmat(t.stat=t.stat,factor.mat = factor.mat,lambda.mat = lambda.mat,K = 3,P=2)
+  pi=rep(1/K,K)
+  R=nvol(b.j.hat)
+  
+  par.init=list(true.covs=init.covmat(t.stat = b.j.hat,factor.mat = factor.mat,lambda.mat = lambda.mat,K = 3,P=2),pi=rep(1/K,K))
+  #par.init=list(true.covs=init.cov,pi=pi)
+  par.init.unlist=unlist(par.init)
+  
+  
+  maxes=apply(t.stat,1,function(x){mean(abs(x))})
+  a=cbind(t.stat,maxes)
+  t=a[order(a$maxes,decreasing=TRUE),-45]
+  t.strong=t[1:100,]
+  v.strong=matrix(rep(1,R*nrow(t.strong)),nrow=nrow(t.strong))
+
+  s=squarem(par=par.init.unlist,b.j.hat=t.strong,se.j.hat=v.strong,fixptfn=fixpoint.cov, objfn=negpenlogliksarah)
+  max.step.unlist=s$par
+  dim.true.covs=c(K,R,R)
+  max.step = list(true.covs = array(max.step.unlist[1:prod(dim.true.covs)], dim = dim.true.covs), pi = max.step.unlist[(prod(dim.true.covs)+1):(prod(dim.true.covs)+pi.length)])
+  return(max.step)
+}

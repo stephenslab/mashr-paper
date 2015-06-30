@@ -283,7 +283,33 @@ For us:
     B_{jk} = U_{k} \left( \hat{V}_{j}^{-1} U_{k} + I \right)^{-1}
     \end{aligned}
 \end{equation}
-\end{document}
+
+
+Thus
+
+\begin{equation}
+U_{k}[U_{k}+\hat{V}_{j}]^{-1}U_{k} + U_{k} \left( \hat{V}_{j}^{-1} U_{k} + I \right)^{-1} = U_{k}
+\end{equation}
+
+Now, we recognize the $[AB]^{-1}$ = $B^{-1}A^{-1}$ and we let $[U_{k}+\hat{V}_{j}] = A$ and $U_{k}^{-1} = B$.
+\begin{equation}
+  \begin{aligned}
+[U_{k}+\hat{V}_{j}]^{-1}
+  \end{aligned}
+\end{equation}
+
+
+ Now multiply by $[\hat{V}_{j}]^{-1}$:
+ 
+\begin{equation}
+  \begin{aligned}
+&=U_{k}[\hat{V}_{j}^{-1}U_{k}+I]^{-1} \hat{V}_{j}^{-1} U_{k} + U_{k} \left( \hat{V}_{j}^{-1} U_{k} + I \right)^{-1} \\
+&= U_{k}[\hat{V}_{j}^{-1}U_{k}+I]^{-1}(\hat{V}_{j}^{-1} U_{k} + I )
+&=U_{k}
+\end{aligned}
+\end{equation}
+
+
 
 
 \end{document}  
