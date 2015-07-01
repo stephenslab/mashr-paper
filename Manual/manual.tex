@@ -120,19 +120,19 @@ Note also that $\hat\pi_{kl}$ represents the prior weights which are estimated h
 
 So why does the likelihood increase at the 'right component'?
 
-Consider the univariate case. Here, think about x as $\hat{b_{1}}$, and $\sigma$ as $U_{k[1,1]]} + \hat{V}_{j[1,1]}$.  
+Consider the univariate single tissue case case case. Here, think about x as $\hat{b_{1}}$ as the Maximum Likelihood Estimate of the effect size in tissue 1, and $\sigma$ as $U_{k[1,1]]} + \hat{V}_{j[1,1]}$ as the marginal variance at a given component (integrating over the uncertainty in $\bm{b}$.
 
 To compute the likelihood at each component: 
 \begin{equation}
 f(x \; | \; \sigma) = \frac{1}{\sigma\sqrt{2\pi} } \; e^{ -\frac{(x)^2}{2\sigma^2} }
 \end{equation}
   
-We can see that this will be largest when $\sigma^{2}$ approaches the MLE, which where is simply $\hat{b}^{2}$. 
+We can see that this will be largest when $\sigma^{2}$ approaches the MLE, which is simply $\hat{b_{r}}^{2}$. \widehat\sigma^2 = \frac{1}{n} \sum_{i=1}^{1} (x) ^2 = \frac{1}{1}\sum_{i=1}^1 x^2$
 This is the intuition behind the bayes factor being the largest at the 'true component'. 
   
 Furthermore, now we know that the posterior mean is $\bm{\mu}_{1} = U_{1} (\hat{V}^{-1} \hat{\bm{b}})$ where $U_{1} = (U_{0}^{-1} + \hat{V}^{-1})^{-1}$ and so quite obviously, the posterior mean for a particular tissue in the components with a large prior variance will also be large because they are 'very roughly' $\propto U_{0k} (\hat{V}^{-1} \hat{\bm{b}})$. 
 
-We can see that the likelihood will be maximal when $\hat{V}_{j,r,r}$ + $U_{k,r,r}$ approaches $\hat{\bm{b}^{2}}$ because this will approach the maximum likelihood estimate of $\sigma^{2}$.
+%We can see that the likelihood will be maximal when $\hat{V}_{j,r,r}$ + $U_{k,r,r}$ approaches $\hat{\bm{b}^{2}}$ because this will approach the maximum likelihood estimate of $\sigma^{2}$.
 
 
 \subsection{Intuition}
@@ -207,33 +207,36 @@ We allow for the input of b.j.hat and se.j.hat because there may be situations i
 
 \section{Denoising Our Covariance Matrices}
 Because these t-statistics need to be 'denoised' (they represent the statistics of the 'observed effects' and not the real effects') we can use an EM algorithm to obtain a set of denoised full rank approximations from which to generate further covariance matrices. 
-This option is achieved with the use of $\textbf{sarahsmixem.R}$ which follows directly from Bovy $\etal$. Briefly, we fit a K=3 component mixture model to obtain the RxR 'true covariance matrix' that is initialized with the empirical covariance matrix $X'X$, the rank $P$ SVD approximation and the rank Q $SFA$ approximation. This returns a set of true covariance matrices in a $KxRxR$ arrays and an $K$ vector of their corresponding mixture weights. We can then create a list of covariance matrices using these 3 full rank matrices as matrices K=2, K=3, and K=4+Q - each of these matrices will be scaled and the grid weighting procedure will then proceed as defined in the step above. For derivation, please see the document "EMUpdates" in the matrix_ash/Documents Directory.
 
-Because this can take some time on a large data set, you might initially choose to denoise only the empirical covariance matrix, thus fitting a K=1 component mixture model. The function $\textbf{deconvolution.em.R}$ updates each of the prior covariance matrices and corresponding mixture weights by computing the posterior mean and covariance quantities for each gene-pair at each of the K components. This is performed in the E step and contained in the function $\textbf{emarray.generator.R}$, generating a JxKxRxR array of posterior covariances and a JxKxR array of posterior means at each iteration.
+This option is achieved with the use of $\textbf{deconvolutionEM.R}$ which follows directly from Bovy $\etal$. Briefly, we fit a K=3 component mixture model to obtain the RxR 'true covariance matrix' that is initialized with the empirical covariance matrix $X'X$, the rank $P$ SVD approximation and the rank Q $SFA$ approximation. This returns a set of true covariance matrices in a $KxRxR$ arrays and an $K$ vector of their corresponding mixture weights. We can then create a list of covariance matrices using these 3 full rank matrices as matrices K=2, K=3, and K=4+Q - each of these matrices will be scaled and the grid weighting procedure will then proceed as defined in the step above. For derivation, please see the document "EMUpdates" in the matrix_ash/Documents Directory.
+
+Because this can take some time on a large data set, you might initially choose to denoise only the empirical covariance matrix, thus fitting a K=1 component mixture model initialized with the empirical covariance matric. The function $\textbf{deconvolution.em.R}$ updates each of the prior covariance matrices and corresponding mixture weights by computing the posterior mean and covariance quantities for each gene-pair at each of the K components. This is performed in the E step and contained in the function $\textbf{emarray.generator.R}$, generating a JxKxRxR array of posterior covariances and a JxKxR array of posterior means at each iteration.
 
 \begin{verbatim}
 for(j in 1:J){
     b.mle=as.vector(t(b.j.hat[j,]))##turn into a R x 1 vector
     V.j.hat=diag(se.j.hat[j,]^2)
     lik=lik.func.em(true.covs,b.mle,V.j.hat,K)
-    ##compute a K dimensional list of posterior covariance for each J, 
-    B.j.=lapply(seq(1:K),function(k){
-      
-      tinv=solve(true.covs[k,,]+V.j.hat)##covariance matrix of the marginal distribution
-      post.b.jk.ed.cov(tinv=tinv,true.covs[k,,])
-        
-    }
-    )##create a K dimensional list of covariance matrices 
-    post.covs[j,,,] <- tarray(array(unlist(B.j.), c( R, R,K))) ###store a K dimensional list of posterior covariances for each J (JxKxRxR) 
+
+ tinv=lapply(seq(1:K),function(k){ ##generate a list of K inverted marginal covariance matrices
+	solve(true.covs[k,,]+V.j.hat)}
+ 
+ ##create a K dimensional list of covariance matrices 
+
+B.j.=lapply(seq(1:K),function(k){
+       post.b.jk.ed.cov(tinv=tinv,true.covs[k,,])
+       })
+post.covs[j,,,] <- tarray(array(unlist(B.j.), c( R, R,K))) ###store a K dimensional list of posterior covariances for each J (JxKxRxR) 
     
-    ##compute a K dimensional list of posterior means for each J
+##compute a K dimensional list of posterior means for each J
    b.j.=(lapply(seq(1:K),function(k){
       tinv=solve(true.covs[k,,]+V.j.hat)##covariance matrix of the marginal distribution
       b=post.b.jk.ed.mean(b.mle,tinv=tinv,true.covs[k,,])##for each component, compute posterior mean
     }
     ))
-    post.means[j,,]=matrix(unlist(b.j.),ncol=R,byrow=TRUE) ##store as KxR matrix for each individual
-    q.mat[j,]=pi*lik/sum(pi*lik)##compute a k dimensional normalized likelihood for each individual 
+post.means[j,,]=matrix(unlist(b.j.),ncol=R,byrow=TRUE) ##store as KxR matrix for each individual
+#compute a k dimensional normalized likelihood for each individual 
+    q.mat[j,]=pi*lik/sum(pi*lik)
 }
 
 \end{verbatim}

@@ -214,7 +214,7 @@ penlogliksarah = function(max.step.unlist,b.j.hat,se.j.hat){
   true.covs=max.step$true.covs
   matrix_lik=t(sapply(seq(1:J),function(x){lik.func.em(true.covs,b.mle=b.j.hat[x,],V.j.hat=diag(se.j.hat[x,])^2,K)}))
   pi = (normalize(pmax(0,pi)))
-  m  = pi*matrix_lik # matrix_lik is n by k; so this is also n by k
+  m  = t(pi * t(matrix_lik))# matrix_lik is n by k; so this is also n by k
   m.rowsum = rowSums(m)
   loglik = sum(log(m.rowsum))
     return(loglik)
