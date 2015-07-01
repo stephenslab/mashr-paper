@@ -19,13 +19,13 @@ factor.mat=as.matrix(read.table("~/Dropbox/AllGeneSNPStuff/tri_gtex_allstrongt_F
 
 
 ##Now, we perform the matric deconvolution in using the EM algorithm to estimate a 'denoised' empirical covariance matrix using the strongest 1000 gene snp pairs
-max.step=deconvolution.em(t.stat = t.stat,factor.mat = factor.mat,lambda.mat = lambda.mat,K = 1,P=2,permsnp = 1000)
+max.step=deconvolution.em(t.stat = t.stat,factor.mat = factor.mat,lambda.mat = lambda.mat,K = 1,P=2,permsnp = 5000)
 
 
 ##we now feed this object into our compute covariance matrices structure to produce the full set of covariance matrices
 covmat=compute.hm.covmat(t.stat,v.j,Q,lambda.mat,P,A,factor.mat,max.step=max.step)
     
-u###We now proceeed as before, in estimating the weights on a set of largely null training data, 
+###We now proceeed as before, in estimating the weights on a set of largely null training data, 
 start="~/Dropbox/cyclingstatistician/beta_gp_continuous/matched/firstbatch"
 
 t.stat=na.omit(read.table(paste0(start,"t.stat.txt"),header=F,skip=1)[,-c(1,2)])
@@ -44,9 +44,9 @@ se.test=v.j[1001:nrow(v.j),]
 A="1000trained"
 pis=readRDS(paste0("pis",A,".rds"))$pihat
 
-
+tim=proc.time()
 compute.lik.test(b.test = b.test,J = nrow(b.test),se.test = se.test,covmat,A,pis)
-
+proc.time()-tim
 
 ###Now compute posterior quantities###
 A="1000trained"
