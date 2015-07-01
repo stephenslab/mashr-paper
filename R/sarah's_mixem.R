@@ -110,12 +110,12 @@ em.array.generator=function(max.step,b.j.hat,se.j.hat){
     b.mle=as.vector(t(b.j.hat[j,]))##turn i into a R x 1 vector
     V.j.hat=diag(se.j.hat[j,]^2)
     lik=lik.func.em(true.covs,b.mle,V.j.hat,K)
+    tinv=lapply(seq(1:K),function(k){solve(true.covs[k,,]+V.j.hat)})##create a K list of intverted Ts for each J, covariance matrix of the marginal distribution
+    
+    
     ##compute a K dimensional list of posterior covariance for each J, this is faster than for looping over the K, but in the main function we have to do within R also
     B.j.=lapply(seq(1:K),function(k){
-      
-      tinv=solve(true.covs[k,,]+V.j.hat)##covariance matrix of the marginal distribution
-      post.b.jk.ed.cov(tinv=tinv,true.covs[k,,])
-        
+      post.b.jk.ed.cov(tinv=tinv[[k]],true.covs[k,,])
     }
     )##create a K dimensional list of covariance matrices 
     post.covs[j,,,] <- tarray(array(unlist(B.j.), c( R, R,K))) ###store a K dimensional list of posterior covariances for each J (JxKxRxR) in the post.means array
@@ -123,8 +123,8 @@ em.array.generator=function(max.step,b.j.hat,se.j.hat){
     
     ##compute a K dimensional list of posterior means for each J, again this is faster than for looping over the K, but in the main function we have to do within R also
    b.j.=(lapply(seq(1:K),function(k){
-      tinv=solve(true.covs[k,,]+V.j.hat)##covariance matrix of the marginal distribution
-      b=post.b.jk.ed.mean(b.mle,tinv=tinv,true.covs[k,,])##for each component, compute posterior mean
+      
+      b=post.b.jk.ed.mean(b.mle,tinv=tinv[[k]],true.covs[k,,])##for each component, compute posterior mean
       
     }
     ))
@@ -357,17 +357,18 @@ test.funct=function(j,max.step.unlist,k,R){
   
   b.mle=as.vector(t(b.j.hat[j,]))##turn i into a R x 1 vector
   V.j.hat=diag(se.j.hat[j,]^2)
+  tinv=lapply(seq(1:K),function(k){solve(true.covs[k,,]+V.j.hat)})##create a K list of intverted Ts for each J
   lik=sapply(seq(1:K),function(k){dmvnorm(x=b.mle, sigma=true.covs[k,,] + V.j.hat)})##compute K element likeilihood for each idndiviual
   B.j.=(lapply(seq(1:K),function(k){
-    tinv=solve(true.covs[k,,]+V.j.hat)##covariance matrix of the marginal distribution
-    post.b.jk.ed.cov(tinv=tinv,true.covs[k,,])
+    #tinv=solve(true.covs[k,,]+V.j.hat)##covariance matrix of the marginal distribution
+    post.b.jk.ed.cov(tinv=tinv[[k]],true.covs[k,,])
   }
   ))##create a K dimensional list of covariance matrices 
   
   ##compute a K dimensional list of posterior means for each J
   b.j.=(lapply(seq(1:K),function(k){
-    tinv=solve(true.covs[k,,]+V.j.hat)##covariance matrix of the marginal distribution
-    post.b.jk.ed.mean(b.mle,tinv=tinv,true.covs[k,,])##for each component, compute posterior mean
+    #tinv=solve(true.covs[k,,]+V.j.hat)##covariance matrix of the marginal distribution
+    post.b.jk.ed.mean(b.mle,tinv=tinv[[k]],true.covs[k,,])##for each component, compute posterior mean
   }))
   
   
