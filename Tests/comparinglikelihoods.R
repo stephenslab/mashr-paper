@@ -19,7 +19,7 @@ factor.mat=as.matrix(read.table("~/Dropbox/AllGeneSNPStuff/tri_gtex_allstrongt_F
 
 
 ##Now, we perform the matric deconvolution in using the EM algorithm to estimate a 'denoised' empirical covariance matrix using the strongest 1000 gene snp pairs
-max.step=deconvolution.em(t.stat = t.stat,factor.mat = factor.mat,lambda.mat = lambda.mat,K = 1,P=2,permsnp = 100)
+max.step=deconvolution.em(t.stat = t.stat,factor.mat = factor.mat,lambda.mat = lambda.mat,K = 1,P=2,permsnp = 10)
 
 
 ##we now feed this object into our compute covariance matrices structure to produce the full set of covariance matrices

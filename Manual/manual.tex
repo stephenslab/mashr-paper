@@ -253,7 +253,7 @@ $\textbf{deconvolution.em(t.stat = t.stat,factor.mat = factor.mat,lambda.mat = l
 
 \section{Training our Model}
 
-Now, we remove the 'strong data' and train our model on a relatively 'null' data set. This allows for shrinkage (see Stephens et al, Ash). Essentially while every gene snp pair falls along a particular direction defined by the relationship in effect sizes between subgroups, some snps have much larger effects than others across subgroups. Because the majority of snp-gene associations in the genome are 'null' we expect this training set to reflect heavy loadings on low $\omega$ but reflect the patterns of the relative directions present in the data well. When we then compute the posterior on strong SNPa of interest, strong likelihoods will overwhelm low priors for large $\omegas$.
+Now, we remove the 'strong data' and train our model on a relatively 'null' data set. This allows for shrinkage (see Stephens et al, $\textit{Ash}$). Essentially while every gene-snp pair falls along a particular direction defined by the relationship in effect sizes between subgroups, some SNPs have much larger effects than others across subgroups. Because the majority of snp-gene associations in the genome are 'null' we expect this training set to reflect heavy loadings on low $\omega$ but reflect the patterns of the relative directions present in the data well. When we then compute the posterior on strong SNPa of interest, strong likelihoods will overwhelm low priors for large $\omegas$.
 
 
 After defining our training data, we use the function $\textbf{compute.hm.train(train.b = b.train,se.train = se.train,covmat = covmat,A="Simulations")}$ to produce a matrix  of likelihood based based on the set of covariance matrices contained in the K list $\textbf{covmat}$. 
@@ -275,7 +275,7 @@ The matrix of likelihoods is then used to estimate the optimal combination of $\
 
 After removing the training data set, we now choose a set of SNP upon which we want to make an inference. 
 
-If we want to compare between methods, we can use the $\textbf{compute.lik.test}$ function on a matrix of test beta hats and their standard errors to compute the observed data likelihood using the hierarchical prior weights estimated from the training data. A method which captures the data well will not be overly biased to the choice of training data and thus maximize the probability of observing both the training (as reflected in the EM-chosen weights) and the test data set. If the weights are estimated on training data, they are then treated as fixed parameters. A method which chooses too many components will not fit the test data well (be overly biased, similar to nearest neighbor) and so this allows for easy comparison between methods.
+If we want to compare between methods, we can use the $\textbf{compute.lik.test}$ function on a matrix of test $\hat{\bm{\beta}}$ and their standard errors to compute the observed data likelihood using the hierarchical prior weights estimated from the training data. A method which captures the data well will not be overly biased to the choice of training data and thus maximize the probability of observing both the training (as reflected in the EM-chosen weights) and the test data set. If the weights are estimated on training data, they are then treated as fixed parameters. A method which chooses too many components will not fit the test data well (be overly biased, similar to nearest neighbor) and so this allows for easy comparison between methods.
 
 In order to perform this step, simply separate training and testing data and load in the vector of $\pis$ computed on training data.
 
@@ -319,7 +319,7 @@ weightedquants=lapply(seq(1:100),function(j){total.quant.per.snp(j,covmat,b.gp.h
 
 \section{Putting it All together}
 
-First, we load the strong t statistics from which to derive the covariance matrices. Note that we remove the rownames for this portion and store the vector of names in 'genesnpnames'.
+First, we load the strong t statistics from which to derive the covariance matrices. Note that we remove the row-names for this portion and store the vector of names in 'genesnpnames'.
 
 \begin{verbatim}
 gene.snp.names=na.omit(read.table("~/Dropbox/AllGeneSNPStuff/max_tscore_eQTL.table.txt"))[,1]
@@ -355,7 +355,7 @@ compute.hm.train(train.b = b.train,se.train = se.train,covmat = covmat,A="1000tr
 \end{verbatim}   
 
 
-If we want to compare with previous approaches, we can compute the test set likelihood. Critically, note that our test set does NOT contain our training set.
+If we want to compare with previous approaches, we can compute the test-set likelihood. Critically, note that our test set does NOT contain our training set.
 
 \begin{verbatim}
 b.test=t.stat[1001:nrow(t.stat),]
@@ -374,6 +374,6 @@ rownames(b.test)=gene.snp.names
 weightedquants=lapply(seq(1:100),function(j){total.quant.per.snp(j,covmat,b.gp.hat=b.test,se.gp.hat = se.test,pis,A="Simulations",checkpoint = FALSE)})
 \end{verbatim}
 
-This will return a set of 6 files containing the JxR matrix of posterior means, marginal variances, tail probabilities, local false sign rates, and the JxK matrix of posterior weights.Checkpoint = FAlSE means that the files will be created (rather than simply outputting an object array which contains the posterior quanitites.
+This will return a set of 6 files containing the JxR matrix of posterior means, marginal variances, tail probabilities, local false sign rates, and the JxK matrix of posterior weights. Checkpoint = FALSE means that the files will be created (rather than simply outputting an object array which contains the posterior quantities.
 
 \end{document}
