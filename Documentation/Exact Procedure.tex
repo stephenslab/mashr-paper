@@ -1,0 +1,157 @@
+\nonstopmode  % to allow pdflatex to compile even if errors are raised (e.g. missing figures)
+
+\documentclass[10pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{graphicx}
+% \graphicspath{{./figures/}} % save all figures in the same directory
+\usepackage{color} 
+\usepackage{hyperref}
+\usepackage{parskip}
+\setlength{\parindent}{0pt}
+
+% Text layout
+\topmargin 0.0cm
+\oddsidemargin 0.5cm
+\evensidemargin 0.5cm
+\textwidth 16cm 
+\textheight 21cm
+
+%% PLEASE INCLUDE ALL MACROS BELOW
+\newcommand{\etal}{\textit{et al.}} % use as "\etal{}" in citations
+%\newcommand{\Prob}{\mathbb{P}} % symbol for proba
+\newcommand{\Prd}{\mathsf{P}} % symbol for discrete proba
+\newcommand{\Exp}{\mathbb{E}} % symbol for expectation
+\newcommand{\Var}{\mathbb{V}} % symbol for variance
+\newcommand{\Cov}{\mathbb{C}} % symbol for covariance
+\newcommand{\Norm}{{\mathcal{N}}} % symbol for Normal distribution
+\newcommand{\BF}{{\text{BF}}} % symbol for Bayes factor
+\newcommand{\Lik}{{\mathcal{L}}} % symbol for 
+
+\begin{document}
+\title{Exact Procedure: With Z stats}
+\author{Sarah Urbut}
+\date{\today}
+\maketitle
+
+\begin{itemize}
+
+First, I load the 16,069 x 44 matrix of maximum z statistics statistics into memory. I had previously computed the SFA decomposition on this matrix using 5 factors on the $\textbf{PPS Cluster}$. The steps that follow were run on the $\textbf{Midway Cluster}.
+
+\begin{verbatim}
+
+z.stat <- read.table("maxz.txt")
+lambda.mat=as.matrix(read.table("zsfa_lambda.out"))
+factor.mat=as.matrix(read.table("zsfa_F.out"))
+\end{verbatim}
+
+
+
+\section{ Deconvolution Step}
+
+I then perform deconvolution.em which initiatlizes the EM algorithm with the $X'X$, where X is the 16,069 x 44 matrix of z statistics from Matrix QTL. In brief, this is how the deconvolution.em algorithm works.
+
+\begin{enumerate}
+\item Produce a 2 element list of initialization parameters containing the initial covariance matrix (or matrices if you choose to fit more than one component) and a vector of their initial weights (again, here only 1: $\pi=1$.) 
+
+\item Choose `zstrong' as the top 10,000 gene-pairs  and 'learn' the denoised covariance matrix from this choice.
+\item Return a list with the denoised covariance matrix and corresponding mixture weights (here a vector of length 1 with $\pi$ = 1)
+\end {enumerate}
+
+\begin{verbatim}
+max.step=deconvolution.em(t.stat = z.stat,factor.mat = factor.mat,lambda.mat = lambda.mat,K=1,P=2,permsnp = 10000)
+\end{verbatim}
+%deconvolution.em <- function(t.stat,factor.mat,lambda.mat,K,P,permsnp=10000){##note here that we have let t.stat = z.stat
+%  init.cov=init.covmat(t.stat=t.stat,factor.mat = factor.mat,lambda.mat = lambda.mat,K=K,P=P)
+%  pi=rep(1/K,K)
+%  R=ncol(t.stat)
+%  
+%  par.init=list(true.covs=init.cov,pi=rep(1/K,K))
+%  par.init.unlist=unlist(par.init)
+%  
+%  
+%  maxes=apply(t.stat,1,function(x){mean(abs(x))})##takes the strongest t statistics
+%  a=cbind(t.stat,maxes)
+%  t=a[order(a$maxes,decreasing=TRUE),-45]
+%  t.strong=t[1:permsnp,]
+%  s.strong=matrix(rep(1,R*nrow(t.strong)),nrow=nrow(t.strong))
+%
+%  s=squarem(par=par.init.unlist,b.j.hat=t.strong,se.j.hat=s.strong,fixptfn=fixpoint.cov, objfn=negpenlogliksarah)
+%  max.step.unlist=s$par
+%  dim.true.covs=c(K,R,R)
+%  pi.length=length(pi)
+%  max.step = list(true.covs = array(max.step.unlist[1:prod(dim.true.covs)], dim = dim.true.covs), pi = max.step.unlist[(prod(dim.true.covs)+1):(prod(dim.true.covs)+pi.length)])
+%  return(max.step)
+%}
+
+
+\section{Generation of List of Covariance Matirce}
+I then use this covariance matrix in place of our original choice of $X'X$ to create a KxL list of covariance matrices. The function $\textbf{compute.hm.covmat}$ chooses a grid according to the range of effect sizes present in the initial 16,069 x 44 matrix of strong Z statistics. 
+Here, I also used the Identity, rank 2 PC matrix, 5 factors, the rank 5 SFA approximation and the 44+1 eqtlbma.lite configurations. This is 54 matrices, and in this data set, $\textbf{autoselect.mixgrid}$ chose a grid with 22 omegas for a total of 1188 covariance matrices.
+
+\begin{verbatim}
+covmat=compute.hm.covmat(z.stat,s.j,Q=5,lambda.mat,P=2,A="jul3",factor.mat,max.step=max.step)
+
+\end{verbatim}
+
+$\textbf{covmat}$ is thus a list of 1188 covariance matrices.
+
+
+\section{Mixture Weights}
+We now need to compute the mixture weights hierarchically. I use  a randomly chosen set of 20000 gene snp pairs from the matrix QTL output to estimate these mixture proportions. This set does not contain the strongest gene-snp pairs, and thus will allow for substantial shrinkage, as a majority of these gene-snp pairs will  have their likelihood maximized at low $\omega$ components.
+
+\begin{verbatim}
+compute.hm.train(train.b = train.z,se.train = train.s,covmat = covmat,A="jul3")
+\end{verbatim}
+
+$\textbf{compute.hm.train}$ produces an rds object with prior weights, a likelihood matrix, and a pdf of the barplot of these weights.
+
+\section{Posterior Quantities}
+Now that I have the estimated mixture weights stored in the vector $\textbf{pis}$. I proceed to the inference step, where I compute the posterior weights and corresponding posterior quantities across all original 16069 gene snp pairs. In brief, the posterior mean, post covariance matrix and tissue specific tail probabilities are computed across all K components for each gene snp pair, and then weighted according to the posterior weights. This is performed in the $\textbf{weightedquants}$ step.
+
+
+ \begin{verbatim}
+weightedquants=lapply(seq(1:nrow(z.stat)),function(j){total.quant.per.snp(j,covmat,b.gp.hat=z.stat,se.gp.hat = s.j,pis,A,checkpoint = FALSE)})
+\end{verbatim}                          
+%  all.arrays=post.array.per.snp(j,covmat,b.gp.hat,se.gp.hat)
+%  post.means=all.arrays$post.means
+%  post.ups=all.arrays$post.ups
+%  post.downs=all.arrays$post.downs
+%  post.covs=all.arrays$post.covs
+%  post.nulls=all.arrays$post.nulls
+%  
+%  all.mus=total.mean.per.snp(post.weights,post.means)
+%  all.ups=total.up.per.snp(post.weights,post.ups)
+%  all.downs=total.down.per.snp(post.weights,post.downs )
+%  lfsr=t(lfsr.per.snp(all.ups,all.downs))
+%  all.covs.partone=total.covs.partone.persnp(post.means,post.covs,post.weights)
+%  marginal.var=all.covs.partone-all.mus^2
+%
+%\end{verbatim}
+This will return a set of 6 files containing the JxR matrix of posterior means, marginal variances, tail probabilities, local false sign rates, and the JxK matrix of posterior weights. Checkpoint = FALSE means that the files will be created (rather than simply outputting an object array which contains the posterior quantities.
+
+I have also simulated, for each gene snp pair, 100 draws from the multivariate normal distribution characterized by the posterior mean and covariance produced at a component chosen according to its posterior weight (responsibility). For each gene-snp pair, I count the number of simulations in which at least two signs differed. 
+
+\begin{verbatim}
+sim.array.generation = function(j,b.j.hat,se.j.hat,covmat,pis,sim){
+K=length(covmat)
+b.mle=as.vector(t(b.j.hat[j,]))##turn i into a R x 1 vector
+V.j.hat=diag(se.j.hat[j,]^2)
+lik=lik.func(b.mle,V.j.hat,covmat)
+post.weights=lik*pis/sum(lik*pis)
+component=apply(rmultinom(100,1,prob = post.weights),2,function(x){which(x==1)})##choose a component according to responsibility
+tinv=lapply(seq(1:sim),function(sim){k=component[sim];solve(covmat[[k]]+V.j.hat)})##generate a list of inverted Ks for all the simulations
+b.j.=lapply(seq(1:sim),function(sim){ k=component[sim];post.b.jk.ed.mean(b.mle,tinv=tinv[[sim]],covmat[[k]])})##for each component, compute posterior mean
+B.j.=lapply(seq(1:sim),function(sim){ k=component[sim];post.b.jk.ed.cov(tinv=tinv[[sim]],covmat[[k]])})## a list of posterior covariances
+simulations=sapply(seq(1:sim),function(x){ 
+  dat=mvrnorm(1,mu = b.j.[[x]],Sigma = B.j.[[x]])##for each simulation, generate a multivariate normal according to posterior mean and posterior covariance assigned
+   pos=sum(dat>0);neg=sum(dat<0);pos*neg!=0})##for each simulation, ask if they are all one direction; if not, assign1 for heterogeneity
+ 
+return(sum(simulations)/length(simulations)
+)}
+\end{verbatim}
+
+
+\end{document}  
