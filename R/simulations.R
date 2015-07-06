@@ -29,10 +29,10 @@ return(sum(simulations)/length(simulations)
 )}
 
 # tim=proc.time()
-# heterogeneity=sapply(seq(1:nrow(t.stat)),function(j){sim.array.generation(j,covmat,pis,sim=100)})
+# heterogeneity=sapply(seq(1:nrow(t.stat)),function(j){sim.array.generation(j,b.j.hat=maxz,v.j,covmat,pis,sim=100)})
 # proc.time()-tim
 
-write.table(heterogeneity,"het.table.txt")
+#write.table(heterogeneity,"het.table.txt")
 #' @title heter.mixture
 #' @param lfsr = Jx(R+1)
 #' @param se.j.hat=1xR vector of their standard errors
