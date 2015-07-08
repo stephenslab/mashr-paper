@@ -1169,3 +1169,48 @@ compute.covmat.nopc = function(b.gp.hat,sebetahat,Q,t.stat,lambda.mat,A,factor.m
   
   return(covmat)}
 
+
+
+
+post.array.per.snp.list=function(j,covmat,b.gp.hat,se.gp.hat){
+  
+  
+  R=ncol(b.gp.hat)
+  K=length(covmat)
+  
+  b.mle=as.vector(t(b.gp.hat[j,]))
+  V.j.hat=diag(se.gp.hat[j,])^2
+  lik=lik.func(b.mle,V.j.hat,covmat)
+  tinv=lapply(seq(1:K),function(k){solve(covmat[[k]]+V.j.hat)})
+  B.j.=lapply(seq(1:K),function(k){
+    diag(post.b.jk.ed.cov(tinv=tinv[[k]],covmat[[k]]))
+  }
+  )
+  post.covs <- matrix(unlist(B.j.),ncol=R,byrow=TRUE)
+  b.j.=(lapply(seq(1:K),function(k){
+   b=post.b.jk.ed.mean(b.mle,tinv=tinv[[k]],covmat[[k]])##for each component, compute posterior mean
+  }
+  ))
+  post.means=matrix(unlist(b.j.),ncol=R,byrow=TRUE) ##store as KxR matrix for each indiviudal
+  
+  u.t.=(lapply(seq(1:K),function(k){
+    mean=b.j.[[k]];sigma=sqrt((B.j.[[k]]))
+    sapply(sigma,function(x){if(x==0){0}else(pnorm(0,mean[x],x,lower.tail=FALSE))})}))
+    
+post.ups=matrix(unlist(u.t.),ncol=R,byrow=TRUE) ##store as KxR matrix for each indiviudal
+    
+l.t.=(lapply(seq(1:K),function(k){
+      mean=b.j.[[k]];sigma=sqrt((B.j.[[k]]))
+      sapply(sigma,function(x){if(x==0){0}else(pnorm(0,mean[x],x,lower.tail=TRUE))})}))
+
+      post.downs=matrix(unlist(l.t.),ncol=R,byrow=TRUE) ##store as KxR matrix for each indiviudal
+
+      null.t.=(lapply(seq(1:K),function(k){
+        sigma=sqrt((B.j.[[k]]))
+        sapply(sigma,function(x){if(x==0){1}else(0)})
+      }))
+post.nulls=matrix(unlist(null.t.),ncol=R,byrow=TRUE)
+
+return(list(post.means=post.means,post.covs=post.covs,post.ups=post.ups,post.downs=post.downs,post.nulls=post.nulls))} ##store as KxR matrix for each indiviudal
+        
+      
