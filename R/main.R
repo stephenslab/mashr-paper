@@ -1214,3 +1214,56 @@ post.nulls=matrix(unlist(null.t.),ncol=R,byrow=TRUE)
 return(list(post.means=post.means,post.covs=post.covs,post.ups=post.ups,post.downs=post.downs,post.nulls=post.nulls))} ##store as KxR matrix for each indiviudal
         
       
+
+#'@title compute.lik.test.semat
+#'@param b.test JxR matrix with the mles for test gene-snp pairs
+#'@param J number of gene snp pairs to consider
+#'@param se.mat RxR matrix of standard errors of the test set, estimated as the same for all genes
+#'@param covmat K list of covariance matrices
+#'@param pis K matrix of HM weights form compute.hm.train
+#'@export
+compute.lik.test.semat=function(b.test,J,se.test,covmat,A,pis){
+  
+  J=J
+  R=ncol(b.test)
+  
+  if(file.exists(paste0("liketest",A,".rds"))==FALSE){
+    lik.mat=t(sapply(seq(1:J),function(x){lik.func(b.mle=b.test[x,],V.gp.hat=se.test^2,covmat)}))
+    saveRDS(lik.mat,paste0("liketest",A,".rds"))}
+  
+  else(lik.mat=readRDS(paste0("liketest",A,".rds")))
+  
+  
+  
+  test=lik.mat
+  write.table(total.lik.func(test,pis),paste0("total.lik.",A,".txt"))
+  post.weights=as.matrix(post.weight.func(pis,lik.mat))
+  saveRDS(post.weights,paste0("post.weight.",A,".rds"))
+  rm(post.weights) ## to conserve memory
+  rm(lik.mat) ## to conserve memory
+  
+  
+} 
+
+#'@title compute.hm.train.semat
+#'@export
+compute.hm.train.semat=function(train.b,se.mat,covmat,A){
+  
+  J=nrow(train.b)
+  R=ncol(train.b)
+  
+  if(file.exists(paste0("liketrain",A,".rds"))==FALSE){
+    lik.mat=t(sapply(seq(1:J),function(x){lik.func(b.mle=train.b[x,],V.gp.hat=se.mat^2,covmat)}))
+    
+    saveRDS(lik.mat,paste0("liketrain",A,".rds"))}
+  
+  else(lik.mat=readRDS(paste0("liketrain",A,".rds")))
+  
+  train=lik.mat
+  pis=mixEM(matrix_lik=train,prior=rep(1,ncol(train)))
+  saveRDS(pis,paste0("pis",A,".rds"))
+  
+  pdf(paste0("pis",A,".pdf"))
+  barplot(t(as.matrix(pis$pihat)))
+  dev.off()
+}
