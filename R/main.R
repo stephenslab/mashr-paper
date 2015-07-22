@@ -1267,3 +1267,89 @@ compute.hm.train.semat=function(train.b,se.mat,covmat,A){
   barplot(t(as.matrix(pis$pihat)))
   dev.off()
 }
+
+
+
+#'@title total.quant.per.snp.with.var
+#'@param covmat a K list of covariance matrices
+#'@param b.gp.hat JxR matrix of mles
+#'@param se.gp.hat JxR matrix of standard errs
+#'@param pis Kx1 matrix of prior weights
+#'@return writes the posterior weighted quantities to a file
+#'@export
+
+total.quant.per.snp.with.var=function(j,covmat,b.gp.hat,se.mat,pis,A,checkpoint=FALSE){
+  gene.snp.name=rownames(b.gp.hat)[j]
+  b.mle=b.gp.hat[j,]
+  R=ncol(b.mle)
+  lik.snp=lik.func(b.mle,se.mat,covmat)
+  post.weights=t(lik.snp*pis/sum(lik.snp*pis))
+  
+  all.arrays=post.array.per.snp.with.mat(j,covmat,b.gp.hat,se.mat)
+  post.means=all.arrays$post.means
+  post.ups=all.arrays$post.ups
+  post.downs=all.arrays$post.downs
+  post.covs=all.arrays$post.covs
+  post.nulls=all.arrays$post.nulls
+  
+  all.mus=total.mean.per.snp(post.weights,post.means)
+  all.ups=total.up.per.snp(post.weights,post.ups)
+  all.downs=total.down.per.snp(post.weights,post.downs )
+  lfsr=t(lfsr.per.snp(all.ups,all.downs))
+  all.covs.partone=total.covs.partone.persnp(post.means,post.covs,post.weights)
+  marginal.var=all.covs.partone-all.mus^2
+  rownames(all.mus)=gene.snp.name
+  rownames(all.ups)=gene.snp.name
+  rownames(all.downs)=gene.snp.name
+  rownames(lfsr)=gene.snp.name
+  rownames(marginal.var)=gene.snp.name
+  
+  if(checkpoint==FALSE){
+    write.table(all.mus,paste0(A,"posterior.means.txt"),append=TRUE,col.names=FALSE)
+    write.table(all.ups,paste0(A,"posterior.ups.txt"),append=TRUE,col.names=FALSE)
+    write.table(all.downs,paste0(A,"posterior.downs.txt"),append=TRUE,col.names=FALSE)
+    write.table(marginal.var,paste0(A,"marginal.var.txt"),append=TRUE,col.names=FALSE)
+    write.table(lfsr,paste0(A,"lfsr.txt"),append=TRUE,col.names=FALSE)
+    write.table(post.weights,paste0(A,"post.weights.txt"),append=TRUE,col.names=FALSE)}
+  else{return(list(posterior.means=all.mus,posterior.downs=all.downs,posterior.ups=all.ups,lfsr=lfsr,marginal.var=marginal.var))}
+}
+
+
+#'@title post.array.per.snp.with.mat
+#'@export
+
+post.array.per.snp.with.mat=function(j,covmat,b.gp.hat,se.mat){
+  
+  
+  R=ncol(b.gp.hat)
+  K=length(covmat)
+  post.means=array(NA,dim=c(K,R))
+  post.covs=array(NA,dim=c(K,R))
+  post.ups=array(NA,dim=c(K,R))
+  post.nulls=array(NA,dim=c(K,R))
+  post.downs=array(NA,dim=c(K,R))
+  
+  b.mle=as.vector(t(b.gp.hat[j,]))##turn i into a R x 1 vector
+  V.gp.hat=se.mat^2
+  V.gp.hat.inv <- solve(V.gp.hat)
+  
+  for(k in 1:K){
+    
+    
+    U.gp1kl <- (post.b.gpkl.cov(V.gp.hat.inv, covmat[[k]]))
+    mu.gp1kl <- as.array(post.b.gpkl.mean(b.mle, V.gp.hat.inv, U.gp1kl))
+    post.means[k,]=mu.gp1kl
+    post.covs[k,]=as.array(diag(U.gp1kl))
+    for(r in 1:R){##` marginal calculation for each tissue in each component
+      if(post.covs[k,r]==0){###if the covariance matrix has entry 0, then p(null=1)
+        post.ups[k,r]=0#need to figure out how to make the list have individual entries
+        post.downs[k,r]=0
+        post.nulls[k,r]=1}
+      else{
+        post.ups[k,r]=pnorm(0,mean=mu.gp1kl[r],sd=sqrt(diag(U.gp1kl)[r]),lower.tail=F)
+        post.downs[k,r]=pnorm(0,mean=mu.gp1kl[r],sd=sqrt(diag(U.gp1kl)[r]),lower.tail=T)
+        post.nulls[k,r]=0}
+    }
+  }
+  return(list(post.means=post.means,post.ups=post.ups,post.downs=post.downs,post.covs=post.covs,post.nulls=post.nulls))
+}
