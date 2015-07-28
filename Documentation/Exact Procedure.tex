@@ -51,17 +51,37 @@ factor.mat=as.matrix(read.table("zsfa_F.out"))
 
 \section{ Deconvolution Step}
 
-I then perform deconvolution.em which initiatlizes the EM algorithm with the $X'X$, where X is the 16,069 x 44 matrix of z statistics from Matrix QTL. In brief, this is how the deconvolution.em algorithm works.
+For a given $\omega_{l}$, we specify 4 `types' of $RxR$ prior covariance matrices $U_{k,l}$.
+\begin{enumerate}
+
+\item $U_{k=1,l}$ = $\omega_l$ $\mathbf{I}_{R}$
+
+\item $U_{k=2,l}$ = $\omega_l$X_{z}$ The (naively) estimated tissue covariance matrix as estimated from the column-centered J \times R$ matrix of $Z$ statistics, $Z_{center}$: $\frac{1}{J}$ $Z_{center}$^{t}$ $Z_{center}$
+
+\item $U_{k=3,l}$ = $\omega_l$ $\frac{1}{J}$ $V_{1...p}$ $d^{2}_{1...p}$   $V^{t}_{1..p}$ is the rank $p$ eigenvector approximation of the tissue covariance matrices, i.e., the sum of the first $p$ eigenvector approximations, where $\pcv_{1...p}$  represent the eigenvectors of the covariance matrix of tissues and $\pcd_{1...p}$ are the first $p$ eigenvalues.
+
+\item $U_{k=4:4+Q,l}$ = $\frac{1}{J}(($\Lambda\mathbf{F})^{t} \Lambda \mathbf{F})_{q}$ corresponding to the $q_{th}$ sparse factor representation of the tissue covariance matrix %(not the sum of the first $q$, as above)
+
+\item $U_{k=4+Q+1,l}$ = $\frac{1}{J}$ ($\($\Lambda \mathbf{F})^{t} \Lambda \mathbf{F}$ is the sparse factor representation of the tissue covariance matrix, estimated using all $q$ factors.
+
+\end{enumerate}
+
+
+To retrieve a 'denoised' or 'deconvoluted' estimate of the non-single rank dimensional reduction matrices, I then perform deconvolution.em which initializes the EM algorithm with  the matrices specified in (2), (3) and (5). The final results of this iterative procedure preserves the rank of the initialization matrix, and allows us to use the 'true' effect component as missing data in deconvoluting the prior covariance matrices.
+
+In brief, this is how the deconvolution.em algorithm works.
 
 \begin{enumerate}
-\item Produce a 2 element list of initialization parameters containing the initial covariance matrix (or matrices if you choose to fit more than one component) and a vector of their initial weights (again, here only 1: $\pi=1$.) 
+\item Produce a 2 element list of initialization parameters containing the initial covariance matrices and a vector of their initial weights, $\mathbf{\pi}$. Critically, this vector $\mathbf{\pi}$ will need to be recomputed when we add these deconvoluted estimates to the full set of covariance matrices.
 
-\item Choose `zstrong' as the top 10,000 gene-pairs  and 'learn' the denoised covariance matrix from this choice.
-\item Return a list with the denoised covariance matrix and corresponding mixture weights (here a vector of length 1 with $\pi$ = 1)
+\item Choose `zstrong' as the top $permsnp$ gene-pairs  and 'learn' the denoised covariance matrix from this choice. In practice, we use the maximum snp per gene, thus learning from the full set of 16,069 genes.
+\item Return a list with the denoised covariance matrix and corresponding mixture weights.
 \end {enumerate}
 
+From extensive investigation with testing and training data, I found that using a rank 10 SVD approximation for the matrix in (5) as well as the rank 5 SFA approximation and the empirical covariance matrix maximized the likelihood of a test data set. 
 \begin{verbatim}
-max.step=deconvolution.em(t.stat = z.stat,factor.mat = factor.mat,lambda.mat = lambda.mat,K=1,P=2,permsnp = 10000)
+max.step=deconvolution.em(t.stat = z.stat,factor.mat = factor.mat,
+lambda.mat = lambda.mat,K=3,P=10,permsnp = nrow(z.stat)
 \end{verbatim}
 %deconvolution.em <- function(t.stat,factor.mat,lambda.mat,K,P,permsnp=10000){##note here that we have let t.stat = z.stat
 %  init.cov=init.covmat(t.stat=t.stat,factor.mat = factor.mat,lambda.mat = lambda.mat,K=K,P=P)
@@ -88,11 +108,12 @@ max.step=deconvolution.em(t.stat = z.stat,factor.mat = factor.mat,lambda.mat = l
 
 
 \section{Generation of List of Covariance Matirce}
-I then use this covariance matrix in place of our original choice of $X'X$ to create a KxL list of covariance matrices. The function $\textbf{compute.hm.covmat}$ chooses a grid according to the range of effect sizes present in the initial 16,069 x 44 matrix of strong Z statistics. 
-Here, I also used the Identity, rank 2 PC matrix, 5 factors, the rank 5 SFA approximation and the 44+1 eqtlbma.lite configurations. This is 54 matrices, and in this data set, $\textbf{autoselect.mixgrid}$ chose a grid with 22 omegas for a total of 1188 covariance matrices.
+I then use these three non single-rank covariance matrix in place of our original choice of the empirical covariance matrix, SFA and SVD approximations to create a KxL list of covariance matrices. The function $\textbf{compute.hm.covmat}$ chooses an 'L' element grid according to the range of effect sizes present in the initial 16,069 x 44 matrix of strong Z statistics. 
+Here, I also used the Identity (K=1), 5 single-rank SFA factors (K=4-9), and the 44+1 eqtlbma.lite configurations (K=10:54). This is 54 matrices, and in this data set, $\textbf{autoselect.mixgrid}$ chose a grid with 22 omegas for a total of 1188 covariance matrices.
 
 \begin{verbatim}
-covmat=compute.hm.covmat(z.stat,s.j,Q=5,lambda.mat,P=2,A="jul3",factor.mat,max.step=max.step)
+covmat=compute.hm.covmat.all.max.step(z.stat,v.j,Q=5,lambda.mat,
+A="filename",factor.mat,max.step=max.step)
 
 \end{verbatim}
 
@@ -113,7 +134,8 @@ Now that I have the estimated mixture weights stored in the vector $\textbf{pis}
 
 
  \begin{verbatim}
-weightedquants=lapply(seq(1:nrow(z.stat)),function(j){total.quant.per.snp(j,covmat,b.gp.hat=z.stat,se.gp.hat = s.j,pis,A,checkpoint = FALSE)})
+weightedquants=lapply(seq(1:nrow(z.stat)),function(j){total.quant.per.snp(j,covmat,b.gp.hat=z.stat,
+se.gp.hat = s.j,pis,A,checkpoint = FALSE)})
 \end{verbatim}                          
 %  all.arrays=post.array.per.snp(j,covmat,b.gp.hat,se.gp.hat)
 %  post.means=all.arrays$post.means
@@ -132,6 +154,26 @@ weightedquants=lapply(seq(1:nrow(z.stat)),function(j){total.quant.per.snp(j,covm
 %\end{verbatim}
 This will return a set of 6 files containing the JxR matrix of posterior means, marginal variances, tail probabilities, local false sign rates, and the JxK matrix of posterior weights. Checkpoint = FALSE means that the files will be created (rather than simply outputting an object array which contains the posterior quantities.
 
+
+\section{Testing and Training}
+
+In order to determine the optimal number and rank of the covariance matrices, we divide our data set into a training and test data set, each containing 8000 genes.
+
+In the training set, we proceed as above: choosing the top SNP for each of the 8000 genes, creating a list of covariance matrices through deconvolution and grid selection of these top 'training gene-snp' pairs. 
+
+Then, within the training data, we similarly choose a random set of gene-snp pairs (restricting our analysis to genes contained in the training set. Again, we choose 20,000 random-gene snp pairs and use the EM algorithm to learn the mixture proportions $\pi$  from this data set.
+
+We then use the KxL vector of $\pi$ from the training set to estimate the log likelihood of each data point in the test data set. If our model is 'overfit' to the training data set, than a larger number of covariance matrices may actually decrease the test log-likelihood. 
+
+I found that the K=1188 set of covariance matrices containing the Identity, the denoised empirical covariance matrix, rank 5 SFA approximation and rank 10 SVD approximation as well as 5 single-rank SFA factors and the 45 eqtl.bma.lite configurations maximized this likelihood.
+
+\begin{verbatim}
+
+total.lik.k1 (estimating only XtX with deconvolution)		 -1268622.16787315	total.lik.nodeconvolution.ee2.rank2.txt		 -1277777	total.lik.nodeconvolution.rank2.txt		 -1269442.93623141	total.lik.nopcnoqwithdeconv.txt	 -1269277.17265676	total.lik.nopcwithdeconv.txt	-1268966.41110003	total.lik.rank10.txt	 -1267592.43262411	total.lik.rank2.txt	 -1268322.99623033	total.lik.rank5noq.txt	-1268191.22715182	total.lik.rank5.txt	 -1268102.92517947	total.lik.rank5withres.txt	 -1283993.13507543	
+
+\end{verbatim}
+
+\section{Simulation}
 I have also simulated, for each gene snp pair, 100 draws from the multivariate normal distribution characterized by the posterior mean and covariance produced at a component chosen according to its posterior weight (responsibility). For each gene-snp pair, I count the number of simulations in which at least two signs differed. 
 
 \begin{verbatim}
@@ -141,7 +183,7 @@ b.mle=as.vector(t(b.j.hat[j,]))##turn i into a R x 1 vector
 V.j.hat=diag(se.j.hat[j,]^2)
 lik=lik.func(b.mle,V.j.hat,covmat)
 post.weights=lik*pis/sum(lik*pis)
-component=apply(rmultinom(100,1,prob = post.weights),2,function(x){which(x==1)})##choose a component according to responsibility
+component=apply(rmultinom(sim,1,prob = post.weights),2,function(x){which(x==1)})##choose a component according to responsibility
 tinv=lapply(seq(1:sim),function(sim){k=component[sim];solve(covmat[[k]]+V.j.hat)})##generate a list of inverted Ks for all the simulations
 b.j.=lapply(seq(1:sim),function(sim){ k=component[sim];post.b.jk.ed.mean(b.mle,tinv=tinv[[sim]],covmat[[k]])})##for each component, compute posterior mean
 B.j.=lapply(seq(1:sim),function(sim){ k=component[sim];post.b.jk.ed.cov(tinv=tinv[[sim]],covmat[[k]])})## a list of posterior covariances

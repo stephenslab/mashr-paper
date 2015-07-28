@@ -462,6 +462,7 @@ get.prior.covar.with.all.max.step <- function(X.c,max.step,lambda.mat, Q, factor
 #' @param max.step: the list ouput of deconvolution EM (list of length 2, contains the denoised covariance  matrices and vector of pi)
 #' @param Q number of single rank factors to include in the set of covariance matrices
 #' @param P PC approximation
+#'  @param v.j a JxR matrix of standard errors for scaling (in the zstat case this is all 1s)
 #' @param BMA Whether or not to include singleton and full configurations
 #' @return a list of covariance matrices
 
