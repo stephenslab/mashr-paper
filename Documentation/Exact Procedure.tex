@@ -167,6 +167,85 @@ We then use the KxL vector of $\pi$ from the training set to estimate the log li
 
 I found that the K=1188 set of covariance matrices containing the Identity, the denoised empirical covariance matrix, rank 5 SFA approximation and rank 10 SVD approximation as well as 5 single-rank SFA factors and the 45 eqtl.bma.lite configurations maximized this likelihood.
 
+
+\begin{verbatim}
+
+mdat <- GetSS("max", "/project/mstephens/gtex/analysis/april2015/query/MatrixEQTLSumStats.h5")
+
+ndat <- GetSS("null", "/project/mstephens/gtex/analysis/april2015/query/MatrixEQTLSumStats.h5")
+
+N1 <- 8000
+N2 <- 16069
+strong.train <- SubsetMatLists(mdat, seq(1, N1))
+strong.test <- SubsetMatLists(mdat, seq(N1 + 1, N2))
+
+strong.train.genes <- as.character(lapply(strsplit(rownames(strong.train$beta), "_"), function(x) x[1])) 
+
+strong.test.genes <- as.character(lapply(strsplit(rownames(strong.test$beta), "_"), function(x) x[1]))
+
+null.genes <- as.character(lapply(strsplit(rownames(ndat$beta), "_"), function(x) x[1]))
+
+
+null.train <- SubsetMatLists(ndat, which(null.genes %in% strong.train.genes))$z[1:20000,]
+
+null.test <- SubsetMatLists(ndat, which(null.genes %in% strong.test.genes))$z[1:20000,]
+
+big.train=strong.train$z
+big.test=strong.test$z
+
+
+max.stepk1=readRDS("maxstep1_train.rds")
+max.steprank5=readRDS("maxsteprank5pcfastjul20_train.rds")
+max.steprank2=readRDS("maxsteprank2pcfastjul20_train.rds")
+#max.steprank10=readRDS("maxsteprank10pc_trainjul20.rds")
+
+max.steprank10=readRDS("trainmaxsteprank10pc.rds")
+
+factor.mat=as.matrix(read.table("../jul3/zsfa_F.out"))
+lambda.mat=as.matrix(read.table("../jul3/zsfa_lambda.out"))
+
+
+z.stat=big.train
+rownames(z.stat)=NULL
+colnames(z.stat)=NULL
+v.j=matrix(rep(1,ncol(z.stat)*nrow(z.stat)),ncol=ncol(z.stat),nrow=nrow(z.stat))
+
+
+
+train.z=null.train[1:20000,]
+rownames(train.z)=NULL
+colnames(train.z)=NULL
+
+train.v=matrix(rep(1,ncol(train.z)*nrow(train.z)),ncol=ncol(train.z),nrow=nrow(train.z))
+
+test.z=null.test
+rownames(test.z)=NULL
+colnames(test.z)=NULL
+
+##withmaxstepk1"
+##compute covarinace matrices on strongest training gene-snp pairs
+
+covmat=compute.hm.covmat(z.stat,v.j,Q=5,lambda.mat,P=2,A="jul21k1",factor.mat,max.step=max.stepk1)
+
+##compute weights on random training set
+
+tim=proc.time()
+compute.hm.train(train.b = train.z,se.train = train.v,covmat = covmat,A="jul21k1") ##compute the HM weights on training data
+proc.time()-tim
+
+A="jul21k1"
+pis=readRDS(paste0("pis",A,".rds"))$pihat
+
+##use training weights to compute test set likelihood
+compute.lik.test(test.z,J=nrow(null.test),train.v,covmat,A="jul21k1",pis) 
+rm(covmat)
+rm(pis)
+\end{verbatim}
+
+Here I show the results:
+
+
+
 \begin{verbatim}
 
 total.lik.k1 (estimating only XtX with deconvolution)		 -1268622.16787315	total.lik.nodeconvolution.ee2.rank2.txt		 -1277777	total.lik.nodeconvolution.rank2.txt		 -1269442.93623141	total.lik.nopcnoqwithdeconv.txt	 -1269277.17265676	total.lik.nopcwithdeconv.txt	-1268966.41110003	total.lik.rank10.txt	 -1267592.43262411	total.lik.rank2.txt	 -1268322.99623033	total.lik.rank5noq.txt	-1268191.22715182	total.lik.rank5.txt	 -1268102.92517947	total.lik.rank5withres.txt	 -1283993.13507543	
