@@ -244,7 +244,8 @@ deconvolution.em <- function(t.stat,factor.mat,lambda.mat,K,P,permsnp=1000){
   
   maxes=apply(t.stat,1,function(x){mean(abs(x))})##takes the strongest t statistics
   a=cbind(t.stat,maxes)
-  t=a[order(a$maxes,decreasing=TRUE),-45]
+  f=ncol(a)
+  t=a[order(a$maxes,decreasing=TRUE),-f]
   t.strong=t[1:permsnp,]
   v.strong=matrix(rep(1,R*nrow(t.strong)),nrow=nrow(t.strong))
 
