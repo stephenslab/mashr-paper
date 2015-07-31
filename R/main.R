@@ -1353,3 +1353,50 @@ post.array.per.snp.with.mat=function(j,covmat,b.gp.hat,se.mat){
   }
   return(list(post.means=post.means,post.ups=post.ups,post.downs=post.downs,post.covs=post.covs,post.nulls=post.nulls))
 }
+
+
+#' @title get.prior.covar.bmafull.only
+#' @param R number of tissues
+#' @param omega.table L vector grid weights
+#' @return a L x K list of covariance matrices
+#' @export
+get.prior.covar.bmafull.only <- function(R,omega.table)  {
+  test=list()
+  for(l in 1:nrow(omega.table)){
+    test[[l]]=list()
+    omega=omega.table[l,]
+    
+      
+    temp=rep(list(c(0,1)),R)
+    configs = as.matrix(expand.grid(temp)[-1,])
+    colnames(configs)=NULL
+   
+    for(c in 1:nrow(configs)) {
+      mat=(configs[c,]%*%t(configs[c,]))
+      test[[l]][[c]]=omega*mat}}
+  return(U.0kl=test)
+}
+
+
+#' @title compute.covmat.bmafull.only
+#' @param b.gp.hat a JxR matrix of betahats
+#' @param sebetahat a JxR matrix of their standard errors
+#' @return A list of covariance matrices
+#' @export
+
+
+compute.covmat.bmafull.only = function(b.gp.hat,sebetahat,A){
+  
+  omega=mult.tissue.grid(mult=sqrt(2),b.gp.hat,sebetahat)
+  
+  omega.table=data.frame(omega)
+  
+  
+  U.0=get.prior.covar.bmafull.only(R = ncol(b.gp.hat),omega.table = omega.table)
+  
+  
+  covmat=unlist(U.0,recursive=F)
+  saveRDS(covmat,paste0("covmat",A,".rds"))
+  
+  return(covmat)}
+

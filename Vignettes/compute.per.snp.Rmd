@@ -135,6 +135,7 @@ plot(post.means[j,],post.weights[j,]%*%all.arrays$post.means)
 
 
 lapply(seq(1:R),function(r){plot(b.truth.test[1:100,r],post.means[,r])})
+cor(as.vector(as.matrix(post.means)),as.vector(as.matrix(b.truth.test[1:100,])))
 
 ```
 
