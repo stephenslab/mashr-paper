@@ -241,7 +241,7 @@ deconvolution.em <- function(t.stat,factor.mat,lambda.mat,K,P,permsnp=1000){
   par.init=list(true.covs=init.cov,pi=rep(1/K,K))
   par.init.unlist=unlist(par.init)
   
-  
+  t.stat=data.frame(t.stat)
   maxes=apply(t.stat,1,function(x){mean(abs(x))})##takes the strongest t statistics
   a=cbind(t.stat,maxes)
   f=ncol(a)
@@ -463,15 +463,16 @@ get.prior.covar.with.all.max.step <- function(X.c,max.step,lambda.mat, Q, factor
 #' @param max.step: the list ouput of deconvolution EM (list of length 2, contains the denoised covariance  matrices and vector of pi)
 #' @param Q number of single rank factors to include in the set of covariance matrices
 #' @param P PC approximation
-#'  @param v.j a JxR matrix of standard errors for scaling (in the zstat case this is all 1s)
+#' @param b.hat,se.hat matrices to help choose grid weights (JxR)
+#' @param v.j a JxR matrix of standard errors for scaling (in the zstat case this is all 1s)
 #' @param BMA Whether or not to include singleton and full configurations
 #' @return a list of covariance matrices
 
-compute.hm.covmat.all.max.step = function(t.stat,v.j,Q,lambda.mat,A,factor.mat,max.step){
+compute.hm.covmat.all.max.step = function(b.hat,se.hat,t.stat,v.j,Q,lambda.mat,A,factor.mat,max.step){
   X.real=as.matrix(t.stat)
   X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
   R=ncol(X.c)
-  omega=mult.tissue.grid(mult=sqrt(2),t.stat,v.j)
+  omega=mult.tissue.grid(mult=sqrt(2),b.hat,se.hat)
   omega.table=data.frame(omega)
   lambda.mat=lambda.mat
   A=A

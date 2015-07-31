@@ -1,5 +1,5 @@
 ---
-title: "PerSnpVignette"
+title: "PerSnpVignetteWithT"
 output: html_document
 ---
 
@@ -20,6 +20,9 @@ suppressPackageStartupMessages(require("mvtnorm"))
 Then, we need to load our matrix of 'strong' t statistics to create the covariance matrices as well as the matrix of factors from our SFA model. In this example, we will not use the additional BMA configurations (i.e., bma=FALSE). Also load the maximum beta hats and t statistics for grid selection.
 
 ```{r}
+source("~/matrix_ash/R/main.R")
+source("~/matrix_ash/R/sarah's_mixem.R")
+source("~/matrix_ash/R/mixEm.R")
 
 set.seed(123)
 R=5
@@ -29,11 +32,15 @@ covdat = factor_sim(n=1000,K=10,betasd=1,esd=0.3,d=5)
 b.gp.hat=covdat$betahat
 se.gp.hat=covdat$sebetahat
 t.stat=covdat$tstat
+v.j=matrix(rep(1,ncol(t.stat)*nrow(t.stat)),nrow=nrow(t.stat),ncol=ncol(t.stat))
 
 lambda.mat=covdat$lambda
 factor.mat=covdat$factors
-covmat=compute.covmat(b.gp.hat,se.gp.hat,Q=5,t.stat,lambda.mat=lambda.mat,P=2,A="simulation",factor.mat=factor.mat,bma=TRUE)
-covmat=compute.hm.covmat.all.max.step(t.stat,v.j,Q = 5,lambda.mat = lambda.mat,A="sim",factor.mat = factor.mat,max.step=ms)
+#max.step=deconvolution.em(t.stat = t.stat,factor.mat = factors,lambda.mat = lambda,K = 3,P = 3,permsnp = 1000)
+max.step=readRDS("max.step.rds")
+covmat=compute.hm.covmat.all.max.step(t.stat,v.j,Q = 5,lambda.mat = lambda.mat,A="sim",factor.mat = factor.mat,max.step=max.step)
+
+#covmat=compute.covmat(t.stat,v.j,Q=5,t.stat,lambda.mat=lambda.mat,P=2,A="simulation",factor.mat=factor.mat,bma=TRUE)
 K=length(covmat)
 K
 covmat[[K]]
@@ -64,14 +71,16 @@ Now, we separate into training data. I will train on 1000 gene snp Pairs.
 
 b.train=b.hat[1:1000,]
 se.train=se.hat[1:1000,]
+t.train=b.train/se.train
+se.traint=matrix(rep(1,ncol(t.train)*nrow(t.train)),nrow=nrow(t.train),ncol=ncol(t.train))
 
-compute.hm.train(train.b = b.train,se.train = se.train,covmat = covmat,A="Simulations")
+compute.hm.train(train.b = t.train,se.train = se.traint,covmat = covmat,A="Simulations")
 ##compute the HM weights on training data
 ##check to show that the likelihood computatations are correct
 A="Simulations"
 likmat=readRDS(paste0("liketrain",A,".rds"))
 likmat[1,1:10]
-lik.func(b.mle = b.train[1,],V.gp.hat = diag(se.train[1,])^2,covmat)[1:10]
+lik.func(b.mle = t.train[1,],V.gp.hat = diag(se.traint[1,])^2,covmat)[1:10]
 ```
 Note creation of three files: pis, a pdf of pis, and a matrix  of likelihoods of training data.
 Now,we remove the training data and create our test data. We can see that it contains the gene snp pairs in the rows and the standardized effect across subgroups in the columns.
@@ -82,7 +91,11 @@ rm(se.train)
 
 b.test=b.hat[1001:nrow(b.hat),]
 se.test=se.hat[1001:nrow(se.hat),]
+t.test=b.test/se.test
+se.testt=matrix(rep(1,ncol(t.test)*nrow(t.test)),nrow=nrow(t.test),ncol=ncol(t.test))
+
 b.truth.test=newdat$beta[1001:nrow(b.hat),]
+se.truth.test=newdat$sebetahat[1001:nrow(b.hat),]
 ````
 
 We read in the previously computed pis and the covariane matrix and compute the test likelihood and corresponding weights. Note the return of a file of test likeilihoods and posterior weights. Here, I will only do the computation for 100 gene-snp pairs. 
@@ -99,7 +112,7 @@ Now, we can compute the posterior quanitites for each gene snp pair. Here, we'll
 
 ```{r}
 
-weightedquants=lapply(seq(1:100),function(j){total.quant.per.snp(j,covmat,b.gp.hat=b.test,se.gp.hat = se.test,pis,A="Simulations",checkpoint = FALSE)})
+weightedquants=lapply(seq(1:100),function(j){total.quant.per.snp(j,covmat,b.gp.hat=t.test,se.gp.hat = se.testt,pis,A="Simulations",checkpoint = FALSE)})
 ```
 
 Note that we create a file of posterior weighted means, lfsr and marginal variances.
@@ -112,10 +125,10 @@ To make sure that these computations are correct,
 
 
 j=sample.int(100,1)
-all.arrays=post.array.per.snp(j=j,covmat = covmat,b.gp.hat = b.test,se.gp.hat = se.test)
+all.arrays=post.array.per.snp(j=j,covmat = covmat,b.gp.hat = t.test,se.gp.hat = se.testt)
 
-b.mle=as.vector(t(b.test[j,]))##turn i into a R x 1 vector
-V.gp.hat=diag(se.test[j,])^2
+b.mle=as.vector(t(t.test[j,]))##turn i into a R x 1 vector
+V.gp.hat=diag(se.testt[j,])^2
 V.gp.hat.inv <- solve(V.gp.hat)
 k=17
 
@@ -132,9 +145,12 @@ plot(post.means[j,],post.weights[j,]%*%all.arrays$post.means)
 (post.means[j,])
 (post.weights[j,]%*%all.arrays$post.means)
 
-
-lapply(seq(1:R),function(r){plot(b.truth.test[1:100,r],post.means[,r])})
-cor(as.vector(as.matrix(post.means)),as.vector(as.matrix(b.truth.test[1:100,])))
+b.corrected=post.means*se.truth.test[1:100,]##because the E(B|ET)is E(T|ET)*se
+plot(b.truth.test[1:100,],b.corrected)
+abline(c(0,1))
+plot(b.test[1:100,],b.corrected)
+abline(c(0,1))
+cor(as.vector(as.matrix(b.corrected)),as.vector(as.matrix(b.truth.test[1:100,])))
 
 ```
 
