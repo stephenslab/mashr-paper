@@ -33,7 +33,7 @@ t.stat=covdat$tstat
 lambda.mat=covdat$lambda
 factor.mat=covdat$factors
 covmat=compute.covmat(b.gp.hat,se.gp.hat,Q=5,t.stat,lambda.mat=lambda.mat,P=2,A="simulation",factor.mat=factor.mat,bma=TRUE)
-covmat=compute.hm.covmat.all.max.step(t.stat,v.j,Q = 5,lambda.mat = lambda.mat,A="sim",factor.mat = factor.mat,max.step=ms)
+
 K=length(covmat)
 K
 covmat[[K]]
@@ -132,9 +132,11 @@ plot(post.means[j,],post.weights[j,]%*%all.arrays$post.means)
 (post.means[j,])
 (post.weights[j,]%*%all.arrays$post.means)
 
-
-lapply(seq(1:R),function(r){plot(b.truth.test[1:100,r],post.means[,r])})
-cor(as.vector(as.matrix(post.means)),as.vector(as.matrix(b.truth.test[1:100,])))
-
 ```
 
+And observe the beautiful shrinkage!! And proof that our method is strongly correlated with original summary statistics.
+
+```{r,shrinkage}
+plot(b.test[1:100,],post.means)
+cor(as.vector(as.matrix(b.test[1:100,])),as.vector(as.matrix(post.means)))
+```
