@@ -20,11 +20,8 @@ suppressPackageStartupMessages(require("mvtnorm"))
 Then, we need to load our matrix of 'strong' t statistics to create the covariance matrices as well as the matrix of factors from our SFA model. In this example, we will not use the additional BMA configurations (i.e., bma=FALSE). Also load the maximum beta hats and t statistics for grid selection.
 
 ```{r}
-
 set.seed(123)
 R=5
-
-
 covdat = factor_sim(n=1000,K=10,betasd=1,esd=0.3,d=5)
 b.gp.hat=covdat$betahat
 se.gp.hat=covdat$sebetahat
