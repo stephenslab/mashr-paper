@@ -1062,16 +1062,17 @@ factor_sim=function(n,d=3,betasd,esd=0.3,K=10){
     k=z[j]
     mvrnorm(1,mu=rep(0,d),Sigma=covmat[[k]])
   }))
-  sebetahat=(matrix(rnorm(n*d,0,esd),ncol=d))
-  sebetahat=abs(matrix(runif(n*d,esd-0.05,esd+0.05),ncol=d))##use uniform to simulate 'shrunken'
-  sign.index=matrix(rbinom(n*d,size=1,prob=0.5)+1,ncol=d)
-  sign.choice=c(-1,1)
-  sign.mat=matrix(sign.choice[sign.index],ncol=d)
-  e=sign.mat*sebetahat##make some negative and some positive
+  #sebetahat=(matrix(rnorm(n*d,0,esd),ncol=d))
+  sgp=abs(matrix(runif(n*d,esd-0.05,esd+0.05),ncol=d))##use uniform to simulate 'shrunken'
+  e=t(apply(sgp,1,function(x){rmvnorm(1,mean=rep(0,d),sigma=diag(x))}))
+  #sign.index=matrix(rbinom(n*d,size=1,prob=0.5)+1,ncol=d)
+  #sign.choice=c(-1,1)
+  #sign.mat=matrix(sign.choice[sign.index],ncol=d)
+  #e=sign.mat*sebetahat##make some negative and some positive
   betahat = beta + e
-  tstat=betahat/abs(sebetahat)
+  tstat=betahat/abs(sgp)
   lambda=possible_loadings[z,]
-  return(list(beta=beta,betahat=betahat,component.mats=covmat,sebetahat=abs(sebetahat),factors=F,lambda=lambda,tstat=tstat))
+  return(list(beta=beta,betahat=betahat,component.mats=covmat,sebetahat=sgp,factors=F,lambda=lambda,tstat=tstat))
 }
 
 #' @title compute.determinant
