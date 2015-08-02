@@ -43,8 +43,8 @@ rm(b.gp.hat)
 rm(se.gp.hat)
 
 newdat = factor_sim(J=10000,K=10,betasd=1,esd=0.1,d=5)
-b.hat=newdat$betahat
-se.hat=newdat$sebetahat
+b.train=newdat$betahat
+se.train=newdat$sebetahat
 
 
 ##Not 
@@ -55,16 +55,15 @@ J=nrow(b.hat)
 head(b.hat)
 ```
 
-Now, we separate into training data. I will train on 1000 gene snp Pairs.
+Now, we separate into training data. I will train on 10000 gene snp Pairs, which tra
 
-```{r}
-
-b.train=b.hat[1:1000,]
-se.train=se.hat[1:1000,]
-
+```{r,eval=FALSE}
 compute.hm.train(train.b = b.train,se.train = se.train,covmat = covmat,A="Simulations")
 ##compute the HM weights on training data
 ##check to show that the likelihood computatations are correct
+```
+
+```{r}
 A="Simulations"
 likmat=readRDS(paste0("liketrain",A,".rds"))
 likmat[1,1:10]
@@ -73,13 +72,14 @@ lik.func(b.mle = b.train[1,],V.gp.hat = diag(se.train[1,])^2,covmat)[1:10]
 Note creation of three files: pis, a pdf of pis, and a matrix  of likelihoods of training data.
 Now,we remove the training data and create our test data. We can see that it contains the gene snp pairs in the rows and the standardized effect across subgroups in the columns.
 
-```{r}
+```{r,eval=FALSE}
 rm(b.train)
 rm(se.train)
 
-b.test=b.hat[1001:nrow(b.hat),]
-se.test=se.hat[1001:nrow(se.hat),]
-b.truth.test=newdat$beta[1001:nrow(b.hat),]
+testdat = factor_sim(J=10000,K=10,betasd=1,esd=0.1,d=5)
+b.test=testdat$betahat
+se.test=testdat$sebetahat
+b.truth.test=testdat$beta
 ````
 
 We read in the previously computed pis and the covariane matrix and compute the test likelihood and corresponding weights. Note the return of a file of test likeilihoods and posterior weights. Here, I will only do the computation for 100 gene-snp pairs. 
@@ -92,11 +92,11 @@ barplot(t(as.matrix(pis)))
 (covmat[[which.max(pis)]])
 ```
 
-Now, we can compute the posterior quanitites for each gene snp pair. Here, we'll test it on 100 gene snp pairs.
+Now, we can compute the posterior quanitites for each gene snp pair. Here, we'll test it on 500 gene snp pairs.
 
-```{r}
+```{r,eval=FALSE}
 
-weightedquants=lapply(seq(1:100),function(j){total.quant.per.snp(j,covmat,b.gp.hat=b.test,se.gp.hat = se.test,pis,A="Simulations",checkpoint = FALSE)})
+weightedquants=lapply(seq(1:500),function(j){total.quant.per.snp(j,covmat,b.gp.hat=b.test,se.gp.hat = se.test,pis,A="Simulations",checkpoint = FALSE)})
 ```
 
 Note that we create a file of posterior weighted means, lfsr and marginal variances.
@@ -128,9 +128,10 @@ plot(post.means[j,],post.weights[j,]%*%all.arrays$post.means)
 
 ```
 
-And observe the beautiful shrinkage!! And proof that our method is strongly correlated with original summary statistics.
-
+And observe the beautiful shrinkage of the null values!! 
 ```{r,shrinkage}
-plot(b.test[1:100,],post.means,xlim=c(-1,1),ylim=c(-1,1))
-cor(as.vector(as.matrix(b.test[1:100,])),as.vector(as.matrix(post.means)))
+plot(b.test[1:500,],post.means,xlim=c(-1,1),ylim=c(-1,1))
+nulls=which(b.truth.test[,1]=="0",)
+null.vals=intersect(1:nrow(post.means),nulls)
+points(b.test[null.vals,],post.means[null.vals,],col="red")
 ```
