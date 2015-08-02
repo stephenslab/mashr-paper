@@ -1047,8 +1047,8 @@ test.quant=function(A,all.arrays){
 #'@title factor.sim
 #'@export
 
-factor_sim=function(n,d=3,betasd,esd=0.3,K=10){
-  
+factor_sim=function(J,d=3,betasd=1,esd=0.1,K=10){
+  n=trunc(0.008*J,units = 0)##number of significant gene snp paris
   F=t(sapply(seq(1:K),function(x){rnorm(d,mean=0,sd=betasd)})) 
   
   covmat=lapply(seq(1:K),function(f){t=as.matrix((F[f,]))%*%F[f,]})
@@ -1062,16 +1062,18 @@ factor_sim=function(n,d=3,betasd,esd=0.3,K=10){
     k=z[j]
     mvrnorm(1,mu=rep(0,d),Sigma=covmat[[k]])
   }))
-  #sebetahat=(matrix(rnorm(n*d,0,esd),ncol=d))
-  sgp=abs(matrix(runif(n*d,esd-esd/100,esd+esd/100),ncol=d))##use uniform to simulate 'shrunken'
-  e=t(apply(sgp,1,function(x){rmvnorm(1,mean=rep(0,d),sigma=diag(x))}))
+  beta=rbind(beta,matrix(rep(0,(J-n)*d),ncol=d))
+  sgp=abs(matrix(rnorm(J*d,0.11,0.001),ncol=d))##use uniform to simulate 'shrunken'
+  e=t(apply(sgp,1,function(x){rmvnorm(1,mean=rep(0,d),sigma=diag(x)^2)}))
+  load.e=matrix(rnorm(J*K,0,0.001),ncol=K)##to make sure all loadings are covered
   #sign.index=matrix(rbinom(n*d,size=1,prob=0.5)+1,ncol=d)
   #sign.choice=c(-1,1)
   #sign.mat=matrix(sign.choice[sign.index],ncol=d)
   #e=sign.mat*sebetahat##make some negative and some positive
-  betahat = beta + e
+  betahat = rbind(beta + e)
+  #betahat=rbind(betahat,)
   tstat=betahat/abs(sgp)
-  lambda=possible_loadings[z,]
+  lambda=rbind(possible_loadings[z,],matrix(rep(0,(J-n)*K),ncol=K))+load.e
   return(list(beta=beta,betahat=betahat,component.mats=covmat,sebetahat=sgp,factors=F,lambda=lambda,tstat=tstat))
 }
 

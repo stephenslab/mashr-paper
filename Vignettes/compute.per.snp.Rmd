@@ -135,3 +135,8 @@ nulls=which(b.truth.test[,1]=="0",)
 null.vals=intersect(1:nrow(post.means),nulls)
 points(b.test[null.vals,],post.means[null.vals,],col="red")
 ```
+
+And the nearly perfect capturing of truth!
+```{r}
+plot(b.truth.test[1:500,],post.means,main="PosteriorMean vs True Effects")
+```
