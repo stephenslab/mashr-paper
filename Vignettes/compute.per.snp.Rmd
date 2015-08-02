@@ -48,16 +48,16 @@ se.train=newdat$sebetahat
 
 
 ##Not 
-indices=seq(1,nrow(b.hat))
-rownames(b.hat)=paste("gene_snp",indices,sep="")##now, we want our data frame to have rownames
+indices=seq(1,nrow(b.train))
+rownames(b.train)=paste("gene_snp",indices,sep="")##now, we want our data frame to have rownames
 
-J=nrow(b.hat)
-head(b.hat)
+J=nrow(b.train)
+head(b.train)
 ```
 
 Now, we separate into training data. I will train on 10000 gene snp Pairs, which tra
 
-```{r,eval=FALSE}
+```{r}
 compute.hm.train(train.b = b.train,se.train = se.train,covmat = covmat,A="Simulations")
 ##compute the HM weights on training data
 ##check to show that the likelihood computatations are correct
@@ -72,7 +72,7 @@ lik.func(b.mle = b.train[1,],V.gp.hat = diag(se.train[1,])^2,covmat)[1:10]
 Note creation of three files: pis, a pdf of pis, and a matrix  of likelihoods of training data.
 Now,we remove the training data and create our test data. We can see that it contains the gene snp pairs in the rows and the standardized effect across subgroups in the columns.
 
-```{r,eval=FALSE}
+```{r}
 rm(b.train)
 rm(se.train)
 
@@ -94,7 +94,7 @@ barplot(t(as.matrix(pis)))
 
 Now, we can compute the posterior quanitites for each gene snp pair. Here, we'll test it on 500 gene snp pairs.
 
-```{r,eval=FALSE}
+```{r}
 
 weightedquants=lapply(seq(1:500),function(j){total.quant.per.snp(j,covmat,b.gp.hat=b.test,se.gp.hat = se.test,pis,A="Simulations",checkpoint = FALSE)})
 ```
