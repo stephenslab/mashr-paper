@@ -4,7 +4,7 @@
 \alias{factor_sim}
 \title{factor.sim}
 \usage{
-factor_sim(n, d = 3, betasd, esd = 0.3, K = 10)
+factor_sim(J, d = 3, betasd = 1, esd = 0.1, K = 10)
 }
 \description{
 factor.sim

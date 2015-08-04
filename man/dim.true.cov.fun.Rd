@@ -4,7 +4,7 @@
 \alias{dim.true.cov.fun}
 \title{dim.true.cov.fun}
 \usage{
-\method{dim}{true.cov.fun}(b.j.hat, se.j, hat, max.step.unlist)
+\method{dim}{true.cov.fun}(max.step.unlist)
 }
 \description{
 dim.true.cov.fun

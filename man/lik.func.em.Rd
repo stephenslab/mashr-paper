@@ -4,7 +4,7 @@
 \alias{lik.func.em}
 \title{lik.func.em}
 \usage{
-lik.func.em(true.covs, b.mle, V.j.hat)
+lik.func.em(true.covs, b.mle, V.j.hat, K)
 }
 \arguments{
 \item{true.covs}{= KxRxR array of prior covariance matrices}

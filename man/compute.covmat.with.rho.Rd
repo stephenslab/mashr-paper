@@ -4,8 +4,8 @@
 \alias{compute.covmat.with.rho}
 \title{compute.covmat.with.rho}
 \usage{
-compute.covmat.with.rho(b.gp.hat, sebetahat, Q, X.c, lambda.mat, P, A,
-  factor.mat)
+compute.covmat.with.rho(b.gp.hat, sebetahat, Q, lambda.mat, P, A, factor.mat,
+  t.stat)
 }
 \description{
 compute.covmat.with.rho

@@ -4,7 +4,7 @@
 \alias{compute.covmat.nopc}
 \title{get.prior.covar.nopcs}
 \usage{
-compute.covmat.nopc(b.gp.hat, sebetahat, Q, X.c, lambda.mat, A, factor.mat,
+compute.covmat.nopc(b.gp.hat, sebetahat, Q, t.stat, lambda.mat, A, factor.mat,
   bma = TRUE)
 }
 \description{

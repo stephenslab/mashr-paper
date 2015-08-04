@@ -557,5 +557,36 @@ compute.hm.covmat.all.max.step.no.pc = function(t.stat,v.j,Q,lambda.mat,A,factor
   
   return(covmat)}
 
+#' @title deconvolution.em.with.max.iter
+#' @details wrapper to compute denoised estimates of the fuller rank covariance matrices
+#' @param t.stat
+#' @param P = rank of PC approxiatmion
+#' @param Q = rank of SFA approximation
+#' @param permsnp = number of strong stats you want to train on (default is 1000)
+#' @return a 2 element list of K pis and the KxRxR true.covariance arrays
+#' @export
 
+deconvolution.em.with.max.iter <- function(t.stat,factor.mat,lambda.mat,K,P,permsnp=1000,maxiter=1000){
+  init.cov=init.covmat(t.stat=t.stat,factor.mat = factor.mat,lambda.mat = lambda.mat,K=K,P=P)
+  pi=rep(1/K,K)
+  R=ncol(t.stat)
+  
+  par.init=list(true.covs=init.cov,pi=rep(1/K,K))
+  par.init.unlist=unlist(par.init)
+  
+  t.stat=data.frame(t.stat)
+  maxes=apply(t.stat,1,function(x){mean(abs(x))})##takes the strongest t statistics
+  a=cbind(t.stat,maxes)
+  f=ncol(a)
+  t=a[order(a$maxes,decreasing=TRUE),-f]
+  t.strong=t[1:permsnp,]
+  v.strong=matrix(rep(1,R*nrow(t.strong)),nrow=nrow(t.strong))
+  maxiter=maxiter
+  s=squarem(par=par.init.unlist,b.j.hat=t.strong,se.j.hat=v.strong,fixptfn=fixpoint.cov, control=list(maxiter=maxiter))#objfn=negpenlogliksarah)
+  max.step.unlist=s$par
+  dim.true.covs=c(K,R,R)
+  pi.length=length(pi)
+  max.step = list(true.covs = array(max.step.unlist[1:prod(dim.true.covs)], dim = dim.true.covs), pi = max.step.unlist[(prod(dim.true.covs)+1):(prod(dim.true.covs)+pi.length)])
+  return(max.step)
+}
 

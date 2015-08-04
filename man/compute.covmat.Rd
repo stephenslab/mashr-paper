@@ -4,17 +4,17 @@
 \alias{compute.covmat}
 \title{compute.covmat}
 \usage{
-compute.covmat(b.gp.hat, sebetahat, Q, X.c, lambda.mat, P, A, factor.mat,
+compute.covmat(b.gp.hat, sebetahat, Q, t.stat, lambda.mat, P, A, factor.mat,
   bma = TRUE)
 }
 \arguments{
-\item{b.gp.hat}{a JxR matrix of betahats}
+\item{b.gp.hat}{a JxR matrix of betahats - necessary for grid computation}
 
-\item{sebetahat}{a JxR matrix of their standard errors}
+\item{sebetahat}{a JxR matrix of their standard errors - necessary for grid computation}
 
 \item{Q}{number of factors to consider}
 
-\item{X.c}{matric of strong t statistics}
+\item{t.stat}{matrix of strong t statistics (needs to be R in columns but not necessarily j in rows)}
 
 \item{factor}{mat a fxR matrix of factors}
 

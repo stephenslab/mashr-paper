@@ -4,10 +4,13 @@
 \alias{get.prior.covar.Ukl.with.rho}
 \title{get.prior.covar.Ukl.with.rho}
 \usage{
-get.prior.covar.Ukl.with.rho(P, lambda.mat, Q, factor.mat, omega.table, rhos)
+get.prior.covar.Ukl.with.rho(P, lambda.mat, X.c, Q, factor.mat, omega.table,
+  rhos)
 }
 \arguments{
 \item{P}{integer number of PCs}
+
+\item{X.c}{= column centered matrix of strong t statistics from which to derive covariance matrices}
 
 \item{omega.table}{table of grid weights}
 

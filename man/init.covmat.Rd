@@ -4,8 +4,8 @@
 \alias{init.covmat}
 \title{init.covmat}
 \usage{
-init.covmat(t.stat = t.stat, factor.mat = factors, lambda.mat = lambda,
-  K = 3, P = 2)
+init.covmat(t.stat = t.stat, factor.mat = factors, lambda.mat = lambda, K,
+  P)
 }
 \arguments{
 \item{t.stat}{matrix of strong t statistics (MxR) from which to derive covariance matrices}

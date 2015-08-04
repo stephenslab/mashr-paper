@@ -4,10 +4,13 @@
 \alias{get.prior.covar.Ukl}
 \title{get.prior.covar.Ukl}
 \usage{
-get.prior.covar.Ukl(P, lambda.mat, Q, factor.mat, omega.table, bma = TRUE)
+get.prior.covar.Ukl(P, X.c, lambda.mat, Q, factor.mat, omega.table,
+  bma = TRUE)
 }
 \arguments{
 \item{P}{number of pcs (must be greater than 1)}
+
+\item{X.c}{= column centered matrix of strong t statistics from which to derive covariance matrices}
 
 \item{lambda.mat}{matrix of JxQ lambdas}
 
