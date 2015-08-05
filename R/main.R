@@ -1407,3 +1407,67 @@ compute.covmat.bmafull.only = function(b.gp.hat,sebetahat,A){
   
   return(covmat)}
 
+
+
+#' @title lik.func.with.tol 
+#' @details computes likelihood for each betahat
+#' @param b.mle Rx1 vector of mles
+#' @param V.gp.hat RxR matrix of standard errors
+#' @param U.0kl L dimensional list of K dimensional list with prior covairnace matrix for each grid weight, prior covariance pair
+#' @export
+
+lik.func.with.tol=function(b.mle,V.gp.hat,covmat)
+{ sapply(seq(1:length(covmat)),function(x){dmvnorm(x=b.mle, mu=rep(0,R),Sigma=covmat[[x]] + V.gp.hat,tol=1)})
+}
+
+
+#'@title compute.hm.train.with.tol
+#'@export
+compute.hm.train.with.tol=function(train.b,se.train,covmat,A){
+  
+  J=nrow(train.b)
+  R=ncol(train.b)
+  
+  if(file.exists(paste0("liketrain",A,".rds"))==FALSE){
+    lik.mat=t(sapply(seq(1:J),function(x){lik.func.with.tol(b.mle=train.b[x,],V.gp.hat=diag(se.train[x,])^2,covmat)}))
+    
+    saveRDS(lik.mat,paste0("liketrain",A,".rds"))}
+  
+  else(lik.mat=readRDS(paste0("liketrain",A,".rds")))
+  
+  train=lik.mat
+  pis=mixEM(matrix_lik=train,prior=rep(1,ncol(train)))
+  saveRDS(pis,paste0("pis",A,".rds"))
+  
+  pdf(paste0("pis",A,".pdf"))
+  barplot(t(as.matrix(pis$pihat)))
+  dev.off()
+}
+
+
+compute.lik.test.with.tol=function(b.test,J,se.test,covmat,A,pis){
+  
+  J=J
+  R=ncol(b.test)
+  
+  if(file.exists(paste0("liketest",A,".rds"))==FALSE){
+    lik.mat=t(sapply(seq(1:J),function(x){lik.func.with.tol(b.mle=b.test[x,],V.gp.hat=diag(se.test[x,])^2,covmat)}))
+    saveRDS(lik.mat,paste0("liketest",A,".rds"))}
+  
+  else(lik.mat=readRDS(paste0("liketest",A,".rds")))
+  
+  
+  
+  test=lik.mat
+  write.table(total.lik.func(test,pis),paste0("total.lik.",A,".txt"))
+  post.weights=as.matrix(post.weight.func(pis,lik.mat))
+  saveRDS(post.weights,paste0("post.weight.",A,".rds"))
+  rm(post.weights) ## to conserve memory
+  rm(lik.mat) ## to conserve memory
+  
+  
+} 
+
+
+
+
