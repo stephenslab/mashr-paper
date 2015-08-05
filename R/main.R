@@ -1416,7 +1416,7 @@ compute.covmat.bmafull.only = function(b.gp.hat,sebetahat,A){
 #' @param U.0kl L dimensional list of K dimensional list with prior covairnace matrix for each grid weight, prior covariance pair
 #' @export
 
-lik.func.with.tol=function(b.mle,V.gp.hat,covmat)
+lik.func.with.tol=function(b.mle,R,V.gp.hat,covmat)
 { sapply(seq(1:length(covmat)),function(x){dmvnorm(x=b.mle, mu=rep(0,R),Sigma=covmat[[x]] + V.gp.hat,tol=1)})
 }
 
@@ -1429,7 +1429,7 @@ compute.hm.train.with.tol=function(train.b,se.train,covmat,A){
   R=ncol(train.b)
   
   if(file.exists(paste0("liketrain",A,".rds"))==FALSE){
-    lik.mat=t(sapply(seq(1:J),function(x){lik.func.with.tol(b.mle=train.b[x,],V.gp.hat=diag(se.train[x,])^2,covmat)}))
+    lik.mat=t(sapply(seq(1:J),function(x){lik.func.with.tol(b.mle=train.b[x,],R,V.gp.hat=diag(se.train[x,])^2,covmat)}))
     
     saveRDS(lik.mat,paste0("liketrain",A,".rds"))}
   
@@ -1451,7 +1451,7 @@ compute.lik.test.with.tol=function(b.test,J,se.test,covmat,A,pis){
   R=ncol(b.test)
   
   if(file.exists(paste0("liketest",A,".rds"))==FALSE){
-    lik.mat=t(sapply(seq(1:J),function(x){lik.func.with.tol(b.mle=b.test[x,],V.gp.hat=diag(se.test[x,])^2,covmat)}))
+    lik.mat=t(sapply(seq(1:J),function(x){lik.func.with.tol(b.mle=b.test[x,],R,V.gp.hat=diag(se.test[x,])^2,covmat)}))
     saveRDS(lik.mat,paste0("liketest",A,".rds"))}
   
   else(lik.mat=readRDS(paste0("liketest",A,".rds")))
