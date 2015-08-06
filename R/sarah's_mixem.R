@@ -617,15 +617,20 @@ deconvolution.em.with.loop <- function(t.stat,factor.mat,lambda.mat,K,P,permsnp=
   v.strong=matrix(rep(1,R*nrow(t.strong)),nrow=nrow(t.strong))
   maxiter=maxiter
   max.step.unlist=par.init.unlist
-  for(i in 1:maxiter){
+  for(i in 1:(maxiter-1)){
     m=fixpoint.cov(max.step.unlist,b.j.hat = t.strong,se.j.hat = v.strong)
     max.step.unlist=m
   }
  
+  nb=negpenlogliksarah(max.step.unlist = max.step.unlist,b.j.hat = t.strong,se.j.hat = v.strong)
+  m=fixpoint.cov(max.step.unlist,b.j.hat = t.strong,se.j.hat = v.strong)
+  max.step.unlist=m
+  negpen=negpenlogliksarah(max.step.unlist = max.step.unlist,b.j.hat = t.strong,se.j.hat = v.strong)-nb
+  
   dim.true.covs=c(K,R,R)
   pi.length=length(pi)
   max.step = list(true.covs = array(max.step.unlist[1:prod(dim.true.covs)], dim = dim.true.covs), pi = max.step.unlist[(prod(dim.true.covs)+1):(prod(dim.true.covs)+pi.length)])
-  return(max.step)
+  return(list(max.step=max.step,negpen=negpen))
 }
 
 
