@@ -616,6 +616,7 @@ deconvolution.em.with.loop <- function(t.stat,factor.mat,lambda.mat,K,P,permsnp=
   t.strong=t[1:permsnp,]
   v.strong=matrix(rep(1,R*nrow(t.strong)),nrow=nrow(t.strong))
   maxiter=maxiter
+  max.step.unlist=par.init.unlist
   for(i in 1:maxiter){
     m=fixpoint.cov(max.step.unlist,b.j.hat = t.strong,se.j.hat = v.strong)
     max.step.unlist=m
