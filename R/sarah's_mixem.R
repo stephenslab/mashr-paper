@@ -635,3 +635,38 @@ deconvolution.em.with.loop <- function(t.stat,factor.mat,lambda.mat,K,P,permsnp=
 
 
 
+#' @title deconvolution.em.bovy
+#' @details wrapper to compute denoised estimates of the fuller rank covariance matrices
+#' @param t.stat
+#' @param P = rank of PC approxiatmion
+#' @param Q = rank of SFA approximation
+#' @param permsnp = number of strong stats you want to train on (default is 1000)
+#' @return a 2 element list of K pis and the KxRxR true.covariance arrays
+#' @export
+
+deconvolution.em.with.bovy=function(t.stat,factor.mat,lambda.mat,K,P){
+R=ncol(t.stat)
+init.cov=init.covmat(t.stat=t.stat,factor.mat = factor.mat,lambda.mat = lambda.mat,K=K,P=P)
+init.cov.list=list()
+for(i in 1:K){init.cov.list[[i]]=init.cov[i,,]}
+head(init.cov.list)
+
+ydata=  t.stat
+xamp= rep(1/K,K)
+xcovar= init.cov.list
+fixmean= TRUE     
+ycovar=  v.j     
+xmean=   mean.mat   
+projection= list();for(l in 1:nrow(t.stat)){projection[[l]]=diag(1,R)}
+
+e=extreme_deconvolution(ydata=ydata,ycovar=ycovar,xamp=xamp,xmean=xmean,xcovar=init.cov.list,fixmean=T,projection=projection)
+
+true.covs=array(dim=c(K,R,R))
+for(i in 1:K){true.covs[i,,]=e$xcovar[[i]]}
+pi=e$xamp
+max.step=list(true.covs=true.covs,pi=pi)
+return(max.step)}
+
+
+
+
