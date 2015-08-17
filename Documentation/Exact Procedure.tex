@@ -124,6 +124,14 @@ $\textbf{covmat}$ is thus a list of 1188 covariance matrices.
 \section{Mixture Weights}
 We now need to compute the mixture weights hierarchically. I use  a randomly chosen set of 20000 gene snp pairs from the matrix QTL output to estimate these mixture proportions. This set does not contain the strongest gene-snp pairs, and thus will allow for substantial shrinkage, as a majority of these gene-snp pairs will  have their likelihood maximized at low $\omega$ components.
 
+Here is a visualization of the training data, which you can see is a mixture of mostly small $\hat{\beta}$ and accordingly small Z statistics.
+
+\begin{figure}[h!]
+  \caption{Distribution of MLEs}
+  \centering
+    \includegraphics[width=0.5\textwidth]{../Figures/distributionofbhattrain.pdf}
+\end{figure}
+
 \begin{verbatim}
 compute.hm.train(train.b = train.z,se.train = train.s,covmat = covmat,A="jul3")
 \end{verbatim}
