@@ -79,9 +79,10 @@ In brief, this is how the deconvolution.em algorithm works.
 \end {enumerate}
 
 From extensive investigation with testing and training data, I found that using a rank 10 SVD approximation for the matrix in (5) as well as the rank 5 SFA approximation and the empirical covariance matrix maximized the likelihood of a test data set. 
+
+After loading the correct package (i.e., $library('ExtremeDeconvolution')$)
 \begin{verbatim}
-max.step=deconvolution.em(t.stat = z.stat,factor.mat = factor.mat,
-lambda.mat = lambda.mat,K=3,P=10,permsnp = nrow(z.stat)
+max.step=deconvolution.em.with.bovy(t.stat=t.stat,factor.mat=factor.mat,lambda.mat=lambda.mat,K=3,P=3)
 \end{verbatim}
 %deconvolution.em <- function(t.stat,factor.mat,lambda.mat,K,P,permsnp=10000){##note here that we have let t.stat = z.stat
 %  init.cov=init.covmat(t.stat=t.stat,factor.mat = factor.mat,lambda.mat = lambda.mat,K=K,P=P)
@@ -248,7 +249,35 @@ Here I show the results:
 
 \begin{verbatim}
 
-total.lik.k1 (estimating only XtX with deconvolution)		 -1268622.16787315	total.lik.nodeconvolution.ee2.rank2.txt		 -1277777	total.lik.nodeconvolution.rank2.txt		 -1269442.93623141	total.lik.nopcnoqwithdeconv.txt	 -1269277.17265676	total.lik.nopcwithdeconv.txt	-1268966.41110003	total.lik.rank10.txt	 -1267592.43262411	total.lik.rank2.txt	 -1268322.99623033	total.lik.rank5noq.txt	-1268191.22715182	total.lik.rank5.txt	 -1268102.92517947	total.lik.rank5withres.txt	 -1283993.13507543	
+total.lik.k1 (estimating only XtX with deconvolution)	
+	
+ -1268622.16787315	
+total.lik.nodeconvolution.ee2.rank2.txt	
+	
+ -1277777	
+total.lik.nodeconvolution.rank2.txt	
+	
+ -1269442.93623141	
+total.lik.nopcnoqwithdeconv.txt	
+
+ -1269277.17265676	
+total.lik.nopcwithdeconv.txt	
+
+-1268966.41110003	
+total.lik.rank10.txt	
+
+ -1267592.43262411	
+total.lik.rank2.txt	
+ -1268322.99623033	
+total.lik.rank5noq.txt	
+
+-1268191.22715182	
+total.lik.rank5.txt	
+
+ -1268102.92517947	
+total.lik.rank5withres.txt	
+
+ -1283993.13507543	
 
 \end{verbatim}
 

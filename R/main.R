@@ -1469,5 +1469,22 @@ compute.lik.test.with.tol=function(b.test,J,se.test,covmat,A,pis){
 } 
 
 
-
+col.func=function(lfsr,posterior.means,j){
+  R=ncol(posterior.means)
+  
+  lfsr.mat=as.matrix(lfsr)
+  col.mat=NULL
+  
+  for(r in 1:R){
+    
+    if (lfsr.mat[j,r]<=0.10) {
+      col.mat[r]=1
+    } else if (lfsr.mat[j,r]<0.5) {
+      col.mat[r]=2
+    } else if (lfsr.mat[j,r]>=0.50) {
+      col.mat[r]=3
+    } 
+  }
+  return(col.mat)
+}
 
