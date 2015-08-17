@@ -650,6 +650,7 @@ init.cov=init.covmat(t.stat=t.stat,factor.mat = factor.mat,lambda.mat = lambda.m
 init.cov.list=list()
 for(i in 1:K){init.cov.list[[i]]=init.cov[i,,]}
 head(init.cov.list)
+mean.mat=matrix(rep(0,ncol(t.stat)*nrow(t.stat)),ncol=ncol(t.stat),nrow=nrow(t.stat))
 
 ydata=  t.stat
 xamp= rep(1/K,K)
