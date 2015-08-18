@@ -711,7 +711,7 @@ init.covmat.single=function(t.stat=t.stat,factor.mat=factors,lambda.mat=lambda,K
 
 
 
-compute.hm.covmat.all.max.step.withQ = function(b.hat,se.hat,t.stat,v.j,Q,lambda.mat,A,factor.mat,max.step,Q){
+compute.hm.covmat.all.max.step.withQ = function(b.hat,se.hat,t.stat,v.j,lambda.mat,A,factor.mat,max.step,Q){
   X.real=as.matrix(t.stat)
   X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
   R=ncol(X.c)
@@ -720,7 +720,7 @@ compute.hm.covmat.all.max.step.withQ = function(b.hat,se.hat,t.stat,v.j,Q,lambda
   lambda.mat=lambda.mat
   A=A
   factor.mat=factor.mat
-  U.0kl=get.prior.covar.with.all.max.step(X.c,max.step = max.step,lambda.mat = lambda.mat,Q = Q,factor.mat = factor.mat,omega.table=omega.table,bma = TRUE)
+  U.0kl=get.prior.covar.with.all.max.step.withQ(X.c,max.step = max.step,lambda.mat = lambda.mat,Q = Q,factor.mat = factor.mat,omega.table=omega.table,bma = TRUE)
   covmat=unlist(U.0kl,recursive=F)
   saveRDS(covmat,paste0("covmat",A,".rds"))
   
