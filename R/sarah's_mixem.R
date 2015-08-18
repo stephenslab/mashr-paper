@@ -700,9 +700,8 @@ init.covmat.single=function(t.stat=t.stat,factor.mat=factors,lambda.mat=lambda,K
       fact=as.matrix(factor.mat[q,])
       rank.prox=load%*%t(fact)
       a=(1/M*(t(rank.prox)%*% rank.prox))
-      a[is.nan(a)] = 0
-      a.norm=a/max(diag(a))
-      true.covs[3+q,,]=omega*a.norm
+      
+    true.covs[3+q,,]=a
       }}}
   return(true.covs)
 }
