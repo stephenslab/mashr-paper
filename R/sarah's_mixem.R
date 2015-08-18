@@ -707,3 +707,76 @@ init.covmat.single=function(t.stat=t.stat,factor.mat=factors,lambda.mat=lambda,K
 }
 
 
+
+
+
+
+compute.hm.covmat.all.max.step.withQ = function(b.hat,se.hat,t.stat,v.j,Q,lambda.mat,A,factor.mat,max.step,Q){
+  X.real=as.matrix(t.stat)
+  X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
+  R=ncol(X.c)
+  omega=mult.tissue.grid(mult=sqrt(2),b.hat,se.hat)
+  omega.table=data.frame(omega)
+  lambda.mat=lambda.mat
+  A=A
+  factor.mat=factor.mat
+  U.0kl=get.prior.covar.with.all.max.step(X.c,max.step = max.step,lambda.mat = lambda.mat,Q = Q,factor.mat = factor.mat,omega.table=omega.table,bma = TRUE)
+  covmat=unlist(U.0kl,recursive=F)
+  saveRDS(covmat,paste0("covmat",A,".rds"))
+  
+  return(covmat)}
+
+
+get.prior.covar.with.all.max.step.withQ <- function(X.c,max.step,lambda.mat, Q, factor.mat,omega.table,bma=TRUE)  {
+  test=list()
+  R=ncol(X.c)
+  M=nrow(X.c)
+  for(l in 1:nrow(omega.table)){
+    test[[l]]=list()
+    omega=omega.table[l,]
+    test[[l]][[1]]=omega*diag(1,R)
+    data.prox=max.step$true.covs[1,,]
+    d.norm=data.prox/max(diag(data.prox))
+    
+    
+    test[[l]][[2]]=omega*d.norm
+    
+    
+    
+    cov.pc=max.step$true.covs[3,,]
+    
+    
+    cov.pc.norm=cov.pc/max(diag(cov.pc))
+    
+    
+    
+    test[[l]][[3]]=omega*(cov.pc.norm)
+    if(Q!=0){for(q in 1:Q){
+      
+      
+      rank.prox=max.step$true.covs[3+q,,]
+      a=(1/M*(t(rank.prox)%*% rank.prox))
+      a[is.nan(a)] = 0
+      a.norm=a/max(diag(a))
+      test[[l]][[q+3]]=omega*a.norm
+    }}
+    full.rank=max.step$true.covs[2,,]
+    b.norm=full.rank/max(diag(full.rank))
+    test[[l]][[Q+4]]=omega*b.norm
+    
+    if(bma==TRUE){
+      configs=matrix(0,nrow=R,ncol=R)
+      
+      R=ncol(factor.mat)
+      for(r in 1:R){
+        configs[r,r]=1}
+      
+      configs=rbind(configs,rep(1,R))
+      for(c in 1:nrow(configs)) {
+        
+        mat=(configs[c,]%*%t(configs[c,]))
+        
+        test[[l]][[Q+4+c]]=omega*mat}}}
+  return(U.0kl=test)
+}
+
