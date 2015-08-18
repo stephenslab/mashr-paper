@@ -673,7 +673,7 @@ return(max.step)}
 init.covmat.single=function(t.stat=t.stat,factor.mat=factors,lambda.mat=lambda,K,P,Q){
   K=K
   R=ncol(t.stat)#number of tissues
-  true.covs=array(NA,dim=c(K,R,R))
+  true.covs=array(NA,dim=c(K+Q,R,R))
   
   X.t=as.matrix(t.stat)
   X.real=X.t
