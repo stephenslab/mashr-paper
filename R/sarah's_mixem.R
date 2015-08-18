@@ -669,4 +669,41 @@ return(max.step)}
 
 
 
+init.covmat.single=function(t.stat=t.stat,factor.mat=factors,lambda.mat=lambda,K,P,Q){
+  K=K
+  R=ncol(t.stat)#number of tissues
+  true.covs=array(NA,dim=c(K,R,R))
+  
+  X.t=as.matrix(t.stat)
+  X.real=X.t
+  X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
+  
+  M=nrow(X.c)
+  data.prox=((t(X.c)%*%X.c)/M)
+  true.covs[1,,]=data.prox
+  full.rank=lambda.mat%*%factor.mat
+  if(K>1){
+  sfa.prox=(t(full.rank)%*%full.rank)/(M)
+  true.covs[2,,]=sfa.prox
+  
+  svd.X=svd(X.c)
+  v=svd.X$v;u=svd.X$u;d=svd.X$d
+  cov.pc=1/M*v[,1:P]%*%diag(d[1:P])%*%t(u[,1:P])%*%t(v[,1:P]%*%diag(d[1:P])%*%t(u[,1:P]))
+  true.covs[3,,]=cov.pc
+  
+  
+  
+   if(Q!=0){for(q in 1:Q){
+      
+      load=as.matrix(lambda.mat[,q])
+      fact=as.matrix(factor.mat[q,])
+      rank.prox=load%*%t(fact)
+      a=(1/M*(t(rank.prox)%*% rank.prox))
+      a[is.nan(a)] = 0
+      a.norm=a/max(diag(a))
+      true.covs[3+q,,]=omega*a.norm
+      }}}
+  return(true.covs)
+}
+
 
