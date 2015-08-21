@@ -1,0 +1,803 @@
+% Template for PLoS
+% Version 3.1 February 2015
+%
+% To compile to pdf, run:
+% latex plos.template
+% bibtex plos.template
+% latex plos.template
+% latex plos.template
+% dvipdf plos.template
+%
+% % % % % % % % % % % % % % % % % % % % % %
+%
+% -- IMPORTANT NOTE
+%
+% This template contains comments intended 
+% to minimize problems and delays during our production 
+% process. Please follow the template instructions
+% whenever possible.
+%
+% % % % % % % % % % % % % % % % % % % % % % % 
+%
+% Once your paper is accepted for publication, 
+% PLEASE REMOVE ALL TRACKED CHANGES in this file and leave only
+% the final text of your manuscript.
+%
+% There are no restrictions on package use within the LaTeX files except that 
+% no packages listed in the template may be deleted.
+%
+% Please do not include colors or graphics in the text.
+%
+% Please do not create a heading level below \subsection. For 3rd level headings, use \paragraph{}.
+%
+% % % % % % % % % % % % % % % % % % % % % % %
+%
+% -- FIGURES AND TABLES
+%
+% Please include tables/figure captions directly after the paragraph where they are first cited in the text.
+%
+% DO NOT INCLUDE GRAPHICS IN YOUR MANUSCRIPT
+% - Figures should be uploaded separately from your manuscript file. 
+% - Figures generated using LaTeX should be extracted and removed from the PDF before submission. 
+% - Figures containing multiple panels/subfigures must be combined into one image file before submission.
+% For figure citations, please use "Fig." instead of "Figure".
+% See http://www.plosone.org/static/figureGuidelines for PLOS figure guidelines.
+%
+% Tables should be cell-based and may not contain:
+% - tabs/spacing/line breaks within cells to alter layout or alignment
+% - vertically-merged cells (no tabular environments within tabular environments, do not use \multirow)
+% - colors, shading, or graphic objects
+% See http://www.plosone.org/static/figureGuidelines#tables for table guidelines.
+%
+% For tables that exceed the width of the text column, use the adjustwidth environment as illustrated in the example table in text below.
+%
+% % % % % % % % % % % % % % % % % % % % % % % %
+%
+% -- EQUATIONS, MATH SYMBOLS, SUBSCRIPTS, AND SUPERSCRIPTS
+%
+% IMPORTANT
+% Below are a few tips to help format your equations and other special characters according to our specifications. For more tips to help reduce the possibility of formatting errors during conversion, please see our LaTeX guidelines at http://www.plosone.org/static/latexGuidelines
+%
+% Please be sure to include all portions of an equation in the math environment.
+%
+% Do not include text that is not math in the math environment. For example, CO2 will be CO\textsubscript{2}.
+%
+% Please add line breaks to long display equations when possible in order to fit size of the column. 
+%
+% For inline equations, please do not include punctuation (commas, etc) within the math environment unless this is part of the equation.
+%
+% % % % % % % % % % % % % % % % % % % % % % % % 
+%
+% Please contact latex@plos.org with any questions.
+%
+% % % % % % % % % % % % % % % % % % % % % % % %
+
+\documentclass[10pt,letterpaper]{article}
+\usepackage[top=0.85in,left=2.75in,footskip=0.75in]{geometry}
+
+% Use adjustwidth environment to exceed column width (see example table in text)
+\usepackage{changepage}
+
+% Use Unicode characters when possible
+\usepackage[utf8]{inputenc}
+
+% textcomp package and marvosym package for additional characters
+\usepackage{textcomp,marvosym}
+
+% fixltx2e package for \textsubscript
+\usepackage{fixltx2e}
+
+% amsmath and amssymb packages, useful for mathematical formulas and symbols
+\usepackage{amsmath,amssymb}
+
+% cite package, to clean up citations in the main text. Do not remove.
+\usepackage{cite}
+
+% Use nameref to cite supporting information files (see Supporting Information section for more info)
+\usepackage{nameref,hyperref}
+
+% line numbers
+\usepackage[right]{lineno}
+
+\usepackage{graphicx} 
+
+\usepackage{amssymb}
+\usepackage{bm}
+% \graphicspath{{./figures/}} % save all figures in the same directory
+
+\newcommand{\given}{\mid}
+\newcommand{\me}{\mathrm{e}} % use for base of the natural logarithm
+\newcommand{\md}{\mathrm{d}} % use for base of the natural logarithm
+\newcommand{\mean}{\mathrm{E}}
+\newcommand{\Normal}{\mathcal{N}}
+\newcommand{\argmax}{\operatornamewithlimits{argmax}}
+\newcommand{\like}{\mathcal{L}}
+
+% ligatures disabled
+\usepackage{microtype}
+\DisableLigatures[f]{encoding = *, family = * }
+
+
+\usepackage{bm}
+% rotating package for sideways tables
+\usepackage{rotating}
+
+% Remove comment for double spacing
+%\usepackage{setspace} 
+%\doublespacing
+
+% Text layout
+\raggedright
+\setlength{\parindent}{0.5cm}
+\textwidth 5.25in 
+\textheight 8.75in
+
+% Bold the 'Figure #' in the caption and separate it from the title/caption with a period
+% Captions will be left justified
+\usepackage[aboveskip=1pt,labelfont=bf,labelsep=period,justification=raggedright,singlelinecheck=off]{caption}
+
+% Use the PLoS provided BiBTeX style
+\bibliographystyle{plos2015}
+
+% Remove brackets from numbering in List of References
+\makeatletter
+\renewcommand{\@biblabel}[1]{\quad#1.}
+\makeatother
+
+% Leave date blank
+\date{}
+
+% Header and Footer with logo
+\usepackage{lastpage,fancyhdr,graphicx}
+\nonstopmode  % to allow pdflatex to compile even if errors are raised (e.g. missing figures)
+\usepackage{epstopdf}
+\pagestyle{myheadings}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\includegraphics[width=2.0in]{PLOS-submission.eps}}
+\rfoot{\thepage/\pageref{LastPage}}
+\renewcommand{\footrule}{\hrule height 2pt \vspace{2mm}}
+\fancyheadoffset[L]{2.25in}
+\fancyfootoffset[L]{2.25in}
+\lfoot{\sf PLOS}
+
+%% Include all macros below
+
+\newcommand{\lorem}{{\bf LOREM}}
+\newcommand{\ipsum}{{\bf IPSUM}}
+
+%% END MACROS SECTION
+
+
+\begin{document}
+\vspace*{0.35in}
+
+% Title must be 250 characters or less.
+% Please capitalize all terms in the title except conjunctions, prepositions, and articles.
+\begin{flushleft}
+{\Large
+\textbf\newline{Matrix Ash}
+}
+\newline
+% Insert author names, affiliations and corresponding author email (do not include titles, positions, or degrees).
+\\
+Sarah Urbut \textsuperscript{1,\Yinyang},
+Name2 Surname\textsuperscript{2,\Yinyang},
+Name3 Surname\textsuperscript{2,\textcurrency a},
+Name4 Surname\textsuperscript{2,\ddag},
+Name5 Surname\textsuperscript{2,\ddag},
+Name6 Surname\textsuperscript{2},
+Name7 Surname\textsuperscript{3,*},
+with the Lorem Ipsum Consortium\textsuperscript{\textpilcrow}
+\\
+\bigskip
+\bf{1} Affiliation Dept/Program/Center, Institution Name, City, State, Country
+\\
+\bf{2} Affiliation Dept/Program/Center, Institution Name, City, State, Country
+\\
+\bf{3} Affiliation Dept/Program/Center, Institution Name, City, State, Country
+\\
+\bigskip
+
+% Insert additional author notes using the symbols described below. Insert symbol callouts after author names as necessary.
+% 
+% Remove or comment out the author notes below if they aren't used.
+%
+% Primary Equal Contribution Note
+\Yinyang These authors contributed equally to this work.
+
+% Additional Equal Contribution Note
+% Also use this double-dagger symbol for special authorship notes, such as senior authorship.
+\ddag These authors also contributed equally to this work.
+
+% Current address notes
+\textcurrency a Insert current address of first author with an address update
+% \textcurrency b Insert current address of second author with an address update
+% \textcurrency c Insert current address of third author with an address update
+
+% Deceased author note
+\dag Deceased
+
+% Group/Consortium Author Note
+\textpilcrow Membership list can be found in the Acknowledgments section.
+
+% Use the asterisk to denote corresponding authorship and provide email address in note below.
+* CorrespondingAuthor@institute.edu
+
+\end{flushleft}
+% Please keep the abstract below 300 words
+\section*{Abstract}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur eget porta erat. Morbi consectetur est vel gravida pretium. Suspendisse ut dui eu ante cursus gravida non sed sem. Nullam sapien tellus, commodo id velit id, eleifend volutpat quam. Phasellus mauris velit, dapibus finibus elementum vel, pulvinar non tellus. Nunc pellentesque pretium diam, quis maximus dolor faucibus id. Nunc convallis sodales ante, ut ullamcorper est egestas vitae. Nam sit amet enim ultrices, ultrices elit pulvinar, volutpat risus.
+
+
+% Please keep the Author Summary between 150 and 200 words
+% Use first person. PLOS ONE authors please skip this step. 
+% Author Summary not valid for PLOS ONE submissions.   
+\section*{Author Summary}
+Variation in gene expression is an important mechanism underlying susceptibility to complex disease. The simultaneous genome-wide assay of gene expression and genetic variation allows the mapping of the genetic factors that underpin individual differences in quantitative levels of expression (expression QTLs; eQTLs). The availability of systematically generated eQTL information could provide immediate insight into a biological basis for disease associations identified through genome-wide association (GWA) studies, and can help to identify networks of genes 
+involved in disease pathogenesis \cite{cookson_mapping_2009}. However, most studies to date have been conducted in a single immortalized peripheral cell type, and it is unclear to what extent these findings will translate to human disease mapping across more varied cell types. 
+Furthermore, even analyses performed on additional cell types are often performed in a single tissue framework \cite{majewski_study_2011,gilad_revealing_2008} and fail to correlate the effect of genetics across multiple tissue types.  The Genotype Tissue Expression Project, GTEx, Project will provide the data necessary to address this situation: by 2016, the resource is expected to enroll a total of approximately 900 post-mortem donors, with approximately 30 tissues collected from each donor, and the project
+will generate extensive genotype data and RNA-seq data on each individual. However,  available methods are limited in their ability to {\it jointly analyze data on all tissues} to maximize power, while
+simultaneously {\it allowing for both qualitative and quantitative differences among eQTLs} present
+in each tissue.
+
+
+
+\linenumbers
+
+\section*{Introduction}
+Variation in gene expression is an important mechanism underlying susceptibility to complex disease. 
+
+The simultaneous genome-wide assay of gene expression and genetic variation allows the mapping of the genetic factors that underpin individual differences in quantitative levels of expression (expression QTLs; eQTLs). 
+
+The availability of this information immediate insight into a biological basis for disease associations identified through genome-wide association (GWA) studies, and can help to identify networks of genes 
+involved in disease pathogenesis 
+
+ However, most studies to date have been conducted in a single immortalized peripheral cell type, and it is unclear to what extent these findings will translate to human disease mapping across more varied cell types. 
+
+Furthermore, even analyses performed on additional cell types are often performed in a single tissue framework and fail to correlate the effect of genetics across multiple tissue types.  
+
+The Genotype Tissue Expression Project, GTEx, Project will provide the data necessary to address this situation: 
+by 2016, the resource is expected to enroll a total of approximately 900 post-mortem donors, with approximately 30 tissues collected from each donor, and the project
+will generate extensive genotype data and RNA-seq data on each individual. 
+However,  available methods are limited in their ability to {\it jointly analyze data on all tissues} to maximize power, while
+simultaneously {\it allowing for both qualitative and quantitative differences among eQTLs} present in each tissue.
+
+\subsection{Aim 1}
+%\begin{itemize}
+%\item
+{\textbf {Develop methods of estimating the posterior effect size across multiple subgroups, thereby mapping eQTLs }}
+\begin{itemize}
+\item Combine information across tissues% to fully acknowledge the multi-tissue nature of a SNP
+\item Report an effect size %rather than simply binary outcome to compare among SNPs called active within a tissue or among tissues
+\item Capture distinct variation in effect sizes within and between subgroups: 'patterns of sharing' %better than restricting effects to simply 'shared' or 'unshared' between subgroups. 
+%
+\end{itemize}
+
+\subsection{The Setting}
+\begin{itemize}
+\item{How do we quantify the effect of a particular SNP on gene expression among tissues?}
+\item{Approach 1: The Isolationist Approach}
+\end{itemize}
+% \begin{figure}
+%\includegraphics[width=8cm]{Isolation.pdf}
+%\label{fig:Isolation}
+%\end{figure}
+%
+Initial approaches to quantify the effect of a particular sno pon gene expression considered only one tissue at a time, and ignored the effect of the snp on gene expression in other tissues. This fails to  exploit the power of  shared genetic variation in effects on expression - i.e. the information that the effect of the gene snp pair in one tissue can provide about the effect in another- and limits our understanding of multiple-tissue phenotypes. 
+
+
+
+\subsection{The Setting}
+\begin{itemize}
+\item{How do we quantify the effect of a particular SNP on gene expression among tissues?}
+\item{Approach 2: The Joint Committee Approach}
+\itemRecognize the multivariate nature of this activity
+\item Many different patterns of sharing of effects among tissues.
+\item But how do we learn about the nature and frequency?
+\end{itemize}
+
+Here, we recognize the multivariate nature of the effects. Now, we aim to make an inference about the vector of  true effects across tissue and thus model this effect b as an R dimensional vector composed of the true effect of the gene snp pair across multiple tissues. across tissue and thus model this effect across tissue and thus model this effect. Acknowledging the multivariate nature of this effect opens the door to illustrating many different patterns of sharing of effects among tissues. But how do we learn about the nature and freuqnecy of these patterns?
+
+\subsection{Considering ALL the evidence!}
+\begin{itemize}
+%\item{\bf Jointly model the Posterior Effect Size $\bm{b}_{j}$ of gene-SNP pair $j$}
+%\item Observe standardized multivariate effect size $\hat{\bm{b}}_{j}$
+%\item Descend from true effect size  $\bm{b}_{j}$
+\item Each eQTL may follow a particular pattern of activity %such that groups 
+\item Within these groups, the tissues exhibit characteristic patterns of sharing of effects %, which can be 
+ \begin{figure}
+\includegraphics[width=6cm]{hm.pdf}
+\end{figure}
+\item Captured by considering the covariance structure of the genetic effects among tissues. 
+%\item This lends itself to a mixture model, in which  we assume all the gene-snp pairs are generated from a mixture of a finite number of Gaussian distributions with unknown parameters. the multivariate nature of this activity, within a particular 'pattern of sharing' some tissues may be more active than others, but not completely on or off. Previous work from our lab considered only the idea that the covariance between two tissues was the same across tissues thought to contain a QTL in a given pattern, or 'configuration',  and thus failed to incorporate the much richer covariance structure between tissues. The primary novelty of this proposal is {\it to estimate this multivariate posterior distribution on the effect size in a data-sensitive way} - i.e., using the mixture model to capture information about the covariance structure among subgroups (here, tissues). 
+\item Natural mixture model: Each component of the mixture is defined by the prior covariance matrix $U_{k}$ from which the vector of standardized effect sizes of this class is thought to be drawn. 
+\item Learn relative frequencies from the data
+\end{itemize}%\item component-specific covariance matrix then represents the variance of the effect size within and between tissues. 
+
+Not only do we have many tissues, we also have an entire genome from which to ?learn? about these patterns of sharing.  We are detectives with many tissues and many gene snp pairs at our disposal, and it is important we consider all the evidence.-For each gene snp pair, we observe a vector of standardized effect sizes and their standard error- assume that they descend from some true effect size b,- Thus as an additional level of combining information, we assume that Each eQTL may follow a particular pattern of activity characterized by its effects across tissues.- Within these groups, the tissues exhibit characteristic patterns of sharing, which can be captured by considering the covariance structure of the genetic effects among tissues. - This lends itself to a natural mixture model, in which  we assume all the gene-snp pairs arise from a mixture of a finite number of Gaussian distributions with unknown parameters. - As mentioned, because of the the multivariate nature of this activity, within a particular 'pattern of sharing' some tissues may be more active than others, but not completely on or off. - Thus each component of the mixture is defined by the prior covariance matrix from which the vector of standardized effect sizes $\bm{b}_{j}$ is thought to be drawn. The covariance matrix of the true effects thus reflects the pattern of sharing (i.e., the diagonal elements of the component-specific covariance matrix then represents the variance of the effect size within and and the off--diagonal between tissues . A large prior variance in one tissue and small in another means that effects in tissue 1 tends to be large while effects in tissue 2 tend to be mall.- Because we can?t know the ?true covariance matrix for each? gene snp pair, we ?learn? the relative proportions of each pattern of sharing (i.e., the mixture weigths) from the data and model each bj as arising from a mixture that captues all the covariance patterns.As a critical innovation on our previous method ([9, 10]), these matrices contain distinct diagonal and off-diagonal elements which reflect data-specific patterns of variation within and covariance between subgroups (tissues). This captures the variation in effect sizes within and between subgroups better than restricting effects to simply ?shared? or ?unshared? between subgroups. Previous work from our lab considered only the idea that the covariance between two tissues was the same across tissues thought to contain a QTL in a given pattern, or 'configuration',  and thus failed to incorporate the much richer covariance structure between tissues. The primary novelty of this proposal is {\it to estimate this multivariate posterior distribution on the effect size in a data-sensitive way} - i.e., using the mixture model to capture information about the covariance structure among subgroups (here, tissues). 
+
+
+
+
+\subsection{So what are the Prior Covariance Matrices $U_ks$ specifiying?}
+Suppose we have just two tissues 
+
+ \begin{figure}
+\includegraphics[width=5cm]{snptypes}
+\end{figure}
+\begin{itemize}
+\item Direction defined by relative ratio in effect size between tissues, specified in prior covariance of $\bm{b}$
+\end{itemize}
+
+Generative $U_{k}$ for \textcolor{blue}{SNPs} 
+\begin{pmatrix}
+   Var(b_{1}) = \textcolor{blue} {2.0}  &  Cov(b_{1},b_{2})=0.56 \\
+    Cov(b_{2},b_{1})=0.56 & Var (b_{2})=\textcolor{blue}{0.20}
+ \end{pmatrix}
+\item Additional novelty: Ratio between tissues is flexible (not simply shared or tissue-specific) and data sensitive (stay-tuned)
+
+To illustrate the utitlity of using a variety of covariance matrices, consider that we have snps of 4 ?types? here defined, by their effects in tow tissues. Snps of the blue class tend to have large effects in tissue 1 and small in tissue 2, while snps in the purple class have very large effects in tissue 2 and small effects in tissue 2. These directions are thus specified in the prior covariance matrix which defines the direction ? here simply ratio - in prior effect size between tissues,The 45 degree angle and the lines would be simply using tissue specific or shared effects, while we can have a much richer understanding of the relationship between effect sizes using a set ofcovariance matrices that aims to recapitulate patterns found in the data
+
+\subsection{Why care about the effect size?}
+
+\begin{itemize}
+
+\item Comparisons among tissues in which the QTL is called active, and among gene-snp pairs with a similar degree of activity in a given tissue. 
+\item The addition of the quantitative comparison captures the continuous nature of biological phenomenon. %Estimating the distribution of multivariate effect sizes seems like a natural addition. The estimation procedure is non-trivial, and previous work by our lab (\cite{flutre_statistical_2013,wen_bayesian_2014}) applied a multivariate mixture model to estimate heterogeneity of effects among conditions.
+\item How confident are we in the sign of the effect?
+\item Acknowledge the many patterns of sharing present in the data, wide array of prior covariance matrices allows our gene-snp pair to find it`s true pattern of sharing
+
+
+\end{itemize}
+
+Given that a snp is called active in two tissues, we want to make more statements about our confidence in the sign and magnitude of the effect among tissues. Similarly, if many snps are called active  in a particular tissue, we can resolve differences among these gene=snp pairs using this wide array of prior covariance matrices allows our gene snp pair to ?find it?s true pattenr of sharing?
+
+
+%\subsection{\it Mixture Prior}
+%For a given gene-snp pair, $\bm{b}$ represents the $R$ vector of unknown standardized effect. We model the prior distribution from which $\bm{b}$ is drawn as a mixture of multivariate {\it Normals}.
+% 
+% \begin{equation}
+%  \label{prior_b_mixt_grid}
+%  \bm{b} | \bm{\pi},\bf{U} \sim \sum_{k,l} \pi_{k,l} \;{\it N}_R(\bm{0}, \omega_l U_{k})
+%\end{equation}
+%
+%\begin{itemize}  
+%\item Choice of $U_k$ determines the direction, while $\omega_l$ determines the 'stretch' or 'tails' of each distribution
+%%\item `stretch factor' $\omega_{1\cdots L}$. 
+%\item $\pi_{k,l}$ to represent the (unknown) prior weight on prior covariance matrix $U_{k,l}$ %which represents a direction and stretch along this vector
+%\item  Use the EM algorithm to estimate the optimal combination of weights: How often does this particular pattern of sharing  occur in the data?
+%%\item Given a direction, may have different proportions of large and small effects
+%%\item The novelty of our approach is in modeling $\bm{b}_{j}$ as a mixture of multivariate {\it Normals}
+%\end{itemize} %where each component of the mixture is defined by its data-sensitive estimate of the prior covariance matrix $U_{k,l}$. We allow the latent variable $z_{j}$ to indicate which combination of covariance matrix and stretch factor we are considering,  $z_{j}$ can take on $KxL$ values $z_{j}$ = $[1,1] \cdots[k,l]$ .
+%%%%%%We?ll now omit the subscript J and assume we are talking about a given gene snp pair. The r dimensional vector of standardized effect sizes bj arises from a mixture of multivariate Gaussian distribtuions. %%-	The Uk and omega are fixed and the mixture proportions are estimated hierarhcicaglly. %-	As discussed the prior covariance matric specifies a pattern of sharing that corresponds to a direction in 44 dimensional space,  and in the two tissue case could be seen as a 2 dimensional vector. %-	A vector has both a direction and a length %-	We scale these vectors so that they all have the same length%-	And we recognize that the distribution of sizes within a class may be different between classes ? i.e., a mixture of big and small effects, corresponding to different stretches along these vectors, %-	or different propensity towards heavy or light tails.%-	This is a flexible way of modeling a variety of effect sizes within a class. %%The mixture weights Pi kl are then estimated hierarchically, using all gene snp pairs to learn about the relative proportions of each pattern of sharing.%% ? we choose the he mixture of pis that best maximizes the probability of the observed data, or the marginal likelihood, or the expected complete data likelihood%%%?we choose the hierarchical weights to reflect the frequencies of each pattern of sharing in the data set. We use the em algorithm to find the optimal combination of weights that maximizes the probability of observing the data.%%
+%
+%
+%
+%
+%
+%%\section{\it For a given gene-snp pair: Likelihood for $\bm{b}}
+%
+%By maximum likelihood in each tissue separately, we can easily obtain the estimates of the standardized genotype effect sizes, $\hat{\bm{b}}_{j}$, and their squared standard errors recorded on the diagonal of an $R \times R$ matrix noted $\hat{V}_{j} = \Var(\hat{\bm{b}}_{j})$. We assume that the matrix of standard errors of $\hat{\bm{b}}_{j}$, $V_{j}$ as approximated by $\hat{V_{j}}$ is diagonal and  that $\hat{V}_{j}$ is an accurate point estimate for the standard error and that these standard errors are independent between tissues.
+%
+%If we now view $\hat{\bm{b}}_{j}$ and $\hat{V}_{j}$ as \emph{observations} (i.e. known), we can write a new ``likelihood'' (using only the sufficient statistics) where we employ the use of bold typeset to indicate vector notation:
+%
+%\begin{itemize}
+%\item ${\hat{\bm{b}}}$ : R x 1 vector of standardized maximum likelihood estimates of effect sizes 
+%\item $\hat{V} \approx Var(\hat{\bm{b}})$: RxR diagonal `accurate' approximation of standardized standard error of ${\hat{\bm{b}}}$.
+%\item For each component, marginal likelihood: ${\it{N_R}(\hat{\bf{b}}; \bm{0}, U_{k} + \hat{V})}$
+%\item $\hat{\bm{b}}$ and $\hat{V}$ as \emph{observations} (i.e. known)
+%\end{itemize} 
+%
+%For a given gene-snp pair, the Likelihood on $\bm{b}$: 
+%\begin{equation}
+%  \label{new_lik}
+%  \hat{\bm{b}} | \bm{b} \sim {\it N}_R(\bm{b}, \hat{V})
+%\end{equation}
+%
+%
+%
+%\item{Adaptive Shrinkage: So why does the likelihood increase at the 'right component'?}
+%
+%Consider the univariate case. Here, think about x as $\hat{b_{1}}$, and $\sigma$ as $U_{k[1,1]]} + \hat{V}_{j[1,1]}$.  
+%
+%To compute the likelihood at each component: 
+%\begin{equation}
+%f(x \; | \; \sigma) = \frac{1}{\sigma\sqrt{2\pi} } \; e^{ -\frac{(x)^2}{2\sigma^2} }
+%\end{equation}
+%  
+%We can see that this will be largest when $\sigma^{2}$ approaches the MLE, which where is simply $\hat{b}^{2}$. 
+%This is the intuition behind the bayes factor being the largest at the 'true component'. 
+%We know that for a single multivariate {\it Normal}  the posterior on  $\bm{b} | U_0$ is  simply: 
+%\[
+%\bm{b} | \hat{\bm{b}} \sim {\it N}_R(\bm{\mu}_{1}, U_{1})
+%\]
+%where:
+%\begin{itemize}
+%\item $\bm{\mu}_{1} = U_{1} (\hat{V}^{-1} \hat{\bm{b}})$;
+%\item $U_{1} = (U_{0}^{-1} + \hat{V}^{-1})^{-1}$.
+%\end{itemize}
+%
+%
+%\item Furthermore, a normal prior+ Normal likelihood = Normal posterior
+%\item  Mix normal prior + normal likelihood = Mix normal posterior
+%\end{itemize}
+%
+%\begin{equation}
+%\begin{aligned}
+%  \label{eq:mixpost}
+%p(\bm{b}_ | \hat{\bm{b}}, \hat{V}, \hat{\bm{\pi}} )
+%&= \sum_{k=1,l=1}^{K,L} \sim {\it N}_R(\bm{\mu}_{1kl}, U_{1kl})%p(\bm{b}_{j} | \hat{\bm{b}}_{j}, \hat{V}_{j}, z_{j}=k,l) 
+%p(z=k,l | \hat{\bm{b}}, \hat{V}, \hat{\bm{\pi} }),%v_{j}=1)
+% \\
+%&= \sum_{k=1,l=1}^{K,L} \sim {\it N}_R(\bm{\mu}_{1kl}, U_{1kl})%,v_{j}=1) 
+%\tilde \pi_{k,l}
+%
+%\end{aligned}
+%\end{equation}
+%
+%\begin{itemize}
+%\item $\tilde \pi_{k,l} = P(Component|Data) \propto  P(Data|Comp.) \times P(Comp.)$ 
+%Combine hierarchical and snp-specific information
+%\item  Allows pair to find its true match!
+%\end{itemize}
+%
+%This is quite simply a weighted combination of normal distributions.%%now each characterized by their posterior mean and covariance.%%Critically, these posterior weights combine information that was estimated hierarchically (from all the data) and is the posterior probability of the component given the data. %%This is proportional to the probability of observing the data across tissues at the snp given that it arose from a particular componenet times the prior weight on that componenet. %%Thus for gene snp pairs who show strong evidence of arising from a particular component, the likelihood will overwhelm the prior weight assigned to a particular component and the posterior weight will be high even if the prior probability of that component is not.%
+%
+%Here, the posterior weight $\tilde \pi_{k,l}$ is simply 
+%
+% 
+% \begin{equation}
+% \label{post.pi}
+%\tilde \pi_{k,l} =\frac{ p(\hat{\bm{b}}_{j}| \hat{V}_{j}, z_{j}=k,l) \hat \pi_{kl}} {\sum_{k=1,l=1}^{K,L} p(\hat{\bm{b}}_{j}| \hat{V}_{j}, z_{j}=k,l) \hat\pi_{kl}}
+%\end{equation}
+%
+%Note also that $\hat\pi_{kl}$ represents the prior weights which are estimated hierarchically, using an EM algorithm which assumes that all $\bm{b}_{j}$ arise from a shared multivariate-{\it Normal} distribution. The proportional representation of each component of the prior on $\bm{b}_{j} $ is 'learned' from the data by maximizing the likelihood across all gene SNP pairs. %Such an assumption results in optimal shrinkage properties (\cite ash).
+%
+%
+%
+%
+%  
+%Furthermore, now we know that the posterior mean is $\bm{\mu}_{1} = U_{1} (\hat{V}^{-1} \hat{\bm{b}})$ where $U_{1} = (U_{0}^{-1} + \hat{V}^{-1})^{-1}$ and so quite obviously, the posterior mean for a particular tissue in the components with a large prior variance will also be large because they are 'very roughly' $\propto U_{0k} (\hat{V}^{-1} \hat{\bm{b}})$. 
+%}
+%
+%Putting these things together, we see that a large likelihood in a particular component will mean that the majority of the posterior weight is at this component, and correspondingly, the majority of the posterior mean will be comprised of the posterior mean at this component which will specify a large effect at this component. If a SNP shows a relatively 'flat likelihood' at all components, than the posterior weights will appear similar to the prior weights, and correspondingly, the posterior mean will look a lot like the null case (since the prior weights are computed from 'mostly null data' and thus the prior weights will heavily weight the components with small posterior means (as determined by small prior variance in $U_{k}$).
+%
+%}
+%
+%
+%
+%
+%
+%\frametitle{The key: Mixture!}
+%
+%
+%
+%\begin{itemize}
+%\item But how do you choose the set of all $\bf{U}$ ?
+%\item Goal: Capture all the patterns of sharing in the data
+%\item If we knew the truth, choose a set that contains for SNPs of each class:
+%
+%\begin{equation}
+%U_{k} \; =
+%  \begin{pmatrix}
+%   Var(b_{1}) & \cdots &     Cov(b_{1},b_{r})\\
+%    \vdots & \ddots & \vdots \\
+%    Cov(b_{r},b_{1}) & \cdots & Var (b_{r})
+%  \end{pmatrix}
+%\end{equation}
+%\item Look to the data for hints ...
+%\end{itemize}
+%
+%
+%
+%
+%%
+%%}
+%
+%% You may title this section "Methods" or "Models". 
+% "Models" is not a valid title for PLoS ONE authors. However, PLoS ONE
+% authors may use "Analysis" 
+\section*{Materials and Methods}
+
+We assume the following mixture prior for the $R$ dimensional vector of true effects,  $\bm{b_{j}}$ represents the genetic effect of SNP-gene pair $j$ across $R4 tissues:
+
+ \begin{equation}
+  \label{prior_b_mixt_grid}
+  \bm{b} | \bm{\pi},\bf{U} \sim \sum_{k,l} \pi_{k,l} \;{\it N}_R(\bm{0}, \omega_l U_{k})
+\end{equation}
+
+
+As mentioned above, each component of the mixture distribution is characterised by these prior covariance matrices, $U_{k}$ which capture the pattern of effects across tissues.
+\subsection{ Covariance Matrices}
+
+For a given $\omega_{l}$, we specify 4 `types' of $RxR$ prior covariance matrices $U_{k,l}$.
+\begin{enumerate}
+
+\item $U_{k=1,l}$ = $\omega_l$ $\mathbf{I}_{R}$
+
+\item $U_{k=2,l}$ = $\omega_l$X_{z}$ The (naively) estimated tissue covariance matrix as estimated from the column-centered J \times R$ matrix of $Z$ statistics, $Z_{center}$: $\frac{1}{J}$ $Z_{center}$^{t}$ $Z_{center}$
+
+\item $U_{k=3,l}$ = $\omega_l$ $\frac{1}{J}$ $V_{1...p}$ $d^{2}_{1...p}$   $V^{t}_{1..p}$ is the rank $p$ eigenvector approximation of the tissue covariance matrices, i.e., the sum of the first $p$ eigenvector approximations, where $\pcv_{1...p}$  represent the eigenvectors of the covariance matrix of tissues and $\pcd_{1...p}$ are the first $p$ eigenvalues.
+
+\item $U_{k=4:4+Q,l}$ = $\frac{1}{J}(($\Lambda\mathbf{F})^{t} \Lambda \mathbf{F})_{q}$ corresponding to the $q_{th}$ sparse factor representation of the tissue covariance matrix %(not the sum of the first $q$, as above)
+
+\item $U_{k=4+Q+1,l}$ = $\frac{1}{J}$ ($\($\Lambda \mathbf{F})^{t} \Lambda \mathbf{F}$ is the sparse factor representation of the tissue covariance matrix, estimated using all $q$ factors.
+
+
+\item $U_{k=4+Q+1,l}$ = $\frac{1}{J}$ ($\($\Lambda \mathbf{F})^{t} \Lambda \mathbf{F}$ is the sparse factor representation of the tissue covariance matrix, estimated using all $q$ factors.
+
+
+\item $U_{k=5+Q:R+4+Q,l}$ = $\frac{1}{J}$ $([1 0 0 . . ]'[1 0 0  . . .]$ %is the sparse factor representation of the tissue covariance matrix, estimated using all $q$ factors.
+\item $U_{k=R+5+Q,l}$ = $\frac{1}{J}$ $([1 1 1 . . .]'[1 1 1 . . .])$
+\item $[1 0 0 0 ...]$ or $[1 1 1  ...]$ represent configurations such that given membership,$\bm{b_{j}}$ arise from the same prior variance.
+\end{itemize}
+
+\end{enumerate}
+
+
+\subsection{Deconvolution}
+To retrieve a 'denoised' or 'deconvoluted' estimate of the non-single rank dimensional reduction matrices, I then perform deconvolution.em which initializes the EM algorithm with  the matrices specified in (2), (3) and (5). The final results of this iterative procedure preserves the rank of the initialization matrix, and allows us to use the 'true' effect component as missing data in deconvoluting the prior covariance matrices. In brief, this algorithm works by treating not only the component identity but also the true effect $b_{j}$ as unobserved data, and maximising the likelihood over the expectation of the complete data likelihood, considering the values $\bm{{b}_{j}}$ as extra missing data (in addition to the indicator variables q_{ij}). This allows us to write down the ?full data? log likelihood as follows
+
+write down the ?full data? log likelihood as follows:\begin{equation}
+\begin{split}
+\phi=\sum_{J} \sum_{K} q_{jk} ln \alpha_{k} \it{N}(\bm{\hat{{b}_{j}}}|0,U_{k}+V_{j})\\
+????\sum_{J} \sum_{K} q_{jk} ln \alpha_{k} \it{N}(\bm{{b}_{j}}|0,U_{k})
+\end{split}
+\end{equation}
+
+Where \alpha_{k} represents $p(k)$ and q_{jk} is the latent identifier variable..
+In brief, this is how the deconvolution.em algorithm works.
+
+%\begin{enumerate}
+%\item Produce a 2 element list of initialization parameters containing the initial covariance matrices and a vector of their initial weights, $\mathbf{\pi}$. Critically, this vector $\mathbf{\pi}$ will need to be recomputed when we add these deconvoluted estimates to the full set of covariance matrices.
+%
+%\item Choose `zstrong' as the top $permsnp$ gene-pairs  and 'learn' the denoised covariance matrix from this choice. In practice, we use the maximum snp per gene, thus learning from the full set of 16,069 genes.
+%\item Return a list with the denoised covariance matrix and corresponding mixture weights.
+%\end {enumerate}
+%
+%From extensive investigation with testing and training data, I found that using a rank 3 SVD approximation for the matrix in (5) as well as the rank 5 SFA approximation and the empirical covariance matrix maximized the likelihood of a test data set. 
+%
+%$max.step=deconvolution.em.with.bovy(t.stat=t.stat,factor.mat=factor.mat,lambda.mat=lambda.mat,K=3,P=3)$
+
+
+\susection{Generation of List of Covariance Matirce}
+I then use these three non single-rank covariance matrix in place of our original choice of the empirical covariance matrix, SFA and SVD approximations. Here, I also used the Identity (K=1), 5 single-rank SFA factors (K=4-9), and the 44+1 eqtlbma.lite configurations (K=10:54 in steps (7) and (8) to a assemble a full list of covariance matrices. This is 54 matrices, and we then proceed to chooses an $'L'$ element grid according to the range of effect sizes present in the initial 16,069 x 44 matrix of strong Z statistics to create a KxL list of covariance matrices. In the gtex data set we choose a grid with 22 omegas for a total of 1188 covariance matrices.
+
+%%The function $\textbf{compute.hm.covmat}$ chooses an 'L' element grid according to the range of effect sizes present in the initial 16,069 x 44 matrix of strong Z statistics. 
+% $\textbf{autoselect.mixgrid}$ chose a grid with 22 omegas for a total of 1188 covariance matrices.
+
+%\begin{verbatim}
+%covmat=compute.hm.covmat.all.max.step(z.stat,v.j,Q=5,lambda.mat,
+%A="filename",factor.mat,max.step=max.step)
+%
+%\end{verbatim}
+%
+%$\textbf{covmat}$ is thus a list of 1188 covariance matrices.
+
+
+\subsection{Mixture Weights}
+We now need to compute the mixture weights $\bm{pi_{kl}$} hierarchically - that is, using all of the data to determine the optimal mixture of covariance matrices. I use  a randomly chosen set of 20,000 gene snp pairs  to estimate these mixture proportions. This set does not contain the strongest gene-snp pairs, and thus will allow for substantial shrinkage, as a majority of these gene-snp pairs will  have their likelihood maximized at low $\omega$ components.
+
+To compute the likelihood at each component: 
+For a given gene-snp pair, the Likelihood on $\bm{b}$: 
+\begin{equation}
+  \label{new_lik}
+  \hat{\bm{b}} | \bm{b} \sim {\it N}_R(\bm{b}, \hat{V})
+\end{equation}
+
+Furthermore, we take advantage of the fact that 
+
+${\it{N_R}(\hat{\bf{b}}_{j}; \bm{0}, U_{k} + \hat{V}_{j})$ 
+
+Thus we can now treat the matrices $U_{k}$ as fixed and computed the JxK matrix of likelihoods to the combinations of weights which maximizes the probability of observing the data.
+
+
+%\begin{verbatim}
+%compute.hm.train(train.b = train.z,se.train = train.s,covmat = covmat,A="jul3")
+%\end{verbatim}
+%
+%$\textbf{compute.hm.train}$ produces an rds object with prior weights, a likelihood matrix, and a pdf of the barplot of these weights.
+%
+\section{Posterior Quantities}
+Now that I have the estimated these prior mixture weights stored in the vector $\textbf{pis}$. I proceed to the inference step, where I compute the posterior weights and corresponding posterior quantities across all original 16069 gene snp pairs. In brief, the posterior mean, post covariance matrix and tissue specific tail probabilities are computed across all K components for each gene snp pair, and then weighted according to the posterior weights. This is performed in the $\textbf{weightedquants}$ step.
+
+We know that for a single multivariate {\it Normal}  the posterior on  $\bm{b} | U_0$ is  simply: 
+\[
+\bm{b} | \hat{\bm{b}} \sim {\it N}_R(\bm{\mu}_{1}, U_{1})
+\]
+where:
+\begin{itemize}
+\item $\bm{\mu}_{1} = U_{1} (\hat{V}^{-1} \hat{\bm{b}})$;
+\item $U_{1} = (U_{0}^{-1} + \hat{V}^{-1})^{-1}$.
+\end{itemize}
+
+Furthermore, a mixture-multivariate normal prior and a normal likelihood yields a mixture multivariate posterior, where the final posterior distribution is simply a weighted combination of multivariate normal distribtuions, each now characterixed by it's posterior mean $\bm{\mu}_{1k}$ and covariance  $U_{1} = (U_{0}^{-1} + \hat{V}^{-1})^{-1}$.
+
+\begin{equation}
+\begin{aligned}
+  \label{eq:mixpost}
+p(\bm{b}_ | \hat{\bm{b}}, \hat{V}, \hat{\bm{\pi}} )
+&= \sum_{k=1,l=1}^{K,L} \sim {\it N}_R(\bm{\mu}_{1kl}, U_{1kl})%p(\bm{b}_{j} | \hat{\bm{b}}_{j}, \hat{V}_{j}, z_{j}=k,l) 
+p(z=k,l | \hat{\bm{b}}, \hat{V}, \hat{\bm{\pi} }),%v_{j}=1)
+ \\
+&= \sum_{k=1,l=1}^{K,L} \sim {\it N}_R(\bm{\mu}_{1kl}, U_{1kl})%,v_{j}=1) 
+\tilde \pi_{k,l}
+
+\end{aligned}
+\end{equation}
+
+Furthermore, the posterior weights or responsibilites combine hierarchical and snp-specific information, as they are proportional to the product of the original mixture weights (estimated hierarchically) and the likelihood for a particular gene snp pair, which allows the gene snp pair to 'find its' true match. A large likelihood in a particular component will mean that the majority of the posterior weight is at this component, and correspondingly, the majority of the posterior mean will be comprised of the posterior mean at this component which will specify a large effect at this component. If a SNP shows a relatively 'flat likelihood' at all components, than the posterior weights will appear similar to the prior weights, and correspondingly, the posterior mean will look a lot like the null case (since the prior weights are computed from 'mostly null data' and thus the prior weights will heavily weight the components with small posterior means (as determined by small prior variance in $U_{k}$).
+
+\begin{euqation}
+\item $\tilde \pi_{k,l} = P(Component|Data) \propto  P(Data|Comp.) \times P(Comp.)$ 
+Combine hierarchical and snp-specific information
+\item  Allows pair to find its true match!
+\end{equation}
+
+Here, the posterior weight $\tilde \pi_{k,l}$ is simply 
+
+ 
+ \begin{equation}
+ \label{post.pi}
+\tilde \pi_{k,l} =\frac{ p(\hat{\bm{b}}_{j}| \hat{V}_{j}, z_{j}=k,l) \hat \pi_{kl}} {\sum_{k=1,l=1}^{K,L} p(\hat{\bm{b}}_{j}| \hat{V}_{j}, z_{j}=k,l) \hat\pi_{kl}}
+\end{equation}
+
+
+% \begin{verbatim}
+%weightedquants=lapply(seq(1:nrow(z.stat)),function(j){total.quant.per.snp(j,covmat,b.gp.hat=z.stat,
+%se.gp.hat = s.j,pis,A,checkpoint = FALSE)})
+%\end{verbatim}                          
+%  all.arrays=post.array.per.snp(j,covmat,b.gp.hat,se.gp.hat)
+%  post.means=all.arrays$post.means
+%  post.ups=all.arrays$post.ups
+%  post.downs=all.arrays$post.downs
+%  post.covs=all.arrays$post.covs
+%  post.nulls=all.arrays$post.nulls
+%  
+%  all.mus=total.mean.per.snp(post.weights,post.means)
+%  all.ups=total.up.per.snp(post.weights,post.ups)
+%  all.downs=total.down.per.snp(post.weights,post.downs )
+%  lfsr=t(lfsr.per.snp(all.ups,all.downs))
+%  all.covs.partone=total.covs.partone.persnp(post.means,post.covs,post.weights)
+%  marginal.var=all.covs.partone-all.mus^2
+%
+%\end{verbatim}
+This will return a set of 6 files containing the JxR matrix of posterior means, marginal variances, tail probabilities, local false sign rates, and the JxK matrix of posterior weights. Checkpoint = FALSE means that the files will be created (rather than simply outputting an object array which contains the posterior quantities.
+
+
+\section{Testing and Training}
+
+In order to determine the optimal number and rank of the covariance matrices, we divide our data set into a training and test data set, each containing 8000 genes.
+
+In the training set, we proceed as above: choosing the top SNP for each of the 8000 genes, creating a list of covariance matrices through deconvolution and grid selection of these top 'training gene-snp' pairs. 
+
+Then, within the training data, we similarly choose a random set of gene-snp pairs (restricting our analysis to genes contained in the training set. Again, we choose 20,000 random-gene snp pairs and use the EM algorithm to learn the mixture proportions $\pi$  from this data set.
+
+We then use the KxL vector of $\pi$ from the training set to estimate the log likelihood of each data point in the test data set. If our model is 'overfit' to the training data set, than a larger number of covariance matrices may actually decrease the test log-likelihood. 
+
+I found that the K=1188 set of covariance matrices containing the Identity, the denoised empirical covariance matrix, rank 5 SFA approximation and rank 3 SVD approximation as well as 5 single-rank SFA factors and the 45 eqtl.bma.lite configurations maximized this likelihood.
+
+
+
+
+\section{Training and Testing Procedure: Estimating Hierarchical Weights}
+
+We wish to choose the model which best maximizes the probability of observing the data set. 
+
+Incomplete Data likelihood:
+%Here, the total likelihood of the test data set over $K$ components: 
+
+\begin{equation}
+L(\bm\pi;{\hat{\bm{b}})} = \prod_{j=1}^J \sum_{k}^{K} \pi_{k} P(\hat{\bm{b_{j}}} | z_{j}=k)
+\end{equation}
+
+\begin{itemize}
+\item  To estimate the hierarchical prior weights $\pi_{k}$: compute the likelihood at each each gene snp pair $j$ by evaluating the probability of observing $\bm{\hat{b}_{j}}$ given that we know the true $\bm{b_{j}}$ arises from component $k$
+\item  Use the EM algorithm to estimate the optimal combination of weights: How often does this particular covariance matrix occur in the data?
+\end{itemize}
+
+We then use these weights to estimate the test set log likelihood.
+
+% Results and Discussion can be combined.
+\section*{Results}
+%Nulla mi mi, venenatis sed ipsum varius, Table~\ref{table1} volutpat euismod diam. Proin rutrum vel massa non gravida. Quisque tempor sem et dignissim rutrum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi at justo vitae nulla elementum commodo eu id massa. In vitae diam ac augue semper tincidunt eu ut eros. Fusce fringilla erat porttitor lectus cursus, vel sagittis arcu lobortis. Aliquam in enim semper, aliquam massa id, cursus neque. Praesent faucibus semper libero.
+%
+%
+%\begin{table}[!ht]
+%\begin{adjustwidth}{-2.25in}{0in} % Comment out/remove adjustwidth environment if table fits in text column.
+%\caption{
+%{\bf Table caption Nulla mi mi, venenatis sed ipsum varius, volutpat euismod diam.}}
+%\begin{tabular}{|l|l|l|l|l|l|l|l|}
+%\hline
+%\multicolumn{4}{|l|}{\bf Heading1} & \multicolumn{4}{|l|}{\bf Heading2}\\ \hline
+%$cell1 row1$ & cell2 row 1 & cell3 row 1 & cell4 row 1 & cell5 row 1 & cell6 row 1 & cell7 row 1 & cell8 row 1\\ \hline
+%$cell1 row2$ & cell2 row 2 & cell3 row 2 & cell4 row 2 & cell5 row 2 & cell6 row 2 & cell7 row 2 & cell8 row 2\\ \hline
+%$cell1 row3$ & cell2 row 3 & cell3 row 3 & cell4 row 3 & cell5 row 3 & cell6 row 3 & cell7 row 3 & cell8 row 3\\ \hline
+%\end{tabular}
+%\begin{flushleft} Table notes Phasellus venenatis, tortor nec vestibulum mattis, massa tortor interdum felis, nec pellentesque metus tortor nec nisl. Ut ornare mauris tellus, vel dapibus arcu suscipit sed.
+%\end{flushleft}
+%\label{table1}
+%\end{adjustwidth}
+%\end{table}
+%
+%
+%
+%\subsection*{\lorem\ and \ipsum\ Nunc blandit a tortor.}
+%
+%Maecenas convallis mauris sit amet sem ultrices gravida. Etiam eget sapien nibh. Sed ac ipsum eget enim egestas ullamcorper nec euismod ligula. Curabitur fringilla pulvinar lectus consectetur pellentesque. Quisque augue sem, tincidunt sit amet feugiat eget, ullamcorper sed velit. Sed non aliquet felis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris commodo justo ac dui pretium imperdiet. Sed suscipit iaculis mi at feugiat. 
+%
+%\subsection*{Sed ac quam id nisi malesuada congue.}
+%
+%Nulla mi mi, venenatis sed ipsum varius, volutpat euismod diam. Proin rutrum vel massa non gravida. Quisque tempor sem et dignissim rutrum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi at justo vitae nulla elementum commodo eu id massa. In vitae diam ac augue semper tincidunt eu ut eros. Fusce fringilla erat porttitor lectus cursus, vel sagittis arcu lobortis. Aliquam in enim semper, aliquam massa id, cursus neque. Praesent faucibus semper libero.
+%
+%% Please do not create a heading level below \subsection. For 3rd level headings, use \paragraph{}. 
+%\subsection*{Subsection 1}
+%Nulla mi mi, venenatis sed ipsum varius, volutpat euismod diam. Proin rutrum vel massa non gravida. Quisque tempor sem et dignissim rutrum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi at justo vitae nulla elementum commodo eu id massa. In vitae diam ac augue semper tincidunt eu ut eros. Fusce fringilla erat porttitor lectus cursus, vel sagittis arcu lobortis. Aliquam in enim semper, aliquam massa id, cursus neque. Praesent faucibus semper libero.
+%
+%\subsection*{Subsection 2}
+%\paragraph{3rd Level Heading.} Nulla mi mi, venenatis sed ipsum varius, volutpat euismod diam. Proin rutrum vel massa non gravida. Quisque tempor sem et dignissim rutrum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi at justo vitae nulla elementum commodo eu id massa. In vitae diam ac augue semper tincidunt eu ut eros. Fusce fringilla erat porttitor lectus cursus, vel sagittis arcu lobortis. Aliquam in enim semper, aliquam massa id, cursus neque. Praesent faucibus semper libero.
+
+\section*{Discussion}
+%Nulla mi mi, venenatis sed ipsum varius, Table~\ref{table1} volutpat euismod diam. Proin rutrum vel massa non gravida. Quisque tempor sem et dignissim rutrum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi at justo vitae nulla elementum commodo eu id massa. In vitae diam ac augue semper tincidunt eu ut eros. Fusce fringilla erat porttitor lectus cursus, vel sagittis arcu lobortis. Aliquam in enim semper, aliquam massa id, cursus neque. Praesent faucibus semper libero.
+%
+%\subsection*{\lorem\ and \ipsum\ Nunc blandit a tortor.}
+%
+%CO\textsubscript{2} Maecenas convallis mauris sit amet sem ultrices gravida. Etiam eget sapien nibh. Sed ac ipsum eget enim egestas ullamcorper nec euismod ligula. Curabitur fringilla pulvinar lectus consectetur pellentesque. Quisque augue sem, tincidunt sit amet feugiat eget, ullamcorper sed velit. 
+%
+%Sed non aliquet felis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris commodo justo ac dui pretium imperdiet. Sed suscipit iaculis mi at feugiat. Ut neque ipsum, luctus id lacus ut, laoreet scelerisque urna. Phasellus venenatis, tortor nec vestibulum mattis, massa tortor interdum felis, nec pellentesque metus tortor nec nisl. Ut ornare mauris tellus, vel dapibus arcu suscipit sed. Nam condimentum sem eget mollis euismod. Nullam dui urna, gravida venenatis dui et, tincidunt sodales ex. Nunc est dui, sodales sed mauris nec, auctor sagittis leo. Aliquam tincidunt, ex in facilisis elementum, libero lectus luctus est, non vulputate nisl augue at dolor. For more information, see \nameref{S1_Text}.
+%
+\section*{Supporting Information}
+
+% Include only the SI item label in the subsection heading. Use the \nameref{label} command to cite SI items in the text.
+%\subsection*{S1 Video}
+%\label{S1_Video}
+%{\bf Bold the first sentence.}  Maecenas convallis mauris sit amet sem ultrices gravida. Etiam eget sapien nibh. Sed ac ipsum eget enim egestas ullamcorper nec euismod ligula. Curabitur fringilla pulvinar lectus consectetur pellentesque.
+%
+%\subsection*{S1 Text}
+%\label{S1_Text}
+%{\bf Lorem Ipsum.} Maecenas convallis mauris sit amet sem ultrices gravida. Etiam eget sapien nibh. Sed ac ipsum eget enim egestas ullamcorper nec euismod ligula. Curabitur fringilla pulvinar lectus consectetur pellentesque.
+%
+%\subsection*{S1 Fig}
+%\label{S1_Fig}
+%{\bf Lorem Ipsum.} Maecenas convallis mauris sit amet sem ultrices gravida. Etiam eget sapien nibh. Sed ac ipsum eget enim egestas ullamcorper nec euismod ligula. Curabitur fringilla pulvinar lectus consectetur pellentesque.
+%
+%\subsection*{S2 Fig}
+%\label{S2_Fig}
+%{\bf Lorem Ipsum.} Maecenas convallis mauris sit amet sem ultrices gravida. Etiam eget sapien nibh. Sed ac ipsum eget enim egestas ullamcorper nec euismod ligula. Curabitur fringilla pulvinar lectus consectetur pellentesque.
+%
+%\subsection*{S1 Table}
+%\label{S1_Table}
+%{\bf Lorem Ipsum.} Maecenas convallis mauris sit amet sem ultrices gravida. Etiam eget sapien nibh. Sed ac ipsum eget enim egestas ullamcorper nec euismod ligula. Curabitur fringilla pulvinar lectus consectetur pellentesque.
+%
+\section*{Acknowledgments}
+%Cras egestas velit mauris, eu mollis turpis pellentesque sit amet. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nam id pretium nisi. Sed ac quam id nisi malesuada congue. Sed interdum aliquet augue, at pellentesque quam rhoncus vitae.
+
+\nolinenumbers
+
+%\section*{References}
+% Either type in your references using
+% \begin{thebibliography}{}
+% \bibitem{}
+% Text
+% \end{thebibliography}
+%
+% OR
+%
+% Compile your BiBTeX database using our plos2015.bst
+% style file and paste the contents of your .bbl file
+% here.
+% 
+\begin{thebibliography}{10}
+\bibitem{bib1}
+Devaraju P, Gulati R, Antony PT, Mithun CB, Negi VS. Susceptibility to SLE in South Indian Tamils may be influenced by genetic selection pressure on TLR2 and TLR9 genes. Mol Immunol. 2014 Nov 22. pii: S0161-5890(14)00313-7. doi: 10.1016/j.molimm.2014.11.005
+
+\bibitem{bib2}
+Huynen MMTE, Martens P, Hilderlink HBM. The health impacts of globalisation: a conceptual framework. Global Health. 2005;1: 14. Available: http://www.globalizationandhealth.com/content/1/1/14.
+
+\end{thebibliography}
+
+
+
+\end{document}
+

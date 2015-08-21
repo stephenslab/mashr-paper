@@ -1,3 +1,6 @@
 lik=readRDS("~/Dropbox/et_with_bma/likelihoodsinglerun.rds")
 head(lik)
 lik[1:10,1:10]
+library("squarem")
+library("SQUAREM")
+?squarem
