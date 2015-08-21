@@ -181,21 +181,22 @@
 \newline
 % Insert author names, affiliations and corresponding author email (do not include titles, positions, or degrees).
 \\
-Sarah Urbut \textsuperscript{1,\Yinyang},
-Name2 Surname\textsuperscript{2,\Yinyang},
-Name3 Surname\textsuperscript{2,\textcurrency a},
-Name4 Surname\textsuperscript{2,\ddag},
-Name5 Surname\textsuperscript{2,\ddag},
-Name6 Surname\textsuperscript{2},
-Name7 Surname\textsuperscript{3,*},
-with the Lorem Ipsum Consortium\textsuperscript{\textpilcrow}
+Sarah Urbut \textsuperscript{1,2},
+Gao Wang {1},
+%Name3 Surname\textsuperscript{2,\textcurrency a},
+%Name4 Surname\textsuperscript{2,\ddag},
+%Name5 Surname\textsuperscript{2,\ddag},
+%Name6 Surname\textsuperscript{2},
+Matthew Stephens \textsuperscript{1,3,\ddag},
+with the GTEX Consortium\textsuperscript{\textpilcrow}
 \\
 \bigskip
-\bf{1} Affiliation Dept/Program/Center, Institution Name, City, State, Country
+\bf{1} Department of Human Genetics/ University of Chicago, Chicago, IL USA
 \\
-\bf{2} Affiliation Dept/Program/Center, Institution Name, City, State, Country
+\bf{2} Pritzker School of Medicine/Growth and Development Training Program/University of Chicago, Chicago, IL USA
 \\
-\bf{3} Affiliation Dept/Program/Center, Institution Name, City, State, Country
+\bf{3} Department of Statistics/ University of Chicago, Chicago, IL USA
+
 \\
 \bigskip
 
@@ -204,19 +205,19 @@ with the Lorem Ipsum Consortium\textsuperscript{\textpilcrow}
 % Remove or comment out the author notes below if they aren't used.
 %
 % Primary Equal Contribution Note
-\Yinyang These authors contributed equally to this work.
+%\Yinyang These authors contributed equally to this work.
 
 % Additional Equal Contribution Note
 % Also use this double-dagger symbol for special authorship notes, such as senior authorship.
 \ddag These authors also contributed equally to this work.
 
 % Current address notes
-\textcurrency a Insert current address of first author with an address update
+%\textcurrency a Insert current address of first author with an address update
 % \textcurrency b Insert current address of second author with an address update
 % \textcurrency c Insert current address of third author with an address update
 
 % Deceased author note
-\dag Deceased
+%\dag Deceased
 
 % Group/Consortium Author Note
 \textpilcrow Membership list can be found in the Acknowledgments section.
@@ -504,7 +505,7 @@ We assume the following mixture prior for the $R$ dimensional vector of true eff
 
  \begin{equation}
   \label{prior_b_mixt_grid}
-  \bm{b} | \bm{\pi},\bf{U} \sim \sum_{k,l} \pi_{k,l} \;{\it N}_R(\bm{0}, \omega_l U_{k})
+  \bm{b_{j} | \bm{\pi},\bf{U} \sim \sum_{k,l} \pi_{k,l} \;{\it N}_R(\bm{0}, \omega_l U_{k})
 \end{equation}
 
 
