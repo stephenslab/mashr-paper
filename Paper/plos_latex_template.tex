@@ -239,8 +239,7 @@ Variation in gene expression is an important mechanism underlying susceptibility
 involved in disease pathogenesis \cite{cookson_mapping_2009}. However, most studies to date have been conducted in a single immortalized peripheral cell type, and it is unclear to what extent these findings will translate to human disease mapping across more varied cell types. 
 Furthermore, even analyses performed on additional cell types are often performed in a single tissue framework \cite{majewski_study_2011,gilad_revealing_2008} and fail to correlate the effect of genetics across multiple tissue types.  The Genotype Tissue Expression Project, GTEx, Project will provide the data necessary to address this situation: by 2016, the resource is expected to enroll a total of approximately 900 post-mortem donors, with approximately 30 tissues collected from each donor, and the project
 will generate extensive genotype data and RNA-seq data on each individual. However,  available methods are limited in their ability to {\it jointly analyze data on all tissues} to maximize power, while
-simultaneously {\it allowing for both qualitative and quantitative differences among eQTLs} present
-in each tissue.
+simultaneously {\it allowing for both qualitative and quantitative differences among eQTLs} presentin each tissue.
 
 
 
@@ -316,7 +315,11 @@ Here, we recognize the multivariate nature of the effects. Now, we aim to make a
 \item Learn relative frequencies from the data
 \end{itemize}%\item component-specific covariance matrix then represents the variance of the effect size within and between tissues. 
 
-Not only do we have many tissues, we also have an entire genome from which to ?learn? about these patterns of sharing.  We are detectives with many tissues and many gene snp pairs at our disposal, and it is important we consider all the evidence.-For each gene snp pair, we observe a vector of standardized effect sizes and their standard error- assume that they descend from some true effect size b,- Thus as an additional level of combining information, we assume that Each eQTL may follow a particular pattern of activity characterized by its effects across tissues.- Within these groups, the tissues exhibit characteristic patterns of sharing, which can be captured by considering the covariance structure of the genetic effects among tissues. - This lends itself to a natural mixture model, in which  we assume all the gene-snp pairs arise from a mixture of a finite number of Gaussian distributions with unknown parameters. - As mentioned, because of the the multivariate nature of this activity, within a particular 'pattern of sharing' some tissues may be more active than others, but not completely on or off. - Thus each component of the mixture is defined by the prior covariance matrix from which the vector of standardized effect sizes $\bm{b}_{j}$ is thought to be drawn. The covariance matrix of the true effects thus reflects the pattern of sharing (i.e., the diagonal elements of the component-specific covariance matrix then represents the variance of the effect size within and and the off--diagonal between tissues . A large prior variance in one tissue and small in another means that effects in tissue 1 tends to be large while effects in tissue 2 tend to be mall.- Because we can?t know the ?true covariance matrix for each? gene snp pair, we ?learn? the relative proportions of each pattern of sharing (i.e., the mixture weigths) from the data and model each bj as arising from a mixture that captues all the covariance patterns.As a critical innovation on our previous method ([9, 10]), these matrices contain distinct diagonal and off-diagonal elements which reflect data-specific patterns of variation within and covariance between subgroups (tissues). This captures the variation in effect sizes within and between subgroups better than restricting effects to simply ?shared? or ?unshared? between subgroups. Previous work from our lab considered only the idea that the covariance between two tissues was the same across tissues thought to contain a QTL in a given pattern, or 'configuration',  and thus failed to incorporate the much richer covariance structure between tissues. The primary novelty of this proposal is {\it to estimate this multivariate posterior distribution on the effect size in a data-sensitive way} - i.e., using the mixture model to capture information about the covariance structure among subgroups (here, tissues). 
+Not only do we have many tissues, we also have an entire genome from which to ?learn? about these patterns of sharing.  For each of $J$ gene-snp pairs, we observe an R dimensional vector of standardized effect sizes $\bm\hat{b}$ and their standard error and assume that these effects descend from some true effect size $\bm{b}$. Thus as an additional level of combining information, we assume that each eQTL may follow a particular pattern of activity characterized by its effects across tissues. Within these groups, the tissues exhibit characteristic patterns of sharing, which can be captured by considering the covariance structure of the genetic effects among tissues. This lends itself to a natural mixture model, in which  we assume all the gene-snp pairs arise from a mixture of a finite number of Gaussian distributions with unknown parameters. Because of the the multivariate nature of this activity, within a particular 'pattern of sharing' some tissues may be more active than others, but not completely on or off. Thus each component of the mixture is defined by the prior covariance matrix from which the vector of standardized effect sizes $\bm{b}$ is thought to be drawn. The covariance matrix of the true effects thus reflects a paritcular pattern of sharing, such that the diagonal elements of the component-specific covariance matrix then represents the variance of the effect size within and and the off--diagonal between tissues . A large prior variance in one tissue and small in another means that effects in the first tissue tend to be large while effects in tissue two tend to be small. Because we can?t know the ?true covariance matrix for each? gene-snp pair, we aim to assemble a list which sufficiently captures the various patterns, and then ?learn? the relative proportions of each pattern of sharing from the data. One can now model each vector of effect sizes $\bm{b}$ each as arising from a mixture that captures all the covariance patterns.As a critical innovation on our previous method $(\cite{flutre_statistical_2013,wen_bayesian_2014})$ these matrices contain distinct diagonal and off-diagonal elements which reflect data-specific patterns of variation within and covariance between subgroups (tissues). This captures the variation in effect sizes within and between subgroups better than restricting effects to simply ?shared? or ?unshared? between subgroups. Previous work from our lab considered only the idea that the covariance between two tissues was the same across tissues thought to contain a QTL in a given pattern, or 'configuration',  and thus failed to incorporate the much richer covariance structure between tissues. The primary novelty of this approach l is {\it to estimate this multivariate posterior distribution on the effect size in a data-sensitive way} - i.e., using the mixture model to capture information about the covariance structure among subgroups (here, tissues). Thus we might identify a situation in which it is common to have large effects in some tissues and not others, and thus if a gene-snp pair demonstrates a small effect in one of the 'off issues', we might be inclined to conclude that it is indeed a member of this particular class and shrink the small effect in this tissue accordingly. However, if we see the same small effect in a setting in which 'similar tissues' have large effects, we might 'shrink' this effect size less, due to our high prior belief in the SNP's effectiveness garnered from adjacent tissues.This is in contrast to a univariate shrinkage approach, in which all effects of the same size would be 'shrunk' equivalently, due to lack of information garnered from adjacent tissues 
+
+
+
+An additional novelty is that in learning something about the effect size in each tissue for a given gene-snp pair, we can make statements about the degree of heterogeneity - that is the proportion of the time we expect a SNP to have effects of different sign. We will be confident in our ability to identify the direction of the effect for A SNP with a large effect and relatvilely high precision, and thus we can use an estimate of the posterior mean in each component and the proportion to quantify the distribution of gene SNP pairs who have effects of opposite direction (or lack convincing evidence of effects in a consistent direction across tissues).
 
 
 
@@ -338,7 +341,7 @@ Generative $U_{k}$ for \textcolor{blue}{SNPs}
  \end{pmatrix}
 \item Additional novelty: Ratio between tissues is flexible (not simply shared or tissue-specific) and data sensitive (stay-tuned)
 
-To illustrate the utitlity of using a variety of covariance matrices, consider that we have snps of 4 ?types? here defined, by their effects in tow tissues. Snps of the blue class tend to have large effects in tissue 1 and small in tissue 2, while snps in the purple class have very large effects in tissue 2 and small effects in tissue 2. These directions are thus specified in the prior covariance matrix which defines the direction ? here simply ratio - in prior effect size between tissues,The 45 degree angle and the lines would be simply using tissue specific or shared effects, while we can have a much richer understanding of the relationship between effect sizes using a set ofcovariance matrices that aims to recapitulate patterns found in the data
+To illustrate the utility of using a variety of covariance matrices, consider that we have snps of 4 ?types? here defined, by their effects in tow tissues. eQTL of the blue class tend to have large effects in tissue 1 and small in tissue 2, while snps in the purple class have very large effects in tissue 2 and small effects in tissue 2. These directions are thus specified in the prior covariance matrix which defines the direction ? here simply ratio - in prior effect size between tissues,The 45 degree angle and the lines would be simply using tissue specific or shared effects, while we can have a much richer understanding of the relationship between effect sizes using a set ofcovariance matrices that aims to recapitulate patterns found in the data
 
 \subsection{Why care about the effect size?}
 
@@ -352,63 +355,18 @@ To illustrate the utitlity of using a variety of covariance matrices, consider t
 
 \end{itemize}
 
-Given that a snp is called active in two tissues, we want to make more statements about our confidence in the sign and magnitude of the effect among tissues. Similarly, if many snps are called active  in a particular tissue, we can resolve differences among these gene=snp pairs using this wide array of prior covariance matrices allows our gene snp pair to ?find it?s true pattenr of sharing?
+Given that an eQTL is called active in two tissues, we want to make more statements about our confidence in the sign and magnitude of the effect among tissues. Similarly, if many SNPs are called active  in a particular tissue, we can resolve differences among these gene=snp pairs  and using this wide array of prior covariance matrices allows our gene snp pair to ?find it?s true pattern of sharing?. 
 
+\item{Adaptive Shrinkage: So why does the likelihood increase at the 'right component'?}
+Consider the univariate case. Here, think about x as $\hat{b_{1}}$, and $\sigma$ as $U_{k[1,1]]} + \hat{V}_{j[1,1]}$.  
 
-%\subsection{\it Mixture Prior}
-%For a given gene-snp pair, $\bm{b}$ represents the $R$ vector of unknown standardized effect. We model the prior distribution from which $\bm{b}$ is drawn as a mixture of multivariate {\it Normals}.
-% 
-% \begin{equation}
-%  \label{prior_b_mixt_grid}
-%  \bm{b} | \bm{\pi},\bf{U} \sim \sum_{k,l} \pi_{k,l} \;{\it N}_R(\bm{0}, \omega_l U_{k})
-%\end{equation}
-%
-%\begin{itemize}  
-%\item Choice of $U_k$ determines the direction, while $\omega_l$ determines the 'stretch' or 'tails' of each distribution
-%%\item `stretch factor' $\omega_{1\cdots L}$. 
-%\item $\pi_{k,l}$ to represent the (unknown) prior weight on prior covariance matrix $U_{k,l}$ %which represents a direction and stretch along this vector
-%\item  Use the EM algorithm to estimate the optimal combination of weights: How often does this particular pattern of sharing  occur in the data?
-%%\item Given a direction, may have different proportions of large and small effects
-%%\item The novelty of our approach is in modeling $\bm{b}_{j}$ as a mixture of multivariate {\it Normals}
-%\end{itemize} %where each component of the mixture is defined by its data-sensitive estimate of the prior covariance matrix $U_{k,l}$. We allow the latent variable $z_{j}$ to indicate which combination of covariance matrix and stretch factor we are considering,  $z_{j}$ can take on $KxL$ values $z_{j}$ = $[1,1] \cdots[k,l]$ .
-%%%%%%We?ll now omit the subscript J and assume we are talking about a given gene snp pair. The r dimensional vector of standardized effect sizes bj arises from a mixture of multivariate Gaussian distribtuions. %%-	The Uk and omega are fixed and the mixture proportions are estimated hierarhcicaglly. %-	As discussed the prior covariance matric specifies a pattern of sharing that corresponds to a direction in 44 dimensional space,  and in the two tissue case could be seen as a 2 dimensional vector. %-	A vector has both a direction and a length %-	We scale these vectors so that they all have the same length%-	And we recognize that the distribution of sizes within a class may be different between classes ? i.e., a mixture of big and small effects, corresponding to different stretches along these vectors, %-	or different propensity towards heavy or light tails.%-	This is a flexible way of modeling a variety of effect sizes within a class. %%The mixture weights Pi kl are then estimated hierarchically, using all gene snp pairs to learn about the relative proportions of each pattern of sharing.%% ? we choose the he mixture of pis that best maximizes the probability of the observed data, or the marginal likelihood, or the expected complete data likelihood%%%?we choose the hierarchical weights to reflect the frequencies of each pattern of sharing in the data set. We use the em algorithm to find the optimal combination of weights that maximizes the probability of observing the data.%%
-%
-%
-%
-%
-%
-%%\section{\it For a given gene-snp pair: Likelihood for $\bm{b}}
-%
-%By maximum likelihood in each tissue separately, we can easily obtain the estimates of the standardized genotype effect sizes, $\hat{\bm{b}}_{j}$, and their squared standard errors recorded on the diagonal of an $R \times R$ matrix noted $\hat{V}_{j} = \Var(\hat{\bm{b}}_{j})$. We assume that the matrix of standard errors of $\hat{\bm{b}}_{j}$, $V_{j}$ as approximated by $\hat{V_{j}}$ is diagonal and  that $\hat{V}_{j}$ is an accurate point estimate for the standard error and that these standard errors are independent between tissues.
-%
-%If we now view $\hat{\bm{b}}_{j}$ and $\hat{V}_{j}$ as \emph{observations} (i.e. known), we can write a new ``likelihood'' (using only the sufficient statistics) where we employ the use of bold typeset to indicate vector notation:
-%
-%\begin{itemize}
-%\item ${\hat{\bm{b}}}$ : R x 1 vector of standardized maximum likelihood estimates of effect sizes 
-%\item $\hat{V} \approx Var(\hat{\bm{b}})$: RxR diagonal `accurate' approximation of standardized standard error of ${\hat{\bm{b}}}$.
-%\item For each component, marginal likelihood: ${\it{N_R}(\hat{\bf{b}}; \bm{0}, U_{k} + \hat{V})}$
-%\item $\hat{\bm{b}}$ and $\hat{V}$ as \emph{observations} (i.e. known)
-%\end{itemize} 
-%
-%For a given gene-snp pair, the Likelihood on $\bm{b}$: 
-%\begin{equation}
-%  \label{new_lik}
-%  \hat{\bm{b}} | \bm{b} \sim {\it N}_R(\bm{b}, \hat{V})
-%\end{equation}
-%
-%
-%
-%\item{Adaptive Shrinkage: So why does the likelihood increase at the 'right component'?}
-%
-%Consider the univariate case. Here, think about x as $\hat{b_{1}}$, and $\sigma$ as $U_{k[1,1]]} + \hat{V}_{j[1,1]}$.  
-%
-%To compute the likelihood at each component: 
-%\begin{equation}
-%f(x \; | \; \sigma) = \frac{1}{\sigma\sqrt{2\pi} } \; e^{ -\frac{(x)^2}{2\sigma^2} }
-%\end{equation}
-%  
-%We can see that this will be largest when $\sigma^{2}$ approaches the MLE, which where is simply $\hat{b}^{2}$. 
-%This is the intuition behind the bayes factor being the largest at the 'true component'. 
+To compute the likelihood at each component: 
+\begin{equation}
+f(x \; | \; \sigma) = \frac{1}{\sigma\sqrt{2\pi} } \; e^{ -\frac{(x)^2}{2\sigma^2} }
+\end{equation}
+  
+We can see that this will be largest when $\sigma^{2}$ approaches the MLE, which where is simply $\hat{b}^{2}$. 
+This is the intuition behind the bayes factor being the largest at the 'true component'. 
 %We know that for a single multivariate {\it Normal}  the posterior on  $\bm{b} | U_0$ is  simply: 
 %\[
 %\bm{b} | \hat{\bm{b}} \sim {\it N}_R(\bm{\mu}_{1}, U_{1})
@@ -499,6 +457,46 @@ Given that a snp is called active in two tissues, we want to make more statement
 %% You may title this section "Methods" or "Models". 
 % "Models" is not a valid title for PLoS ONE authors. However, PLoS ONE
 % authors may use "Analysis" 
+
+\section*{Results}
+
+
+ \begin{figure}
+\includegraphics[width=5cm]{scatterplot}
+\caption{Different Shrinkage}
+\end{figure}
+
+ \begin{figure}
+\includegraphics[width=5cm]{differentshrink}
+\caption{An example in which consistency across tissues shrinks posteriors differently}
+\end{figure}
+
+ \begin{figure}
+\includegraphics[width=5cm]{singletonz.png}
+\caption{An example in which consistency across tissues shrinks posteriors differently}
+\end{figure}
+
+ \begin{figure}
+\includegraphics[width=5cm]{singleton.png}
+\caption{An example in which consistency across tissues shrinks posteriors differently}
+\end{figure}
+
+ \begin{figure}
+\includegraphics[width=5cm]{consistentz.png}
+\caption{An example in which consistency across tissues shrinks posteriors differently}
+\end{figure}
+
+ \begin{figure}
+\includegraphics[width=5cm]{consistent.png}
+\caption{An example in which consistency across tissues shrinks posteriors differently}
+\end{figure}
+
+ \begin{figure}
+\includegraphics[width=5cm]{heterogeneity distribution-1.png}
+\caption{For each gene-snp pair, simulate 100 draws from mixture of multivariate normals, where the proportion of times in each component is determined by corresponding posterior weight $\tilde{pi_{kl}}$ We then count, for each gene-snp pair, the proportion of simulations that result in effects of a different sign in at least two tissues.}
+\end{figure}
+
+
 \section*{Materials and Methods}
 
 We assume the following mixture prior for the $R$ dimensional vector of true effects,  $\bm{b_{j}}$ represents the genetic effect of SNP-gene pair $j$ across $R4 tissues:
@@ -538,17 +536,21 @@ For a given $\omega_{l}$, we specify 4 `types' of $RxR$ prior covariance matrice
 
 
 \subsection{Deconvolution}
-To retrieve a 'denoised' or 'deconvoluted' estimate of the non-single rank dimensional reduction matrices, I then perform deconvolution.em which initializes the EM algorithm with  the matrices specified in (2), (3) and (5). The final results of this iterative procedure preserves the rank of the initialization matrix, and allows us to use the 'true' effect component as missing data in deconvoluting the prior covariance matrices. In brief, this algorithm works by treating not only the component identity but also the true effect $b_{j}$ as unobserved data, and maximising the likelihood over the expectation of the complete data likelihood, considering the values $\bm{{b}_{j}}$ as extra missing data (in addition to the indicator variables q_{ij}). This allows us to write down the ?full data? log likelihood as follows
+To retrieve a 'denoised' or 'deconvoluted' estimate of the non-single rank dimensional reduction matrices, I then perform deconvolution.em which initializes the EM algorithm with  the matrices specified in (2), (3) and (5). The final results of this iterative procedure preserves the rank of the initialization matrix, and allows us to use the 'true' effect component as missing data in deconvoluting the prior covariance matrices. In brief, this algorithm works by treating not only the component identity but also the true effect $\bm{{b}_{j}}$  as unobserved data, and maximising the likelihood over the expectation of the complete data likelihood, considering the values $\bm{{b}_{j}}$ as extra missing data (in addition to the indicator variables $q_{ij}$) (Bovy et al, 2014).. This allows us to write down the ?full data? log likelihood as follows:
 
-write down the ?full data? log likelihood as follows:\begin{equation}
-\begin{split}
-\phi=\sum_{J} \sum_{K} q_{jk} ln \alpha_{k} \it{N}(\bm{\hat{{b}_{j}}}|0,U_{k}+V_{j})\\
-????\sum_{J} \sum_{K} q_{jk} ln \alpha_{k} \it{N}(\bm{{b}_{j}}|0,U_{k})
-\end{split}
+\begin{equation}
+
+\begin{aligned}
+\phi=\sum_{J} \sum_{K} q_{jk} ln \alpha_{k} \it{N}(\hat{\bm{{b}_{j}}}|0,U_{k}+V_{j})\\
+\phi=\sum_{J} \sum_{K} q_{jk} ln \alpha_{k} \it{N}(\bm{{b}_{j}}|0,U_{k})
+%\sum_{K} q_{jk} ln \alpha_{k} 
+\end{aligned}
 \end{equation}
 
-Where \alpha_{k} represents $p(k)$ and q_{jk} is the latent identifier variable..
-In brief, this is how the deconvolution.em algorithm works.
+
+
+Where $\alpha_{k}$ represents $p(k)$ and $q_{jk}$ is the latent identifier variable..
+%In brief, this is how the deconvolution.em algorithm works.
 
 %\begin{enumerate}
 %\item Produce a 2 element list of initialization parameters containing the initial covariance matrices and a vector of their initial weights, $\mathbf{\pi}$. Critically, this vector $\mathbf{\pi}$ will need to be recomputed when we add these deconvoluted estimates to the full set of covariance matrices.
@@ -563,7 +565,7 @@ In brief, this is how the deconvolution.em algorithm works.
 
 
 \susection{Generation of List of Covariance Matirce}
-I then use these three non single-rank covariance matrix in place of our original choice of the empirical covariance matrix, SFA and SVD approximations. Here, I also used the Identity (K=1), 5 single-rank SFA factors (K=4-9), and the 44+1 eqtlbma.lite configurations (K=10:54 in steps (7) and (8) to a assemble a full list of covariance matrices. This is 54 matrices, and we then proceed to chooses an $'L'$ element grid according to the range of effect sizes present in the initial 16,069 x 44 matrix of strong Z statistics to create a KxL list of covariance matrices. In the gtex data set we choose a grid with 22 omegas for a total of 1188 covariance matrices.
+I then use these three non single-rank covariance matrix in place of our original choice of the empirical covariance matrix, SFA and SVD approximations. Here, I also used the Identity (K=1), 5 single-rank SFA factors (K=4-9), and the 44+1 $eqtlbma.lite$ configurations (K=10:54 in steps (7) and (8) to a assemble a full list of covariance matrices. Briefly, these  $eqtlbma.lite$ are an attempt to capture 'singleton' and 'fully shared' configurations in which the gene-snp pair is active in only one or all tissues. In the latter case, the variance of the distribution of underlying effect sizes is equal in all tissues.  This is 54 matrices, and we then proceed to chooses an $'L'$ element grid according to the range of effect sizes present in the initial 16,069 x 44 matrix of strong Z statistics to create a KxL list of covariance matrices. In the gtex data set we choose a grid with 22 omegas for a total of 1188 covariance matrices.
 
 %%The function $\textbf{compute.hm.covmat}$ chooses an 'L' element grid according to the range of effect sizes present in the initial 16,069 x 44 matrix of strong Z statistics. 
 % $\textbf{autoselect.mixgrid}$ chose a grid with 22 omegas for a total of 1188 covariance matrices.
@@ -578,7 +580,7 @@ I then use these three non single-rank covariance matrix in place of our origina
 
 
 \subsection{Mixture Weights}
-We now need to compute the mixture weights $\bm{pi_{kl}$} hierarchically - that is, using all of the data to determine the optimal mixture of covariance matrices. I use  a randomly chosen set of 20,000 gene snp pairs  to estimate these mixture proportions. This set does not contain the strongest gene-snp pairs, and thus will allow for substantial shrinkage, as a majority of these gene-snp pairs will  have their likelihood maximized at low $\omega$ components.
+We now need to compute the mixture weights $\bm{pi_{kl}$} hierarchically - that is, using all of the data to determine the optimal mixture of covariance matrices. I use  a randomly chosen set of 20,000 gene-snp pairs  to estimate these mixture proportions. This set does not contain the strongest gene-snp pairs, and thus will allow for substantial shrinkage, as a majority of these gene-snp pairs will  have their likelihood maximized at low $\omega$ components.
 
 To compute the likelihood at each component: 
 For a given gene-snp pair, the Likelihood on $\bm{b}$: 
@@ -591,7 +593,12 @@ Furthermore, we take advantage of the fact that
 
 ${\it{N_R}(\hat{\bf{b}}_{j}; \bm{0}, U_{k} + \hat{V}_{j})$ 
 
-Thus we can now treat the matrices $U_{k}$ as fixed and computed the JxK matrix of likelihoods to the combinations of weights which maximizes the probability of observing the data.
+Thus we can now treat the matrices $U_{k}$ as fixed and computed the JxK matrix of likelihoods to the combinations of weights which maximizes the probability of observing the data. Concatenating the list of $JxK$ matrices to a list of $K$ components, use the EM algorithm to estimate $\hat{\pi_{k}}$ as the set of all weights which maximizes the following likelihood:
+
+\begin{equation}
+L(\bm\pi;{\hat{\bm{b}})} = \prod_{j=1}^J \sum_{k}^{K} \pi_{k} P(\hat{\bm{b_{j}}} | z_{j}=k)
+\end{equation}
+
 
 
 %\begin{verbatim}
@@ -601,7 +608,7 @@ Thus we can now treat the matrices $U_{k}$ as fixed and computed the JxK matrix 
 %$\textbf{compute.hm.train}$ produces an rds object with prior weights, a likelihood matrix, and a pdf of the barplot of these weights.
 %
 \section{Posterior Quantities}
-Now that I have the estimated these prior mixture weights stored in the vector $\textbf{pis}$. I proceed to the inference step, where I compute the posterior weights and corresponding posterior quantities across all original 16069 gene snp pairs. In brief, the posterior mean, post covariance matrix and tissue specific tail probabilities are computed across all K components for each gene snp pair, and then weighted according to the posterior weights. This is performed in the $\textbf{weightedquants}$ step.
+Now that I have the estimated these prior mixture weights stored in the vector $\textbf{pis}$. I proceed to the inference step, where I compute the posterior weights and corresponding posterior quantities across all original 16,069 gene-snp pairs. In brief, the posterior mean, post covariance matrix and tissue specific tail probabilities are computed across all K components for each gene snp pair, and then weighted according to the posterior weights. This is performed in the $\textbf{weightedquants}$ step.
 
 We know that for a single multivariate {\it Normal}  the posterior on  $\bm{b} | U_0$ is  simply: 
 \[
@@ -613,7 +620,7 @@ where:
 \item $U_{1} = (U_{0}^{-1} + \hat{V}^{-1})^{-1}$.
 \end{itemize}
 
-Furthermore, a mixture-multivariate normal prior and a normal likelihood yields a mixture multivariate posterior, where the final posterior distribution is simply a weighted combination of multivariate normal distribtuions, each now characterixed by it's posterior mean $\bm{\mu}_{1k}$ and covariance  $U_{1} = (U_{0}^{-1} + \hat{V}^{-1})^{-1}$.
+Furthermore, a mixture-multivariate normal prior and a normal likelihood yields a mixture multivariate posterior, where the final posterior distribution is simply a weighted combination of multivariate normal distributions, each now characterized by it's posterior mean $\bm{\mu}_{1k}$ and covariance  $U_{1} = (U_{0}^{-1} + \hat{V}^{-1})^{-1}$.
 
 \begin{equation}
 \begin{aligned}
@@ -628,7 +635,7 @@ p(z=k,l | \hat{\bm{b}}, \hat{V}, \hat{\bm{\pi} }),%v_{j}=1)
 \end{aligned}
 \end{equation}
 
-Furthermore, the posterior weights or responsibilites combine hierarchical and snp-specific information, as they are proportional to the product of the original mixture weights (estimated hierarchically) and the likelihood for a particular gene snp pair, which allows the gene snp pair to 'find its' true match. A large likelihood in a particular component will mean that the majority of the posterior weight is at this component, and correspondingly, the majority of the posterior mean will be comprised of the posterior mean at this component which will specify a large effect at this component. If a SNP shows a relatively 'flat likelihood' at all components, than the posterior weights will appear similar to the prior weights, and correspondingly, the posterior mean will look a lot like the null case (since the prior weights are computed from 'mostly null data' and thus the prior weights will heavily weight the components with small posterior means (as determined by small prior variance in $U_{k}$).
+Furthermore, the posterior weights or responsibilities combine hierarchical and snp-specific information, as they are proportional to the product of the original mixture weights (estimated hierarchically) and the likelihood for a particular gene-snp pair, which allows the gene-snp pair to 'find its' true match. A large likelihood in a particular component will mean that the majority of the posterior weight is at this component, and correspondingly, the majority of the posterior mean will be comprised of the posterior mean at this component which will specify a large effect at this component. If a SNP shows a relatively 'flat likelihood' at all components, than the posterior weights will appear similar to the prior weights, and correspondingly, the posterior mean will look a lot like the null case (since the prior weights are computed from 'mostly null data' and thus the prior weights will heavily weight the components with small posterior means (as determined by small prior variance in $U_{k}$).
 
 \begin{euqation}
 \item $\tilde \pi_{k,l} = P(Component|Data) \propto  P(Data|Comp.) \times P(Comp.)$ 
@@ -664,7 +671,7 @@ Here, the posterior weight $\tilde \pi_{k,l}$ is simply
 %  marginal.var=all.covs.partone-all.mus^2
 %
 %\end{verbatim}
-This will return a set of 6 files containing the JxR matrix of posterior means, marginal variances, tail probabilities, local false sign rates, and the JxK matrix of posterior weights. Checkpoint = FALSE means that the files will be created (rather than simply outputting an object array which contains the posterior quantities.
+%This will return a set of 6 files containing the JxR matrix of posterior means, marginal variances, tail probabilities, local false sign rates, and the JxK matrix of posterior weights. Checkpoint = FALSE means that the files will be created (rather than simply outputting an object array which contains the posterior quantities.
 
 
 \section{Testing and Training}
