@@ -6,7 +6,8 @@
 \BOOKMARK [2][-]{subsection.0.6}{Why care about the effect size?}{}% 6
 \BOOKMARK [2][-]{subsection.0.7}{ Covariance Matrices}{}% 7
 \BOOKMARK [2][-]{subsection.0.8}{Deconvolution}{}% 8
-\BOOKMARK [2][-]{subsection.0.9}{Mixture Weights}{}% 9
-\BOOKMARK [1][-]{section.1}{Posterior Quantities}{}% 10
-\BOOKMARK [1][-]{section.2}{Testing and Training}{}% 11
-\BOOKMARK [1][-]{section.3}{Training and Testing Procedure: Estimating Hierarchical Weights}{}% 12
+\BOOKMARK [2][-]{subsection.0.9}{Generation of List of Covariance Matrices}{}% 9
+\BOOKMARK [2][-]{subsection.0.10}{Mixture Weights}{}% 10
+\BOOKMARK [2][-]{subsection.0.11}{Posterior Quantities}{}% 11
+\BOOKMARK [1][-]{section.1}{Testing and Training}{}% 12
+\BOOKMARK [1][-]{section.2}{Training and Testing Procedure: Estimating Hierarchical Weights}{}% 13

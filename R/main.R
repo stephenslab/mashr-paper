@@ -1478,11 +1478,11 @@ col.func=function(lfsr,posterior.means,j){
   for(r in 1:R){
     
     if (lfsr.mat[j,r]<=0.10) {
-      col.mat[r]=1
+      col.mat[r]="green"
     } else if (lfsr.mat[j,r]<0.5) {
-      col.mat[r]=2
+      col.mat[r]="orange"
     } else if (lfsr.mat[j,r]>=0.50) {
-      col.mat[r]=3
+      col.mat[r]="red"
     } 
   }
   return(col.mat)
