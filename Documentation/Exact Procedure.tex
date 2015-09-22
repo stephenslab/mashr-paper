@@ -74,11 +74,11 @@ In brief, this is how the deconvolution.em algorithm works.
 \begin{enumerate}
 \item Produce a 2 element list of initialization parameters containing the initial covariance matrices and a vector of their initial weights, $\mathbf{\pi}$. Critically, this vector $\mathbf{\pi}$ will need to be recomputed when we add these deconvoluted estimates to the full set of covariance matrices.
 
-\item Choose `zstrong' as the top $permsnp$ gene-pairs  and 'learn' the denoised covariance matrix from this choice. In practice, we use the maximum snp per gene, thus learning from the full set of 16,069 genes.
+%\item Choose `zstrong' as the top $permsnp$ gene-pairs  and 'learn' the denoised covariance matrix from this choice. In practice, we use the maximum snp per gene, thus learning from the full set of 16,069 genes.
 \item Return a list with the denoised covariance matrix and corresponding mixture weights.
 \end {enumerate}
 
-From extensive investigation with testing and training data, I found that using a rank 10 SVD approximation for the matrix in (5) as well as the rank 5 SFA approximation and the empirical covariance matrix maximized the likelihood of a test data set. 
+From extensive investigation with testing and training data, I found that using a rank 3 SVD approximation for the matrix in (5) as well as the rank 5 SFA approximation and the empirical covariance matrix maximized the likelihood of a test data set. 
 
 After loading the correct package (i.e., $library('ExtremeDeconvolution')$)
 \begin{verbatim}
@@ -257,35 +257,7 @@ Here I show the results:
 
 \begin{verbatim}
 
-total.lik.k1 (estimating only XtX with deconvolution)	
-	
- -1268622.16787315	
-total.lik.nodeconvolution.ee2.rank2.txt	
-	
- -1277777	
-total.lik.nodeconvolution.rank2.txt	
-	
- -1269442.93623141	
-total.lik.nopcnoqwithdeconv.txt	
-
- -1269277.17265676	
-total.lik.nopcwithdeconv.txt	
-
--1268966.41110003	
-total.lik.rank10.txt	
-
- -1267592.43262411	
-total.lik.rank2.txt	
- -1268322.99623033	
-total.lik.rank5noq.txt	
-
--1268191.22715182	
-total.lik.rank5.txt	
-
- -1268102.92517947	
-total.lik.rank5withres.txt	
-
- -1283993.13507543	
+Run	LikelihoodBMAONLY	-1298672Rank5withRes	-1283993Rank2EE	-1277777NoDecRank5	-1269504NoDecRank2	-1269442NoPCNoSFA	-1269277NOPC	-1268966K1 Only	-1268622Rank20	-1268552Rank10	-1268525Rank6	-1268520Rank7	-1268519Rank12	-1268516Rank2	-1268322Rank5NoQ	-1268191Rank5	-1268102Rank4	-1268065.997Rank3maxiter	-1267998.4rank3 loop 	-1267998.484Rank3 with single denoise	-1268049.69rank3ED	-1267887.8
 
 \end{verbatim}
 
