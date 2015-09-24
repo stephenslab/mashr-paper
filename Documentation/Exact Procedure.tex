@@ -257,7 +257,28 @@ Here I show the results:
 
 \begin{verbatim}
 
-Run	LikelihoodBMAONLY	-1298672Rank5withRes	-1283993Rank2EE	-1277777NoDecRank5	-1269504NoDecRank2	-1269442NoPCNoSFA	-1269277NOPC	-1268966K1 Only	-1268622Rank20	-1268552Rank10	-1268525Rank6	-1268520Rank7	-1268519Rank12	-1268516Rank2	-1268322Rank5NoQ	-1268191Rank5	-1268102Rank4	-1268065.997Rank3maxiter	-1267998.4rank3 loop 	-1267998.484Rank3 with single denoise	-1268049.69rank3ED	-1267997.5
+Run	Likelihood
+BMAONLY	-1298672
+Rank5withRes	-1283993
+Rank2EE	-1277777
+NoDecRank5	-1269504
+NoDecRank2	-1269442
+NoPCNoSFA	-1269277
+NOPC	-1268966
+K1 Only	-1268622
+Rank20	-1268552
+Rank10	-1268525
+Rank6	-1268520
+Rank7	-1268519
+Rank12	-1268516
+Rank2	-1268322
+Rank5NoQ	-1268191
+Rank5	-1268102
+Rank4	-1268065.997
+Rank3maxiter	-1267998.4
+rank3 loop 	-1267998.484
+Rank3 with single denoise	-1268049.69
+rank3ED	-1267997.5
 
 \end{verbatim}
 
@@ -282,6 +303,35 @@ simulations=sapply(seq(1:sim),function(x){
 return(sum(simulations)/length(simulations)
 )}
 \end{verbatim}
+
+\section{Testing with Residuals}
+
+Here, I use the covariance matrix of the residuals from the beta_hats, normalized such that the diagonal is 1 (because the variance of the Z statistic should be 1):
+
+\begin{verbatim}
+se.mat.train=cor(read.table("null.train.se.txt"))
+se.mat.test=cor(read.table("null.test.se.txt"))
+
+
+
+A="rank5withres"
+covmat=compute.hm.covmat.all.max.step(z.stat,v.j,Q=5,lambda.mat,A,factor.mat,max.step=max.steprank5)
+
+tim=proc.time()
+compute.hm.train.semat(train.z,se.mat.train,covmat,A)
+proc.time()-tim
+
+
+A="rank5withres"
+pis=readRDS(paste0("pis",A,".rds"))$pihat
+
+compute.lik.test.semat(test.z,J=nrow(null.test),se.mat.test,covmat,A,pis) 
+
+rm(covmat)
+rm(pis)
+\end{verbatim}
+
+
 
 
 \end{document}  
