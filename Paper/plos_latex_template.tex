@@ -382,65 +382,65 @@ f(x \; | \; \sigma) = \frac{1}{\sigma\sqrt{2\pi} } \; e^{ -\frac{(x)^2}{2\sigma^
 We can see that this will be largest when $\sigma^{2}$ approaches the MLE, which where is simply $\hat{b}^{2}$. 
 This is the intuition behind the bayes factor being the largest at the 'true component'. 
 
-\section*{Results}
-
-Matrix ASH can be used to assess the effect size across subgroups, allowing the effect in one tissue to powerfully inform our estimate of the effect in the other tissues.
-
-
-Considering a scatterplot of our results against the original summary statistics, the ability of Matrix-Ash to selectively shrink only the smallest effect sizes in a manner consistent with the patterns observe din the larger data set. Suppose we observe two small effects: one in which the effect size observed in other tissues is larger, and one in which the other tissues show similarly small effect sizes. The effect size in which alternative tissues show larger effects will not be shrunk to the same degree in which alternative tissues show small effects. because larger effects in alternative tissues lead us to believe that the  SNP belongs to a group or class in which effects are consistently bigger, and if this group is well represented in the data, we will augment the ultimate effect size because there will be a high prior weight on this componenet.
- \begin{figure}[h]
-\includegraphics[width=5cm]{scatterplot}
-\caption{Different Shrinkage}
-\end{figure}
-
- \begin{figure}[h]
-\includegraphics[width=5cm]{selective_shirnk.png}
-\caption{An example in which consistency across tissues shrinks posteriors differently}
-\end{figure}
-
-
-
- \begin{figure}
-\includegraphics[width=5cm]{TissueSpecific}
-\caption{Tissue Specific Effects}
-\end{figure}
-
-
- \begin{figure}
-\includegraphics[width=5cm]{lfsr>0.05}
-\caption{An example in which consistency across tissues shrinks posteriors differently}
-\end{figure}
-
-
- \begin{figure}
-\includegraphics[width=5cm]{z>5}
-\caption{An example in which consistency across tissues shrinks posteriors differently}
-\end{figure}
- \begin{figure}
-\includegraphics[width=5cm]{singletonz.png}
-\caption{An example in which consistency across tissues shrinks posteriors differently}
-\end{figure}
-
- \begin{figure}
-\includegraphics[width=5cm]{singleton.png}
-\caption{An example in which consistency across tissues shrinks posteriors differently}
-\end{figure}
-
- \begin{figure}
-\includegraphics[width=5cm]{consistentz.png}
-\caption{An example in which consistency across tissues shrinks posteriors differently}
-\end{figure}
-
- \begin{figure}
-\includegraphics[width=5cm]{consistent.png}
-\caption{An example in which consistency across tissues shrinks posteriors differently}
-\end{figure}
-
- \begin{figure}
-\includegraphics[width=5cm]{heterogeneity distribution-1.png}
-\caption{For each gene-snp pair, simulate 100 draws from mixture of multivariate normals, where the proportion of times in each component is determined by corresponding posterior weight $\tilde{pi_{kl}}$ We then count, for each gene-snp pair, the proportion of simulations that result in effects of a different sign in at least two tissues.}
-\end{figure}
-
+%\section*{Results}
+%
+%Matrix ASH can be used to assess the effect size across subgroups, allowing the effect in one tissue to powerfully inform our estimate of the effect in the other tissues.
+%
+%
+%Considering a scatterplot of our results against the original summary statistics, the ability of Matrix-Ash to selectively shrink only the smallest effect sizes in a manner consistent with the patterns observe din the larger data set. Suppose we observe two small effects: one in which the effect size observed in other tissues is larger, and one in which the other tissues show similarly small effect sizes. The effect size in which alternative tissues show larger effects will not be shrunk to the same degree in which alternative tissues show small effects. because larger effects in alternative tissues lead us to believe that the  SNP belongs to a group or class in which effects are consistently bigger, and if this group is well represented in the data, we will augment the ultimate effect size because there will be a high prior weight on this componenet.
+% \begin{figure}[h]
+%\includegraphics[width=5cm]{scatterplot}
+%\caption{Different Shrinkage}
+%\end{figure}
+%
+% \begin{figure}[h]
+%\includegraphics[width=5cm]{selective_shirnk.png}
+%\caption{An example in which consistency across tissues shrinks posteriors differently}
+%\end{figure}
+%
+%
+%
+% \begin{figure}
+%\includegraphics[width=5cm]{TissueSpecific}
+%\caption{Tissue Specific Effects}
+%\end{figure}
+%
+%
+% \begin{figure}
+%\includegraphics[width=5cm]{lfsr>0.05}
+%\caption{An example in which consistency across tissues shrinks posteriors differently}
+%\end{figure}
+%
+%
+% \begin{figure}
+%\includegraphics[width=5cm]{z>5}
+%\caption{An example in which consistency across tissues shrinks posteriors differently}
+%\end{figure}
+% \begin{figure}
+%\includegraphics[width=5cm]{singletonz.png}
+%\caption{An example in which consistency across tissues shrinks posteriors differently}
+%\end{figure}
+%
+% \begin{figure}
+%\includegraphics[width=5cm]{singleton.png}
+%\caption{An example in which consistency across tissues shrinks posteriors differently}
+%\end{figure}
+%
+% \begin{figure}
+%\includegraphics[width=5cm]{consistentz.png}
+%\caption{An example in which consistency across tissues shrinks posteriors differently}
+%\end{figure}
+%
+% \begin{figure}
+%\includegraphics[width=5cm]{consistent.png}
+%\caption{An example in which consistency across tissues shrinks posteriors differently}
+%\end{figure}
+%
+% \begin{figure}
+%\includegraphics[width=5cm]{heterogeneity distribution-1.png}
+%\caption{For each gene-snp pair, simulate 100 draws from mixture of multivariate normals, where the proportion of times in each component is determined by corresponding posterior weight $\tilde{pi_{kl}}$ We then count, for each gene-snp pair, the proportion of simulations that result in effects of a different sign in at least two tissues.}
+%\end{figure}
+%
 
 \section*{Materials and Methods}
 

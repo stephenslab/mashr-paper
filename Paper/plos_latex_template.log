@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  10 SEP 2015 11:24
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  14 SEP 2015 12:33
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -936,10 +936,10 @@ Package microtype Info: Loading generic settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 Package epstopdf Info: Source file: <PLOS-submission.eps>
-(epstopdf)                    date: 2015-03-16 17:44:14
+(epstopdf)                    date: 2015-09-14 12:14:07
 (epstopdf)                    size: 283246 bytes
 (epstopdf)             Output file: <PLOS-submission-eps-converted-to.pdf>
-(epstopdf)                    date: 2015-08-11 12:31:50
+(epstopdf)                    date: 2015-09-14 12:14:07
 (epstopdf)                    size: 15292 bytes
 (epstopdf)             Command: <repstopdf --outfile=PLOS-submission-eps-conver
 ted-to.pdf PLOS-submission.eps>
@@ -973,10 +973,10 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 Package epstopdf Info: Source file: <PLOS-submission.eps>
-(epstopdf)                    date: 2015-03-16 17:44:14
+(epstopdf)                    date: 2015-09-14 12:14:07
 (epstopdf)                    size: 283246 bytes
 (epstopdf)             Output file: <PLOS-submission-eps-converted-to.pdf>
-(epstopdf)                    date: 2015-08-11 12:31:50
+(epstopdf)                    date: 2015-09-14 12:14:07
 (epstopdf)                    size: 15292 bytes
 (epstopdf)             Command: <repstopdf --outfile=PLOS-submission-eps-conver
 ted-to.pdf PLOS-submission.eps>
@@ -994,10 +994,10 @@ File: hm.pdf Graphic file (type pdf)
 Package pdftex.def Info: hm.pdf used on input line 310.
 (pdftex.def)             Requested size: 170.71652pt x 81.56226pt.
 Package epstopdf Info: Source file: <PLOS-submission.eps>
-(epstopdf)                    date: 2015-03-16 17:44:14
+(epstopdf)                    date: 2015-09-14 12:14:07
 (epstopdf)                    size: 283246 bytes
 (epstopdf)             Output file: <PLOS-submission-eps-converted-to.pdf>
-(epstopdf)                    date: 2015-08-11 12:31:50
+(epstopdf)                    date: 2015-09-14 12:14:07
 (epstopdf)                    size: 15292 bytes
 (epstopdf)             Command: <repstopdf --outfile=PLOS-submission-eps-conver
 ted-to.pdf PLOS-submission.eps>
@@ -1140,10 +1140,10 @@ really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
 Package epstopdf Info: Source file: <PLOS-submission.eps>
-(epstopdf)                    date: 2015-03-16 17:44:14
+(epstopdf)                    date: 2015-09-14 12:14:07
 (epstopdf)                    size: 283246 bytes
 (epstopdf)             Output file: <PLOS-submission-eps-converted-to.pdf>
-(epstopdf)                    date: 2015-08-11 12:31:50
+(epstopdf)                    date: 2015-09-14 12:14:07
 (epstopdf)                    size: 15292 bytes
 (epstopdf)             Command: <repstopdf --outfile=PLOS-submission-eps-conver
 ted-to.pdf PLOS-submission.eps>
@@ -1183,98 +1183,22 @@ l.374 \item{
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-<scatterplot.pdf, id=230, 614.295pt x 794.97pt>
-File: scatterplot.pdf Graphic file (type pdf)
- <use scatterplot.pdf>
-Package pdftex.def Info: scatterplot.pdf used on input line 392.
-(pdftex.def)             Requested size: 142.26378pt x 184.1008pt.
 Package epstopdf Info: Source file: <PLOS-submission.eps>
-(epstopdf)                    date: 2015-03-16 17:44:14
+(epstopdf)                    date: 2015-09-14 12:14:07
 (epstopdf)                    size: 283246 bytes
 (epstopdf)             Output file: <PLOS-submission-eps-converted-to.pdf>
-(epstopdf)                    date: 2015-08-11 12:31:50
+(epstopdf)                    date: 2015-09-14 12:14:07
 (epstopdf)                    size: 15292 bytes
 (epstopdf)             Command: <repstopdf --outfile=PLOS-submission-eps-conver
 ted-to.pdf PLOS-submission.eps>
-(epstopdf)             \includegraphics on input line 395.
+(epstopdf)             \includegraphics on input line 458.
 Package epstopdf Info: Output file is already uptodate.
 File: PLOS-submission-eps-converted-to.pdf Graphic file (type pdf)
-
 <use PLOS-submission-eps-converted-to.pdf>
 Package pdftex.def Info: PLOS-submission-eps-converted-to.pdf used on input lin
-e 395.
+e 458.
 (pdftex.def)             Requested size: 144.54pt x 23.42201pt.
  [5]
-<selective_shirnk.png, id=243, 666.49pt x 445.665pt>
-File: selective_shirnk.png Graphic file (type png)
-
-<use selective_shirnk.png>
-Package pdftex.def Info: selective_shirnk.png used on input line 397.
-(pdftex.def)             Requested size: 142.26378pt x 95.12247pt.
-
-<TissueSpecific.pdf, id=245, 558.085pt x 436.63126pt>
-File: TissueSpecific.pdf Graphic file (type pdf)
- <use TissueSpecific.pdf>
-Package pdftex.def Info: TissueSpecific.pdf used on input line 404.
-(pdftex.def)             Requested size: 142.26378pt x 111.30284pt.
-
-
-LaTeX Warning: File `lfsr>0.05' not found on input line 410.
-
-
-./plos_latex_template.tex:410: LaTeX Error: Unknown graphics extension: .05.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.410 \includegraphics[width=5cm]{lfsr>0.05}
-                                            
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-<z>5.pdf, id=246, 499.8675pt x 335.2525pt>
-File: z>5.pdf Graphic file (type pdf)
- <use z>5.pdf>
-Package pdftex.def Info: z>5.pdf used on input line 416.
-(pdftex.def)             Requested size: 142.26378pt x 95.41495pt.
-
-<singletonz.png, id=247, 1349.04pt x 963.6pt>
-File: singletonz.png Graphic file (type png)
- <use singletonz.png>
-Package pdftex.def Info: singletonz.png used on input line 420.
-(pdftex.def)             Requested size: 142.26378pt x 101.61473pt.
-
-<singleton.png, id=248, 1349.04pt x 963.6pt>
-File: singleton.png Graphic file (type png)
- <use singleton.png>
-Package pdftex.def Info: singleton.png used on input line 425.
-(pdftex.def)             Requested size: 142.26378pt x 101.61473pt.
-
-<consistentz.png, id=249, 1349.04pt x 963.6pt>
-File: consistentz.png Graphic file (type png)
- <use consistentz.png>
-Package pdftex.def Info: consistentz.png used on input line 430.
-(pdftex.def)             Requested size: 142.26378pt x 101.61473pt.
-
-<consistent.png, id=250, 1349.04pt x 963.6pt>
-File: consistent.png Graphic file (type png)
- <use consistent.png>
-Package pdftex.def Info: consistent.png used on input line 435.
-(pdftex.def)             Requested size: 142.26378pt x 101.61473pt.
-
-
-LaTeX Warning: File `heterogeneity distribution-1.png' not found on input line 
-440.
-
-<heterogeneity distribution-1.png, id=251, 1349.04pt x 963.6pt>
-File: heterogeneity distribution-1.png Graphic file (type png)
-
-<use heterogeneity distribution-1.png>
-Package pdftex.def Info: heterogeneity distribution-1.png used on input line 44
-0.
-(pdftex.def)             Requested size: 142.26378pt x 101.61473pt.
-
 ./plos_latex_template.tex:462: Missing $ inserted.
 <inserted text> 
                 $
@@ -1321,39 +1245,6 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-Package epstopdf Info: Source file: <PLOS-submission.eps>
-(epstopdf)                    date: 2015-03-16 17:44:14
-(epstopdf)                    size: 283246 bytes
-(epstopdf)             Output file: <PLOS-submission-eps-converted-to.pdf>
-(epstopdf)                    date: 2015-08-11 12:31:50
-(epstopdf)                    size: 15292 bytes
-(epstopdf)             Command: <repstopdf --outfile=PLOS-submission-eps-conver
-ted-to.pdf PLOS-submission.eps>
-(epstopdf)             \includegraphics on input line 465.
-Package epstopdf Info: Output file is already uptodate.
-File: PLOS-submission-eps-converted-to.pdf Graphic file (type pdf)
-<use PLOS-submission-eps-converted-to.pdf>
-Package pdftex.def Info: PLOS-submission-eps-converted-to.pdf used on input lin
-e 465.
-(pdftex.def)             Requested size: 144.54pt x 23.42201pt.
- [6 <./scatterplot.pdf> <./selective_shirnk.png>]
-Package epstopdf Info: Source file: <PLOS-submission.eps>
-(epstopdf)                    date: 2015-03-16 17:44:14
-(epstopdf)                    size: 283246 bytes
-(epstopdf)             Output file: <PLOS-submission-eps-converted-to.pdf>
-(epstopdf)                    date: 2015-08-11 12:31:50
-(epstopdf)                    size: 15292 bytes
-(epstopdf)             Command: <repstopdf --outfile=PLOS-submission-eps-conver
-ted-to.pdf PLOS-submission.eps>
-(epstopdf)             \includegraphics on input line 465.
-Package epstopdf Info: Output file is already uptodate.
-File: PLOS-submission-eps-converted-to.pdf Graphic file (type pdf)
- <use PLOS-submission-eps-converted-to.pdf>
-Package pdftex.def Info: PLOS-submission-eps-converted-to.pdf used on input lin
-e 465.
-(pdftex.def)             Requested size: 144.54pt x 23.42201pt.
- [7 <./TissueSpecific.pdf> <./z>5.pdf> <./singletonz.png> <./singleton.png> <./
-consistentz.png>]
 ./plos_latex_template.tex:466: Missing $ inserted.
 <inserted text> 
                 $
@@ -1441,22 +1332,6 @@ l.479 \end{enumerate}
                      
 Things are pretty mixed up, but I think the worst is over.
 
-Package epstopdf Info: Source file: <PLOS-submission.eps>
-(epstopdf)                    date: 2015-03-16 17:44:14
-(epstopdf)                    size: 283246 bytes
-(epstopdf)             Output file: <PLOS-submission-eps-converted-to.pdf>
-(epstopdf)                    date: 2015-08-11 12:31:50
-(epstopdf)                    size: 15292 bytes
-(epstopdf)             Command: <repstopdf --outfile=PLOS-submission-eps-conver
-ted-to.pdf PLOS-submission.eps>
-(epstopdf)             \includegraphics on input line 484.
-Package epstopdf Info: Output file is already uptodate.
-File: PLOS-submission-eps-converted-to.pdf Graphic file (type pdf)
-<use PLOS-submission-eps-converted-to.pdf>
-Package pdftex.def Info: PLOS-submission-eps-converted-to.pdf used on input lin
-e 484.
-(pdftex.def)             Requested size: 144.54pt x 23.42201pt.
- [8 <./consistent.png> <./heterogeneity distribution-1.png>]
 ./plos_latex_template.tex:486: Missing $ inserted.
 <inserted text> 
                 $
@@ -1624,6 +1499,22 @@ l.492 \end{equation}
 The `$' that I just saw supposedly matches a previous `$$'.
 So I shall assume that you typed `$$' both times.
 
+Package epstopdf Info: Source file: <PLOS-submission.eps>
+(epstopdf)                    date: 2015-09-14 12:14:07
+(epstopdf)                    size: 283246 bytes
+(epstopdf)             Output file: <PLOS-submission-eps-converted-to.pdf>
+(epstopdf)                    date: 2015-09-14 12:14:07
+(epstopdf)                    size: 15292 bytes
+(epstopdf)             Command: <repstopdf --outfile=PLOS-submission-eps-conver
+ted-to.pdf PLOS-submission.eps>
+(epstopdf)             \includegraphics on input line 501.
+Package epstopdf Info: Output file is already uptodate.
+File: PLOS-submission-eps-converted-to.pdf Graphic file (type pdf)
+<use PLOS-submission-eps-converted-to.pdf>
+Package pdftex.def Info: PLOS-submission-eps-converted-to.pdf used on input lin
+e 501.
+(pdftex.def)             Requested size: 144.54pt x 23.42201pt.
+ [6]
 ./plos_latex_template.tex:530: Undefined control sequence.
 <argument> \bfseries \pis 
                           
@@ -1668,22 +1559,6 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-Package epstopdf Info: Source file: <PLOS-submission.eps>
-(epstopdf)                    date: 2015-03-16 17:44:14
-(epstopdf)                    size: 283246 bytes
-(epstopdf)             Output file: <PLOS-submission-eps-converted-to.pdf>
-(epstopdf)                    date: 2015-08-11 12:31:50
-(epstopdf)                    size: 15292 bytes
-(epstopdf)             Command: <repstopdf --outfile=PLOS-submission-eps-conver
-ted-to.pdf PLOS-submission.eps>
-(epstopdf)             \includegraphics on input line 531.
-Package epstopdf Info: Output file is already uptodate.
-File: PLOS-submission-eps-converted-to.pdf Graphic file (type pdf)
-<use PLOS-submission-eps-converted-to.pdf>
-Package pdftex.def Info: PLOS-submission-eps-converted-to.pdf used on input lin
-e 531.
-(pdftex.def)             Requested size: 144.54pt x 23.42201pt.
- [9]
 
 ./plos_latex_template.tex:534: LaTeX Error: Bad math environment delimiter.
 
@@ -1807,6 +1682,22 @@ l.537 \end{equation}
                     
 Things are pretty mixed up, but I think the worst is over.
 
+Package epstopdf Info: Source file: <PLOS-submission.eps>
+(epstopdf)                    date: 2015-09-14 12:14:07
+(epstopdf)                    size: 283246 bytes
+(epstopdf)             Output file: <PLOS-submission-eps-converted-to.pdf>
+(epstopdf)                    date: 2015-09-14 12:14:07
+(epstopdf)                    size: 15292 bytes
+(epstopdf)             Command: <repstopdf --outfile=PLOS-submission-eps-conver
+ted-to.pdf PLOS-submission.eps>
+(epstopdf)             \includegraphics on input line 545.
+Package epstopdf Info: Output file is already uptodate.
+File: PLOS-submission-eps-converted-to.pdf Graphic file (type pdf)
+<use PLOS-submission-eps-converted-to.pdf>
+Package pdftex.def Info: PLOS-submission-eps-converted-to.pdf used on input lin
+e 545.
+(pdftex.def)             Requested size: 144.54pt x 23.42201pt.
+ [7]
 ./plos_latex_template.tex:555: Missing $ inserted.
 <inserted text> 
                 $
@@ -1884,45 +1775,28 @@ the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
 Package epstopdf Info: Source file: <PLOS-submission.eps>
-(epstopdf)                    date: 2015-03-16 17:44:14
+(epstopdf)                    date: 2015-09-14 12:14:07
 (epstopdf)                    size: 283246 bytes
 (epstopdf)             Output file: <PLOS-submission-eps-converted-to.pdf>
-(epstopdf)                    date: 2015-08-11 12:31:50
+(epstopdf)                    date: 2015-09-14 12:14:07
 (epstopdf)                    size: 15292 bytes
 (epstopdf)             Command: <repstopdf --outfile=PLOS-submission-eps-conver
 ted-to.pdf PLOS-submission.eps>
-(epstopdf)             \includegraphics on input line 581.
+(epstopdf)             \includegraphics on input line 589.
 Package epstopdf Info: Output file is already uptodate.
 File: PLOS-submission-eps-converted-to.pdf Graphic file (type pdf)
 <use PLOS-submission-eps-converted-to.pdf>
 Package pdftex.def Info: PLOS-submission-eps-converted-to.pdf used on input lin
-e 581.
+e 589.
 (pdftex.def)             Requested size: 144.54pt x 23.42201pt.
- [10]
-Package epstopdf Info: Source file: <PLOS-submission.eps>
-(epstopdf)                    date: 2015-03-16 17:44:14
-(epstopdf)                    size: 283246 bytes
-(epstopdf)             Output file: <PLOS-submission-eps-converted-to.pdf>
-(epstopdf)                    date: 2015-08-11 12:31:50
-(epstopdf)                    size: 15292 bytes
-(epstopdf)             Command: <repstopdf --outfile=PLOS-submission-eps-conver
-ted-to.pdf PLOS-submission.eps>
-(epstopdf)             \includegraphics on input line 703.
-Package epstopdf Info: Output file is already uptodate.
-File: PLOS-submission-eps-converted-to.pdf Graphic file (type pdf)
-
-<use PLOS-submission-eps-converted-to.pdf>
-Package pdftex.def Info: PLOS-submission-eps-converted-to.pdf used on input lin
-e 703.
-(pdftex.def)             Requested size: 144.54pt x 23.42201pt.
- [11]
+ [8]
 
 AED: lastpage setting LastPage
 Package epstopdf Info: Source file: <PLOS-submission.eps>
-(epstopdf)                    date: 2015-03-16 17:44:14
+(epstopdf)                    date: 2015-09-14 12:14:07
 (epstopdf)                    size: 283246 bytes
 (epstopdf)             Output file: <PLOS-submission-eps-converted-to.pdf>
-(epstopdf)                    date: 2015-08-11 12:31:50
+(epstopdf)                    date: 2015-09-14 12:14:07
 (epstopdf)                    size: 15292 bytes
 (epstopdf)             Command: <repstopdf --outfile=PLOS-submission-eps-conver
 ted-to.pdf PLOS-submission.eps>
@@ -1933,7 +1807,7 @@ File: PLOS-submission-eps-converted-to.pdf Graphic file (type pdf)
 Package pdftex.def Info: PLOS-submission-eps-converted-to.pdf used on input lin
 e 711.
 (pdftex.def)             Requested size: 144.54pt x 23.42201pt.
- [12]
+ [9]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 711.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 711.
  (./plos_latex_template.aux)
@@ -1951,42 +1825,45 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 711.
  ) 
 Here is how much of TeX's memory you used:
- 10814 strings out of 493117
- 162481 string characters out of 6135433
- 289773 words of memory out of 5000000
- 13955 multiletter control sequences out of 15000+600000
+ 10751 strings out of 493117
+ 161345 string characters out of 6135433
+ 290771 words of memory out of 5000000
+ 13916 multiletter control sequences out of 15000+600000
  20240 words of font info for 94 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 42i,15n,43p,2001b,453s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2014/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
-}</usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb>
-</usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><
-/usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb></u
-sr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></us
-r/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr
-/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/
-local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/lo
-cal/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/loca
-l/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/
-texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/local/
-texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb></usr/lo
-cal/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/loca
-l/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/
-texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/tex
-live/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texliv
-e/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/texlive
-/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/local/texlive/2
-014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/20
-14/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2014
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2014/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmti7.pfb></usr/local/texlive/2014/te
-xmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/local/texlive/2014/texm
-f-dist/fonts/type1/public/cm-super/sfrm0700.pfb></usr/local/texlive/2014/texmf-
-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on plos_latex_template.pdf (12 pages, 783801 bytes).
+ 42i,15n,43p,2001b,424s stack positions out of 5000i,500n,10000p,200000b,80000s
+pdfTeX warning (dest): name{page.12} has been referenced but does not exist, 
+replaced by a fixed one
+
+{/usr/local/texlive/2014/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}<
+/usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></
+usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></u
+sr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb></usr
+/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/
+local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/l
+ocal/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/lo
+cal/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/loca
+l/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/
+texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/te
+xlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/local/te
+xlive/2014/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb></usr/loca
+l/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/
+texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/te
+xlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texli
+ve/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/
+2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/texlive/2
+014/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/local/texlive/201
+4/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2014
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2014/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2014/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmti7.pfb></usr/local/texlive/2014/texm
+f-dist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/local/texlive/2014/texmf-
+dist/fonts/type1/public/cm-super/sfrm0700.pfb></usr/local/texlive/2014/texmf-di
+st/fonts/type1/public/cm-super/sfrm1000.pfb>
+Output written on plos_latex_template.pdf (9 pages, 442613 bytes).
 PDF statistics:
- 452 PDF objects out of 1000 (max. 8388607)
- 339 compressed objects within 4 object streams
- 69 named destinations out of 1000 (max. 500000)
- 19109 words of extra memory for PDF output out of 20736 (max. 10000000)
+ 383 PDF objects out of 1000 (max. 8388607)
+ 294 compressed objects within 3 object streams
+ 56 named destinations out of 1000 (max. 500000)
+ 19064 words of extra memory for PDF output out of 20736 (max. 10000000)
 
