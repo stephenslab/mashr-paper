@@ -108,7 +108,7 @@ max.step=deconvolution.em.with.bovy(t.stat=t.stat,factor.mat=factor.mat,lambda.m
 %}
 
 
-\section{Generation of List of Covariance Matirce}
+\section{Generation of List of Covariance Matrices}
 I then use these three non single-rank covariance matrix in place of our original choice of the empirical covariance matrix, SFA and SVD approximations to create a KxL list of covariance matrices. The function $\textbf{compute.hm.covmat}$ chooses an 'L' element grid according to the range of effect sizes present in the initial 16,069 x 44 matrix of strong Z statistics. 
 Here, I also used the Identity (K=1), 5 single-rank SFA factors (K=4-9), and the 44+1 eqtlbma.lite configurations (K=10:54). This is 54 matrices, and in this data set, $\textbf{autoselect.mixgrid}$ chose a grid with 22 omegas for a total of 1188 covariance matrices.
 
@@ -281,6 +281,14 @@ Rank3 with single denoise	-1268049.69
 rank3ED	-1267997.5
 
 \end{verbatim}
+
+
+\begin{figure}[h!]
+  \caption{Model Comparisons}
+  \centering
+    \includegraphics[width=0.5\textwidth]{../Figures/loglik.png}
+\end{figure}
+
 
 \section{Simulation}
 I have also simulated, for each gene snp pair, 100 draws from the multivariate normal distribution characterized by the posterior mean and covariance produced at a component chosen according to its posterior weight (responsibility). For each gene-snp pair, I count the number of simulations in which at least two signs differed. 
