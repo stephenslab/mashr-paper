@@ -644,7 +644,7 @@ deconvolution.em.with.loop <- function(t.stat,factor.mat,lambda.mat,K,P,permsnp=
 #' @return a 2 element list of K pis and the KxRxR true.covariance arrays
 #' @export
 
-deconvolution.em.with.bovy=function(t.stat,factor.mat,v.j,lambda.mat,K,P){
+deconvolution.em.with.bovy=function(t.stat,factor.mat,v.j,lambda.mat,K,P){
 R=ncol(t.stat)
 init.cov=init.covmat(t.stat=t.stat,factor.mat = factor.mat,lambda.mat = lambda.mat,K=K,P=P)
 init.cov.list=list()
