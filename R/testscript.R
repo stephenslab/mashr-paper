@@ -31,7 +31,7 @@ compute.hm.covmat.all.max.step.omega=function(mult=sqrt(2),b.hat,se.hat,t.stat,v
   X.real=as.matrix(t.stat)
   X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
   R=ncol(X.c)
-  omega=mult.tissue.omega(mult=sqrt(2),betahat,sebetahat)
+  omega=mult.tissue.omega(mult=sqrt(2),b.hat,se.hat)
   omega.table=data.frame(omega)
   lambda.mat=lambda.mat
   A=A
