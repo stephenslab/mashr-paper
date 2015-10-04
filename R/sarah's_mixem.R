@@ -780,3 +780,19 @@ get.prior.covar.with.all.max.step.withQ <- function(X.c,max.step,lambda.mat, Q, 
   return(U.0kl=test)
 }
 
+
+compute.hm.covmat.all.max.step.squared = function(b.hat,se.hat,t.stat,v.j,Q,lambda.mat,A,factor.mat,max.step){
+  X.real=as.matrix(t.stat)
+  X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
+  R=ncol(X.c)
+  omega=mult.tissue.grid(mult=sqrt(2),b.hat,se.hat)
+  omega.table=data.frame(omega)
+  lambda.mat=lambda.mat
+  A=A
+  factor.mat=factor.mat
+  U.0kl=get.prior.covar.with.all.max.step(X.c,max.step = max.step,lambda.mat = lambda.mat,Q = Q,factor.mat = factor.mat,omega.table=omega.table,bma = TRUE)
+  covmat=unlist(U.0kl,recursive=F)
+  covmat=lapply(covmat,function(x){x^2})
+  saveRDS(covmat,paste0("covmat",A,".rds"))
+  
+  return(covmat)}
