@@ -4,7 +4,7 @@
 \alias{mult.tissue.grid}
 \title{mult.tissue.grid}
 \usage{
-mult.tissue.grid(mult, betahat, sebetahat)
+mult.tissue.grid(mult = sqrt(2), betahat, sebetahat)
 }
 \arguments{
 \item{mult}{is density}

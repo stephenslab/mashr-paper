@@ -31,6 +31,8 @@ lambda.mat=covdat$lambda
 factor.mat=covdat$factors
 covmat=compute.covmat(b.gp.hat,se.gp.hat,Q=5,t.stat,lambda.mat=lambda.mat,P=2,A="simulation",factor.mat=factor.mat,bma=TRUE)
 
+##Alternatively, use minparam=sqrt(10) and maxparam = 1/1.1
+
 K=length(covmat)
 K
 covmat[[K]]
