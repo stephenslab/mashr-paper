@@ -1048,6 +1048,12 @@ test.quant=function(A,all.arrays){
 }
 
 #'@title factor.sim
+#'@description Generate J beta,betahats, T statistics across R tissues from a set of covariance matrices
+#'@description Creates factors with magnitude based on betasd - each betaj is loaded on a minimal number of factors by simulating from rmvnorm
+#'@param J Number of Gene-SNP Pairs (by definition, only 0.08% of them will be true eQTL; pi0 is 0.20 and the number of genes is 1/10 J)
+#'@param d Number of subgroups
+#'@param betasd size of covariance of true effects
+#'@param esd standard error
 #'@export
 
 factor_sim=function(J,d=3,betasd=1,esd=0.1,K=10){
@@ -1102,7 +1108,7 @@ convert.liks=function(se.gp.hat,test.lik,pis){
 #' @title get.prior.covar.nopcs
 #' @description get.prior.covar.nopcs
 #' @export 
-get.prior.covar.nopcs <- function(lambda.mat, Q, X.c,factor.mat,omega.table,bma=TRUE)  {
+get.prior.covar.nopcs <- function(lambda.mat, Q, X.c,simat,omega.table,bma=TRUE)  {
   test=list()
   R=ncol(X.c)
   M=nrow(X.c)
