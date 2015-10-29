@@ -1234,11 +1234,11 @@ return(list(post.means=post.means,post.covs=post.covs,post.ups=post.ups,post.dow
 #'@title compute.lik.test.semat
 #'@param b.test JxR matrix with the mles for test gene-snp pairs
 #'@param J number of gene snp pairs to consider
-#'@param se.mat RxR matrix of standard errors of the test set, estimated as the same for all genes
+#'@param v.mat RxR matrix of residual variance matrix, estimated as the same for all genes
 #'@param covmat K list of covariance matrices
 #'@param pis K matrix of HM weights form compute.hm.train
 #'@export
-compute.lik.test.semat=function(b.test,J,se.test,covmat,A,pis){
+compute.lik.test.semat=function(b.test,J,v.mat,covmat,A,pis){
   
   J=J
   R=ncol(b.test)
@@ -1263,13 +1263,13 @@ compute.lik.test.semat=function(b.test,J,se.test,covmat,A,pis){
 
 #'@title compute.hm.train.semat
 #'@export
-compute.hm.train.semat=function(train.b,se.mat,covmat,A){
+compute.hm.train.semat=function(train.b,v.mat,covmat,A){
   
   J=nrow(train.b)
   R=ncol(train.b)
   
   if(file.exists(paste0("liketrain",A,".rds"))==FALSE){
-    lik.mat=t(sapply(seq(1:J),function(x){lik.func(b.mle=train.b[x,],V.gp.hat=se.mat^2,covmat)}))
+    lik.mat=t(sapply(seq(1:J),function(x){lik.func(b.mle=train.b[x,],V.gp.hat=v.mat,covmat)}))
     
     saveRDS(lik.mat,paste0("liketrain",A,".rds"))}
   
