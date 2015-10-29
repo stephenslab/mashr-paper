@@ -1244,7 +1244,7 @@ compute.lik.test.semat=function(b.test,J,v.mat,covmat,A,pis){
   R=ncol(b.test)
   
   if(file.exists(paste0("liketest",A,".rds"))==FALSE){
-    lik.mat=t(sapply(seq(1:J),function(x){lik.func(b.mle=b.test[x,],V.gp.hat=se.test^2,covmat)}))
+    lik.mat=t(sapply(seq(1:J),function(x){lik.func(b.mle=b.test[x,],V.gp.hat=v.mat,covmat)}))
     saveRDS(lik.mat,paste0("liketest",A,".rds"))}
   
   else(lik.mat=readRDS(paste0("liketest",A,".rds")))
