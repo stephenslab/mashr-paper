@@ -1,7 +1,7 @@
 #'@title factor.sim.new
 #'@description Generate J beta,betahats, T statistics across R tissues from a set of covariance matrices
 #'@description Creates factors with magnitude based on betasd - each betaj is loaded on a minimal number of factors by simulating from rmvnorm
-#'@param J Number of Gene-SNP Pairs (by definition, only 0.08% of them will be true eQTL; pi0 is 0.20 and the number of genes is 1/10 J)
+#'@param J Number of Gene-SNP Pairs (by definition, only 0.8% of them will be true eQTL; pi0 is 0.20 and the number of genes is 1/100 J)
 #'@param d Number of subgroups
 #'@param betasd size of covariance of true effects
 #'@param esd standard error
@@ -9,7 +9,7 @@
 #'@export
 
 factor_sim_new=function(J,d=44,betasd=1,esd=0.1){
-  n=trunc(0.008*J,units = 0)##number of significant gene-snp Pairs
+  n=trunc(0.008*J,units = 0)##number of significant gene-snp Pairs, so there are 100 snps in cis of a gene and one causal snp
   #F=t(sapply(seq(1:K),function(x){rnorm(d,mean=0,sd=betasd)})) 
   covmat=readRDS("~/Dropbox/Aug12/covmatAug13withED.rds")[2:9]
   covmat=lapply(seq(1:length(covmat)),function(x){covmat[[x]]/max(diag(covmat[[x]]))})
