@@ -8,11 +8,24 @@
 #'@details: to simulate strong sharing, I use the gtex covariance matrices
 #'@export
 
-factor_sim_new=function(J,d=44,betasd=1,esd=0.1){
+factor_sim_new=function(J,d=44,betasd=1,esd=0.1,tspec=0){
   n=trunc(0.008*J,units = 0)##number of significant gene-snp Pairs, so there are 100 snps in cis of a gene and one causal snp
   #F=t(sapply(seq(1:K),function(x){rnorm(d,mean=0,sd=betasd)})) 
   covmat=readRDS("~/Dropbox/Aug12/covmatAug13withED.rds")[2:9]
   covmat=lapply(seq(1:length(covmat)),function(x){covmat[[x]]/max(diag(covmat[[x]]))})
+ 
+  if(tspec!=0){
+    configs=matrix(0,nrow=R,ncol=R)
+    for(r in 1:R){
+      configs[r,r]=1}
+    specs=sample(seq(1:d),tspec,replace=FALSE)##generate tissue specific configs if required
+    singleton.mat=list()
+    for(t in 1:length(specs)){
+      tissue=specs[t]
+      singleton.mat[[t]]=(configs[tissue,]%*%t(configs[tissue,]))}
+    covmat=append(covmat,singleton.mat)
+  }
+  
   library("mvtnorm")
   library("MASS")
   K=length(covmat)
