@@ -1,0 +1,37 @@
+---
+title: "Using New factor sim"
+output: html_document
+---
+ The purpose is to simulate according to the factor model, where 100 snps in cis of a gene, $pi0$ is 0.80, and there is sharing according to gtex covmats 2:9.
+
+```{r simulatedata}
+source("~/matrix_ash/R/main.R")
+source("~/matrix_ash/R/NewSimulations.R")
+data=factor_sim_new(J = 50000)##simulate 50000 gene snp pairs
+t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat
+saveRDS(data,"~/Dropbox/simdata.rds")
+c=apply(t,1,function(x){max(abs(x))})
+maxes=order(c,decreasing = TRUE)[1:400]##take top 100 gene snp pairs
+max.t=t[maxes,]
+##sfa -gen ./maxt.txt -g 400 -n 44 -o tri_sim_strongt i -k 5
+
+factor.mat=as.matrix(read.table("~/Dropbox/tri_sim_strongt_F.out"))
+lambda.mat=as.matrix(read.table("~/Dropbox/tri_sim_strongt_lambda.out"))
+v.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
+cov=compute.covmat(b.gp.hat = t,sebetahat = v.j,Q =5, t.stat=max.t,lambda.mat=lambda.mat,P=3,A="testim", factor.mat = factor.mat,bma = FALSE)
+```
+
+Now, let's fit the model using the random set of 20,000 gene snp pairs.
+
+```{r, echo=FALSE}
+compute.hm.train(train.b = t[1:20000,],se.train = v.j[1:20000,],covmat = cov,A="Simulations")
+```
+
+Now, we can compute posteriors for, say, the first 10000 gene snp pairs:
+
+```{r}
+A="Simulations"
+pis=readRDS(paste0("pis",A,".rds"))$pihat
+b.test=t[1:10000,]
+se.test=v.j[1:10000,]
+weightedquants=lapply(seq(1:10000),function(j){total.quant.per.snp(j,cov,b.gp.hat=b.test,se.gp.hat = se.test,pis,A="Simulations",checkpoint = FALSE)})
