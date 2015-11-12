@@ -14,12 +14,6 @@ source("~/matrix_ash/R/main.R")
 source("~/matrix_ash/R/main.R")
 source("~/matrix_ash/R/NewSimulations.R")
 data=factor_sim_new(J = 50000,tspec=5)##simulate 50000 gene snp pairs, with 5 tissue specific tissues
-```
-
-To determine how much is tissue specific:
-```{r definedata,eval=FALSE}
-sum(data$component.id>8)/length(data$component.id)
-t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta
 saveRDS(data,"~/Dropbox/simdata_tspec.rds")
 c=apply(t,1,function(x){max(abs(x))})
 maxes=order(c,decreasing = TRUE)[1:400]##take top 100 gene snp pairs
@@ -29,7 +23,35 @@ max.t=t[maxes,]
 factor.mat=as.matrix(read.table("~/Dropbox/tri_sim_spect_F.out"))
 lambda.mat=as.matrix(read.table("~/Dropbox/tri_sim_spect_lambda.out"))
 v.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
-covmat=compute.covmat(b.gp.hat = t,sebetahat = v.j,Q =5, t.stat=max.t,lambda.mat=lambda.mat,P=3,A="testim_tspec", factor.mat = factor.mat,bma = TRUE)
+covmat=compute.covmat(b.gp.hat = t,sebetahat = v.j,Q =5, t.stat=max.t,lambda.mat=lambda.mat,P=3,A="testim_tspec", factor.mat = factor.mat,bma = TRUE)##Note that here, we perform our inference including the BMA configs.
+```
+
+To determine how much is tissue specific:
+```{r definedata,eval=TRUE}
+data=readRDS("~/Dropbox/simdata_tspec.rds")
+t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta
+sum(data$component.id>8)/length(data$component.id)
+```
+
+Here, we can see that `r sum(data$component.id>8)/length(data$component.id)` is tissue specific, and the tissue specific tissues are:
+```{r whichspec}
+lapply((data$component.mats[9:13]),function(x){which(diag(x)!=0)})
+```
+We can find which pairs have tissue specific activity and plot an example of their t statistic, to make sure the model is simulating correctly:
+```{r plotsample}
+
+(j=which(data$component.id==9)[1])
+```
+This corresponds to tissue specificity in:
+```{r tissuespectissue}
+
+which(diag(data$component.mats[[9]])!=0)
+```
+
+Accordingly, a plot of gene-snp pair `r j` t-statistics should show tissue specificity tissue `r which(diag(data$component.mats[[10]])!=0)`:
+```{r}
+
+barplot(data$tstat[j,],names=seq(1,44),las=3,xlab="Tissue",ylab="Tstatistic",main=paste(c("Individual",j,"T stats")))
 ```
 
 Now, let's fit the model using the random set of 20,000 gene snp pairs.
@@ -52,12 +74,10 @@ weightedquants=lapply(seq(1:10000),function(j){total.quant.per.snp(j,covmat,b.gp
 
 We can compute the root mean squared error:
 ```{r RMSE}
-data=readRDS("~/Dropbox/simdata.rds")
-t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta;v.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
-covmat=readRDS("~/Dropbox/covmattestim.rds")
 
+covmat=readRDS("~/Dropbox/covmattestim_tspec.rds")
 t.truth.test=beta/sebetahat
-post.means=read.table("~/Dropbox/Simulationsposterior.means.txt")[,-1]
+post.means=read.table("~/Dropbox/testtissuespecposterior.means.txt")[,-1]
 sqrt(mean((t.truth.test[1:10000,]-post.means)^2))
 ```
 
@@ -65,7 +85,7 @@ sqrt(mean((t.truth.test[1:10000,]-post.means)^2))
 
 Let's check some stuff out:
 
-```{r checkpoint}
+```{r checkpoint,eval=FALSE}
 j=sample.int(100,1)
 
 all.arrays=post.array.per.snp(j=j,covmat = covmat,b.gp.hat = t,se.gp.hat = v.j)
@@ -73,7 +93,7 @@ all.arrays=post.array.per.snp(j=j,covmat = covmat,b.gp.hat = t,se.gp.hat = v.j)
 b.mle=as.vector(t(t[j,]))##turn i into a R x 1 vector
 V.gp.hat=diag(v.j[j,])^2
 V.gp.hat.inv <- solve(V.gp.hat)
-k=17
+k=3
 
 U.gp1kl <- (post.b.gpkl.cov(V.gp.hat.inv, covmat[[k]]))
 mu.gp1kl <- as.array(post.b.gpkl.mean(b.mle, V.gp.hat.inv, U.gp1kl))
@@ -81,8 +101,8 @@ mu.gp1kl <- as.array(post.b.gpkl.mean(b.mle, V.gp.hat.inv, U.gp1kl))
 plot(all.arrays$post.means[k,],mu.gp1kl)
 
 ##Now, check to make sure weighting is correct
-post.means=as.matrix(read.table("~/Dropbox/Simulationsposterior.means.txt")[,-1])
-post.weights=as.matrix(read.table("~/Dropbox/Simulationspost.weights.txt")[,-1])
+post.means=as.matrix(read.table("~/Dropbox/testtissuespecposterior.means.txt")[,-1])
+post.weights=as.matrix(read.table("~/Dropbox/testtissuespecpost.weights.txt")[,-1])
 
 plot(post.means[j,],post.weights[j,]%*%all.arrays$post.means)
 #(post.means[j,])
@@ -111,14 +131,14 @@ univariate.ash.pm[,x]=max.z.fit$PosteriorMean
 univariate.ash.lfsr[,x]=max.z.fit$lfsr
 }
 
-write.table(univariate.ash.pm,file="univariate.ash.pm.txt")
-write.table(univariate.ash.lfsr,file="univariate.ash.lfsr.txt")
+write.table(univariate.ash.pm,file="univariate.ash.pm.tspec.txt")
+write.table(univariate.ash.lfsr,file="univariate.ash.lfsr.tspec.txt")
 ```
 
 Let's compare the RMSE here:
 
 ```{r univariateashcompare}
-univariate.ash.pm=read.table("~/Dropbox/univariate.ash.pm.txt")
+univariate.ash.pm=read.table("~/Dropbox/univariate.ash.pm.tspec.txt")
 
 sqrt(mean((t.truth.test[1:10000,]-univariate.ash.pm)^2))
 ```
@@ -127,33 +147,37 @@ We can also plot the scatterplot to observe the behavior of 'null'(in red) and '
 
 ```{r scatterplot,eval=FALSE, echo=FALSE}
 
-nulls=which(data$beta[,1]=="0",)
+nulls=which(rowSums(data$beta)==0,)
 null.vals=intersect(1:nrow(post.means),nulls)
+tspec=which((data$component.id>8))
+tspec.peep=intersect(1:nrow(post.means),tspec)
+post.means=as.matrix(post.means)
 
-
-png("scatterplot.fitted.png")
+png("scatterplot.fittedtspec.png")
 plot(as.matrix(t[1:10000,]),as.matrix(post.means),col=adjustcolor("blue", alpha=0.5), pch=16,main="E(Z|Data) vs Zmle",ylab="E(Z|Data)",xlab="Zmle")
 points(t[null.vals,],post.means[null.vals,],col="red")
+points(t[tspec.peep,],post.means[tspec.peep,],col="green")
 dev.off()
 
 
-png("scatterplot.truth.png")
+png("scatterplot.truthtspec.png")
 plot(as.matrix(t.truth.test[1:10000,]),as.matrix(post.means),col=adjustcolor("blue", alpha=0.5), pch=16,main="E(Z|Data) vs Z.true",ylab="E(Z|Data)",xlab="Z.truth")
 points(t.truth.test[null.vals,],post.means[null.vals,],col="red")
-legend("right",legend=paste0("RMSE",round(sqrt(mean((t.truth.test[1:10000,]-post.means)^2)),2)))
-
+points(t.truth.test[tspec.peep,],post.means[tspec.peep,],col="green")
+legend("right",legend=c(paste0("RMSE=",round(sqrt(mean((t.truth.test[1:10000,]-post.means)^2)),2)),"Tissue_specific","TrueNulls"),pch=1,col=c("black","green","red"))
 dev.off()
 
 
-png("scatterplot.TRUTH.ash.png")
+png("scatterplot.TRUTHashtspec.png")
 plot(as.matrix(t.truth.test[1:10000,]),as.matrix(univariate.ash.pm),col=adjustcolor("blue", alpha=0.5), pch=16,main="E(Z|Data.ash) vs Z.True",ylab="E(Z|Data)",xlab="Z.True")
 points(t.truth.test[null.vals,],univariate.ash.pm[null.vals,],col="red")
-legend("right",legend=paste0("RMSE",round(sqrt(mean((t.truth.test[1:10000,]-univariate.ash.pm)^2)),2)))
+points(t.truth.test[tspec.peep,],univariate.ash.pm[tspec.peep,],col="green")
+legend("right",legend=c(paste0("RMSE=",round(sqrt(mean((t.truth.test[1:10000,]-univariate.ash.pm)^2)),2)),"Tissue_specific","TrueNulls"),pch=1,col=c("black","green","red"))
 dev.off()
 
 ```
 
-![alt text](scatterplotfitted.png) 
-![alt text](scatterplottruth.png)
-![alt text](scatterplotTRUTHash.png)
+![alt text](scatterplot.fittedtspec.png) 
+![alt text](scatterplot.truthtspec.png)
+![alt text](scatterplot.TRUTHashtspec.png)
 
