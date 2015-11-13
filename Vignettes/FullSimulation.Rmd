@@ -130,6 +130,12 @@ plot(as.matrix(t[1:10000,]),as.matrix(post.means),col=adjustcolor("blue", alpha=
 points(t[null.vals,],post.means[null.vals,],col="red")
 dev.off()
 
+png("scatterplot.fittedash.png")
+plot(as.matrix(t[1:10000,]),as.matrix(univariate.ash.pm),col=adjustcolor("blue", alpha=0.5), pch=16,main="E(Z|Data) vs Zmle",ylab="E(Z|Data.ash)",xlab="Zmle")
+points(t[null.vals,],univariate.ash.pm[null.vals,],col="red")
+dev.off()
+
+
 
 png("scatterplot.truth.png")
 plot(as.matrix(t.truth.test[1:10000,]),as.matrix(post.means),col=adjustcolor("blue", alpha=0.5), pch=16,main="E(Z|Data) vs Z.true",ylab="E(Z|Data)",xlab="Z.truth")
@@ -148,6 +154,7 @@ dev.off()
 ```
 
 ![alt text](scatterplotfitted.png) 
+![alt text](scatterplotfittedash.png) 
 ![alt text](scatterplottruth.png)
 ![alt text](scatterplotTRUTHash.png)
 
