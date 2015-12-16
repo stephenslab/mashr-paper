@@ -235,33 +235,33 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur eget porta er
 % Use first person. PLOS ONE authors please skip this step. 
 % Author Summary not valid for PLOS ONE submissions.   
 \section*{Author Summary}
-Variation in gene expression is an important mechanism underlying susceptibility to complex disease. The simultaneous genome-wide assay of gene expression and genetic variation allows the mapping of the genetic factors that underpin individual differences in quantitative levels of expression (expression QTLs; eQTLs). The availability of systematically generated eQTL information could provide immediate insight into a biological basis for disease associations identified through genome-wide association (GWA) studies, and can help to identify networks of genes 
-involved in disease pathogenesis \cite{cookson_mapping_2009}. However, most studies to date have been conducted in a single immortalized peripheral cell type, and it is unclear to what extent these findings will translate to human disease mapping across more varied cell types. 
-Furthermore, even analyses performed on additional cell types are often performed in a single tissue framework \cite{majewski_study_2011,gilad_revealing_2008} and fail to correlate the effect of genetics across multiple tissue types.  The Genotype Tissue Expression Project, GTEx, Project will provide the data necessary to address this situation: by 2016, the resource is expected to enroll a total of approximately 900 post-mortem donors, with approximately 30 tissues collected from each donor, and the project
-will generate extensive genotype data and RNA-seq data on each individual. However,  available methods are limited in their ability to {\it jointly analyze data on all tissues} to maximize power, while
-simultaneously {\it allowing for both qualitative and quantitative differences among eQTLs} presentin each tissue.
+Variation in gene expression is an important mechanism underlying susceptibility to complex disease.  The simultaneous genome-wide assay of gene expression and genetic variation allows the mapping of the genetic factors that underpin individual differences in quantitative levels of expression (expression QTLs; eQTLs). 
+By analyzing these effects across multiple tissues, we exploit the information that the effect of the gene-snp pair in one tissue can provide about its effect in alternative tissues.
+Furthermore, quantifying the effect size as opposed to simply calling QTLs present or absent reveal many patterns of sharing of effects among tissues which differ in both sign an magnitude.
+We provide a novel framework for estimating effect sizes across multiple subgroups, considering the evidence contained in all subgroups jointly, which provides a powerful and detailed insight into quantitative heterogeneity present in the genome.
+
+%The availability of systematically generated eQTL information could provide immediate insight into a biological basis for disease associations identified through genome-wide association (GWA) studies, and can help to identify networks of genes 
+%involved in disease pathogenesis \cite{cookson_mapping_2009}. However, most studies to date have been conducted in a single immortalized peripheral cell type, and it is unclear to what extent these findings will translate to human disease mapping across more varied cell types. 
+%Furthermore, even analyses performed on additional cell types are often performed in a single tissue framework \cite{majewski_study_2011,gilad_revealing_2008} and fail to correlate the effect of genetics across multiple tissue types.  The Genotype Tissue Expression Project, GTEx, Project will provide the data necessary to address this situation: by 2016, the resource is expected to enroll a total of approximately 900 post-mortem donors, with approximately 30 tissues collected from each donor, and the project
+%will generate extensive genotype data and RNA-seq data on each individual. However,  available methods are limited in their ability to {\it jointly analyze data on all tissues} to maximize power, while
+%simultaneously {\it allowing for both qualitative and quantitative differences among eQTLs} present in each tissue.
 
 
 
 \linenumbers
 
 \section*{Introduction}
-Variation in gene expression is an important mechanism underlying susceptibility to complex disease. 
+Variation in gene expression is an important mechanism underlying susceptibility to complex disease.  
 
 The simultaneous genome-wide assay of gene expression and genetic variation allows the mapping of the genetic factors that underpin individual differences in quantitative levels of expression (expression QTLs; eQTLs). 
-
 The availability of this information immediate insight into a biological basis for disease associations identified through genome-wide association (GWA) studies, and can help to identify networks of genes 
-involved in disease pathogenesis 
+involved in disease pathogenesis.
 
- However, most studies to date have been conducted in a single immortalized peripheral cell type, and it is unclear to what extent these findings will translate to human disease mapping across more varied cell types. 
+Initial approaches to quantify the effect of a particular SNP on gene expression considered only one tissue at a time, and ignored the effect of the SNP on gene expression in other tissues.
+This fails to exploit the power of  shared genetic variation in effects on expression - i.e. the information that the effect of the gene snp pair in one tissue can provide about the effect in another- and limits our understanding of multiple-tissue phenotypes.
+Available methods are limited not only in their ability to {\it jointly analyze data on all tissues} to maximize power, but also in simultaneously {\it allowing for both qualitative and quantitative differences among eQTLs} present in each tissue. Indeed, past attempts at quantifying heterogeneity of eQTLs were limited in the number of tissues considered and also the level of heterogeneity modeled- whille 
 
-Furthermore, even analyses performed on additional cell types are often performed in a single tissue framework and fail to correlate the effect of genetics across multiple tissue types.  
-
-The Genotype Tissue Expression Project, GTEx, Project will provide the data necessary to address this situation: 
-by 2016, the resource is expected to enroll a total of approximately 900 post-mortem donors, with approximately 30 tissues collected from each donor, and the project
-will generate extensive genotype data and RNA-seq data on each individual. 
-However,  available methods are limited in their ability to {\it jointly analyze data on all tissues} to maximize power, while
-simultaneously {\it allowing for both qualitative and quantitative differences among eQTLs} present in each tissue.
+ 
 
 \subsection{Aim 1}
 %\begin{itemize}
