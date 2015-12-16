@@ -1,6 +1,6 @@
 ---
 title: "Using New factor sim"
-output: pdf_document
+output: html_document
 ---
  The purpose is to simulate according to the patterns of sharing present in the GTEX V6 Data, where 100 snps in cis of 500 genes, $pi0$ is 0.80, and there is sharing according to gtex covmats 2:9. 
 
@@ -153,8 +153,8 @@ dev.off()
 
 ```
 
-![alt text](scatterplotfitted.png) 
-![alt text](scatterplotfittedash.png) 
-![alt text](scatterplottruth.png)
-![alt text](scatterplotTRUTHash.png)
+![alt text](Figures/scatterplotfitted.png) 
+![alt text](Figures/scatterplotfittedash.png) 
+![alt text](Figures/scatterplottruth.png)
+![alt text](Figures/scatterplotTRUTHash.png)
 

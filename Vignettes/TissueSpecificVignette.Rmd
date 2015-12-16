@@ -177,7 +177,7 @@ dev.off()
 
 ```
 
-![alt text](scatterplot.fittedtspec.png) 
-![alt text](scatterplot.truthtspec.png)
-![alt text](scatterplot.TRUTHashtspec.png)
+![alt text](Figures/scatterplot.fittedtspec.png) 
+![alt text](Figures/scatterplot.truthtspec.png)
+![alt text](Figures/scatterplot.TRUTHashtspec.png)
 
