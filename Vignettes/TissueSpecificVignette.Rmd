@@ -48,7 +48,7 @@ This corresponds to tissue specificity in:
 which(diag(data$component.mats[[9]])!=0)
 ```
 
-Accordingly, a plot of gene-snp pair `r j` t-statistics should show tissue specificity tissue `r which(diag(data$component.mats[[10]])!=0)`:
+Accordingly, a plot of gene-snp pair `r j` t-statistics should show tissue specificity tissue `r which(diag(data$component.mats[[9]])!=0)`:
 ```{r}
 
 barplot(data$tstat[j,],names=seq(1,44),las=3,xlab="Tissue",ylab="Tstatistic",main=paste(c("Individual",j,"T stats")))
