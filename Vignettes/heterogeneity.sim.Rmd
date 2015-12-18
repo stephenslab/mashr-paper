@@ -1,0 +1,69 @@
+---
+title: "ComparingHIndex"
+output: html_document
+---
+
+The purpose of this document is to show that computing the sum of the normalixed effects for each gene-snp pair is more accurate using MASH then ASH. First, recall the RMSE result:
+
+
+```{r load.data}
+data=readRDS("~/Dropbox/simdata.rds")
+t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta;v.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
+covmat=readRDS("~/Dropbox/covmattestim.rds")
+
+t.truth.test=beta/sebetahat
+mash.means=read.table("~/Dropbox/Simulationsposterior.means.txt")[,-1]
+univariate.ash.pm=read.table("~/Dropbox/univariate.ash.pm.txt")
+
+sqrt(mean((t.truth.test[1:10000,]-mash.means)^2))
+sqrt(mean((t.truth.test[1:10000,]-univariate.ash.pm)^2))
+```
+
+In the first simulation of 'het indexes', for each gene-snp pair, I sum the non-negative normalized effects for the true betas, mash betas, and ash betas and compute the RMSE (i.e., $\sqrt(\sum(truth-estimated)^2))$
+
+```{r}
+het.index=function(data,thresh){
+  t(apply(data,1,function(x){
+   maxx=x[which.max(abs(x))]
+   if(maxx==0){h=44}
+   else{
+     normx=x/x[which.max(abs(x))]
+     pos=normx[normx>0]
+     h=sum(pos)}
+   return(h)
+     
+    }))}
+
+
+
+true.h=het.index(beta[1:10000,],thresh=0.5)
+mash.h=het.index(mash.means*sebetahat[1:10000,],0.5)
+ash.h=het.index(univariate.ash.pm*sebetahat[1:10000,],0.5)
+sqrt(mean(true.h-mash.h)^2)
+sqrt(mean(true.h-ash.h)^2)
+```
+
+In the second, simulation of 'het indexes', for each gene-snp pair, I count number of normalized effects greater than 50% of the max effect for the pair for the true betas, mash betas, and ash betas and compute the RMSE (i.e., $\sqrt(\sum(truth-estimated)^2))$
+
+```{r het.index.two}
+het.index.two=function(data,thresh){
+  t(apply(data,1,function(x){
+   maxx=x[which.max(abs(x))]
+   if(maxx==0){h=44}
+   else{
+     normx=x/x[which.max(abs(x))]
+     
+     h=sum(normx>thresh)}
+   return(h)
+     
+    }))}
+
+
+true.h=het.index.two(beta[1:10000,],thresh=0.5)
+mash.h=het.index.two(mash.means*sebetahat[1:10000,],0.5)
+ash.h=het.index.two(univariate.ash.pm*sebetahat[1:10000,],0.5)
+sqrt(mean(true.h-mash.h)^2)
+sqrt(mean(true.h-ash.h)^2)
+
+```
+

@@ -237,11 +237,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur eget porta er
 \section*{Author Summary}
 Variation in gene expression is an important mechanism underlying susceptibility to complex disease.  The simultaneous genome-wide assay of gene expression and genetic variation allows the mapping of the genetic factors that underpin individual differences in quantitative levels of expression (expression QTLs; eQTLs). 
 By analyzing these effects across multiple tissues, we exploit the information that the effect of the gene-snp pair in one tissue can provide about its effect in alternative tissues.
-Furthermore, quantifying the effect size as opposed to simply calling QTLs present or absent reveal many patterns of sharing of effects among tissues which differ in both sign an magnitude.
+Furthermore, quantifying the effect size as opposed to simply calling QTLs present or absent reveal many patterns of sharing of effects among tissues which differ in both sign and magnitude.
 We provide a novel framework for estimating effect sizes across multiple subgroups, considering the evidence contained in all subgroups jointly, which provides a powerful and detailed insight into quantitative heterogeneity present in the genome.
 
 %The availability of systematically generated eQTL information could provide immediate insight into a biological basis for disease associations identified through genome-wide association (GWA) studies, and can help to identify networks of genes 
-%involved in disease pathogenesis \cite{cookson_mapping_2009}. However, most studies to date have been conducted in a single immortalized peripheral cell type, and it is unclear to what extent these findings will translate to human disease mapping across more varied cell types. 
+%involved in disease pathogenesis (\cite{nicolae_trait-associated_2010, veyrieras_high-resolution_2008}). However, most studies to date have been conducted in a single immortalized peripheral cell type, and it is unclear to what extent these findings will translate to human disease mapping across more varied cell types. 
 %Furthermore, even analyses performed on additional cell types are often performed in a single tissue framework \cite{majewski_study_2011,gilad_revealing_2008} and fail to correlate the effect of genetics across multiple tissue types.  The Genotype Tissue Expression Project, GTEx, Project will provide the data necessary to address this situation: by 2016, the resource is expected to enroll a total of approximately 900 post-mortem donors, with approximately 30 tissues collected from each donor, and the project
 %will generate extensive genotype data and RNA-seq data on each individual. However,  available methods are limited in their ability to {\it jointly analyze data on all tissues} to maximize power, while
 %simultaneously {\it allowing for both qualitative and quantitative differences among eQTLs} present in each tissue.
@@ -251,34 +251,40 @@ We provide a novel framework for estimating effect sizes across multiple subgrou
 \linenumbers
 
 \section*{Introduction}
-Variation in gene expression is an important mechanism underlying susceptibility to complex disease.  
+Variation in gene expression is an important mechanism underlying susceptibility to complex disease.
 
 The simultaneous genome-wide assay of gene expression and genetic variation allows the mapping of the genetic factors that underpin individual differences in quantitative levels of expression (expression QTLs; eQTLs). 
 The availability of this information provides immediate insight into a biological basis for disease associations identified through genome-wide association (GWA) studies, and can help to identify networks of genes 
-involved in disease pathogenesis.
+involved in disease pathogenesis (\cite{nicolae_trait-associated_2010, veyrieras_high-resolution_2008}).
+Available methods are limited not only in their ability to {\it jointly analyze data on all tissues} to maximize power, but also in simultaneously {\it allowing for both qualitative and quantitative differences among eQTLs} present in each tissue.
 
 Initial approaches to quantify the effect of a particular SNP on gene expression considered only one tissue at a time, and ignored the effect of the SNP on gene expression in other tissues.
-This fails to exploit the power of  shared genetic variation in effects on expression - i.e. the information that the effect of the gene snp pair in one tissue can provide about the effect in another- and limits our understanding of multiple-tissue phenotypes.
-Available methods are limited not only in their ability to {\it jointly analyze data on all tissues} to maximize power, but also in simultaneously {\it allowing for both qualitative and quantitative differences among eQTLs} present in each tissue.
-Indeed, past attempts at quantifying heterogeneity of eQTLs were limited in the number of tissues considered and also the level of heterogeneity considered. Qualitative heterogeneity refers to calling a snp `active' or `inactive' in a given tissue.
-Indeed, previous work has referred to the setting in which the gene-snp pair is active in all tissues as `shared' and active in only one as 'tissue-specific'.
-However, a QTL may be`active' in all or many tissues and with varying magnitude or sign; we refer to this as quantitative heterogeneity. 
-Quantifying the effect sizes of the gene-snp pair across tissues considering the evidence contained in all tissues jointly thus reveals new patterns of activity across tissues, which differ in their relationship in sign and magnitude within and between tissues. 
-- thus effects can be 'shared' but not 'consistent' across tissues.
-
+This fails to exploit the power of  shared genetic variation in effects on expression - i.e. the information that the effect of the gene-snp pair in one tissue can provide about the effect in another- and limits our understanding of multiple-tissue phenotypes.
+Furthermore, even past attempts at quantifying heterogeneity of eQTLs using the data across tissues jointly were limited in both the number of tissues considered, and also the level of heterogeneity considered. Qualitative heterogeneity refers to calling a snp `active' or `inactive' in a given tissue. For example, previous work has referred to the setting in which the gene-snp pair is active in all tissues as `shared' and active in only one as 'tissue-specific'  (\cite{flutre_statistical_2013,wen_bayesian_2014}).
+However, a QTL may be`active' in all or many tissues and with varying magnitude or sign; we refer to this as quantitative heterogeneity.
+ Indeed, our initial motivation came from our analysis of GTEx pilot data, in which we see evidence that many (50\%) QTLs are shared across all nine tissues. In this context, a QTL is called based on whether it demonstrates significant posterior probability of being active in a particular tissue. Applying our hierarchical model to the dataset from Dimas $\it{et a}l$ $\cite{dimas_common_2009}$ with 3 tissues, we found just 8\% of eQTLs are specific to a single tissue, with an estimated 88\% of eQTLs being common to fibroblasts, LCL cells and T-Cells \cite{flutre_statistical_2013}. Not all eQTLs are shared by all tissues; some tissues may share eQTLs more than others. To allow for this, our previous hierarchical model attempted to infer the extent of such sharing by estimating the proportion of eQTL which were shared in various 'configurations' or patterns of binary activity. 
+ However, these binary configurations are still $\textit{ limited in their ability to capture continuous variation}$ in levels of activity among tissues in which the SNP is considered active. 
+ In fact, as the number of tissues considered increases, perhaps the more interesting and biologically relevant question becomes one of quantitative heterogeneity - that is, how do the patterns of effect vary across tissues in which the SNP is called 'active'.  
+Quantifying the effect sizes of the gene-snp pair across tissues considering the evidence contained in all tissues jointly thus reveals new patterns of activity across tissues, which differ in their relationship in sign and magnitude within and between tissues. Thus effects can be 'shared' but not 'consistent' across tissues. The structure of this paper is as follows: we will describe our approach for modeling and estimating these effect sizes across tissues, 
 
 \subsection{Approach} 
 We aim to learning about patterns of sharing across tissues within a SNP and among SNPs, which join to help us better understand the global and snp-specific patterns of effects of genetics on gene expression. 
+This allows us to make comparisons among tissues in which the QTL is called active, and among gene-snp pairs with a similar degree of activity in a given tissue. 
+Thus as an additional level of combining information, we assume that each eQTL may follow a particular pattern of activity characterized by its effects across tissues. Within these groups, the tissues exhibit characteristic patterns of sharing, which can be captured by considering the covariance structure of the genetic effects among tissues. \insert{figure}This lends itself to a mixture model, in which  we assume all the gene-snp pairs arise from a mixture of a finite number of multivariate normal (MVN) distribution, each characterised by the covariance matrix from which the vector of effects is though to arise. For each of $J$ gene-snp pairs, we observe an R dimensional vector of standardized effect sizes $\bm\hat{b}$ and their standard error and assume that these effects descend from some true effect size $\bm{b}$. 
 
-This allows us to make omparisons among tissues in which the QTL is called active, and among gene-snp pairs with a similar degree of activity in a given tissue. 
-Use the whole genome to imagine that all gene-snp pairs belong to a finite number of groups, where each group is characterized by pattern of sharing of effects across tissues 
 
+
+ \begin{equation}
+  \bm{b_{j}} | \bm{\pi},\bf{U} \sim \sum_{k,l} \pi_{k,l} \;{\it N}_R(\bm{0}, \omega_l U_{k})
+\end{equation}
+
+Here, the covariance matrix $U_{k}$ captures the particular patterns of sharing - variation in effect sizes within and between tissues
+ Choice of Uk determines the direction (relative relationship in effect sizes within and between tissues), while $\omega_{l}$ determines the scale of each pattern - the magnitude of the effect size. Thus we recognize that while two EQTL may obey a similar pattern or shape, the absolute scale may vary. For example, two eQTL may both have strong correlation between tissues 1 and 2 with consistently larger effects in 2, but the absolute size of the effects maweeny vary between SNPs.
+ Previous work from our lab considered only the idea that the variance of and covariance between two tissues was the same across tissues thought to contain a QTL in a given pattern, or 'configuration',  and thus failed to incorporate the much richer covariance structure between tissues. As a critical innovation on our previous method $(\cite{flutre_statistical_2013,wen_bayesian_2014})$ these matrices contain distinct diagonal and off-diagonal elements which reflect data-specific patterns of variation within and covariance between subgroups (tissues). This captures the variation in effect sizes within and between subgroups better than restricting effects to simply 'shared' or 'unshared' between subgroups. 
  
+  Because we can't know the 'true covariance matrix' for each gene-snp pair, we aim to assemble a list which sufficiently captures the various patterns, and then 'learn' the relative proportions of each pattern of sharing from the data. One can now model each vector of effect sizes $\bm{b}$ each as arising from a mixture that captures all the covariance patterns.
 
-Not only do we have many tissues, we also have an entire genome from which to 'learn' about these patterns of sharing.  For each of $J$ gene-snp pairs, we observe an R dimensional vector of standardized effect sizes $\bm\hat{b}$ and their standard error and assume that these effects descend from some true effect size $\bm{b}$. Thus as an additional level of combining information, we assume that each eQTL may follow a particular pattern of activity characterized by its effects across tissues. Within these groups, the tissues exhibit characteristic patterns of sharing, which can be captured by considering the covariance structure of the genetic effects among tissues. This lends itself to a natural mixture model, in which  we assume all the gene-snp pairs arise from a mixture of a finite number of Gaussian distributions with unknown parameters. Because of the the multivariate nature of this activity, within a particular 'pattern of sharing' some tissues may be more active than others, but not completely on or off. Thus each component of the mixture is defined by the prior covariance matrix from which the vector of standardized effect sizes $\bm{b}$ is thought to be drawn. The covariance matrix of the true effects thus reflects a particular pattern of sharing, such that the diagonal elements of the component-specific covariance matrix then represents the variance of the effect size within and and the off--diagonal between tissues . A large prior variance in one tissue and small in another means that effects in the first tissue tend to be large while effects in tissue two tend to be small. Because we can't know the 'true covariance matrix' for each gene-snp pair, we aim to assemble a list which sufficiently captures the various patterns, and then 'learn' the relative proportions of each pattern of sharing from the data. One can now model each vector of effect sizes $\bm{b}$ each as arising from a mixture that captures all the covariance patterns.
 
-
-As a critical innovation on our previous method $(\cite{flutre_statistical_2013,wen_bayesian_2014})$ these matrices contain distinct diagonal and off-diagonal elements which reflect data-specific patterns of variation within and covariance between subgroups (tissues). This captures the variation in effect sizes within and between subgroups better than restricting effects to simply 'shared' or 'unshared' between subgroups. 
 
 Previous work from our lab considered only the idea that the covariance between two tissues was the same across tissues thought to contain a QTL in a given pattern, or 'configuration',  and thus failed to incorporate the much richer covariance structure between tissues. 
 
@@ -290,56 +296,6 @@ An additional novelty is that in learning something about the effect size in eac
 
 
 
-
-\subsection{So what are the Prior Covariance Matrices $U_ks$ specifiying?}
-Suppose we have just two tissues 
-
- \begin{figure}
-\includegraphics[width=5cm]{snptypes}
-\end{figure}
-\begin{itemize}
-\item Direction defined by relative ratio in effect size between tissues, specified in prior covariance of $\bm{b}$
-\end{itemize}
-
-Generative $U_{k}$ for \textcolor{blue}{SNPs} 
-\begin{pmatrix}
-   Var(b_{1}) = \textcolor{blue} {2.0}  &  Cov(b_{1},b_{2})=0.56 \\
-    Cov(b_{2},b_{1})=0.56 & Var (b_{2})=\textcolor{blue}{0.20}
- \end{pmatrix}
-\item Additional novelty: Ratio between tissues is flexible (not simply shared or tissue-specific) and data sensitive (stay-tuned)
-
-To illustrate the utility of using a variety of covariance matrices, consider that we have snps of 4 'types' here defined, by their effects in tow tissues. eQTL of the blue class tend to have large effects in tissue 1 and small in tissue 2, while snps in the purple class have very large effects in tissue 2 and small effects in tissue 2. These directions are thus specified in the prior covariance matrix which defines the direction - here simply ratio - in prior effect size between tissues,
-
-The 45 degree angle and the lines would be simply using tissue specific or shared effects, while we can have a much richer understanding of the relationship between effect sizes using a set ofcovariance matrices that aims to recapitulate patterns found in the data
-
-
-
-\subsection{Why care about the effect size?}
-
-\begin{itemize}
-
-\item Comparisons among tissues in which the QTL is called active, and among gene-snp pairs with a similar degree of activity in a given tissue. 
-\item The addition of the quantitative comparison captures the continuous nature of biological phenomenon. %Estimating the distribution of multivariate effect sizes seems like a natural addition. The estimation procedure is non-trivial, and previous work by our lab (\cite{flutre_statistical_2013,wen_bayesian_2014}) applied a multivariate mixture model to estimate heterogeneity of effects among conditions.
-\item How confident are we in the sign of the effect?
-\item Acknowledge the many patterns of sharing present in the data, wide array of prior covariance matrices allows our gene-snp pair to find it`s true pattern of sharing
-
-
-\end{itemize}
-
-Given that an eQTL is called active in two tissues, we want to make more statements about our confidence in the sign and magnitude of the effect among tissues. 
-
-Similarly, if many SNPs are called active  in a particular tissue, we can resolve differences among these gene=snp pairs  and using this wide array of prior covariance matrices allows our gene snp pair to find it's true pattern of sharing. 
-
-\item{Adaptive Shrinkage: So why does the likelihood increase at the 'right component'?}
-Consider the univariate case. Here, think about x as $\hat{b_{1}}$, and $\sigma$ as $U_{k[1,1]]} + \hat{V}_{j[1,1]}$.  
-
-To compute the likelihood at each component: 
-\begin{equation}
-f(x \; | \; \sigma) = \frac{1}{\sigma\sqrt{2\pi} } \; e^{ -\frac{(x)^2}{2\sigma^2} }
-\end{equation}
-  
-We can see that this will be largest when $\sigma^{2}$ approaches the MLE, which where is simply $\hat{b}^{2}$. 
-This is the intuition behind the bayes factor being the largest at the 'true component'. 
 
 %\section*{Results}
 %

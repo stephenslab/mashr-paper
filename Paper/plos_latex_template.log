@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  16 DEC 2015 15:02
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  17 DEC 2015 10:13
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -924,22 +924,30 @@ Package microtype Info: Loading generic settings for font family
 (microtype)             `cmss' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
+
+LaTeX Warning: Citation `nicolae_trait-associated_2010' on page 1 undefined on 
+input line 258.
+
+
+LaTeX Warning: Citation `veyrieras_high-resolution_2008' on page 1 undefined on
+ input line 258.
+
 Package epstopdf Info: Source file: <PLOS-submission.eps>
-(epstopdf)                    date: 2015-09-14 12:14:07
+(epstopdf)                    date: 2015-03-16 16:44:14
 (epstopdf)                    size: 283246 bytes
 (epstopdf)             Output file: <PLOS-submission-eps-converted-to.pdf>
-(epstopdf)                    date: 2015-09-14 12:14:07
+(epstopdf)                    date: 2015-08-11 11:31:50
 (epstopdf)                    size: 15292 bytes
 (epstopdf)             Command: <repstopdf --outfile=PLOS-submission-eps-conver
 ted-to.pdf PLOS-submission.eps>
-(epstopdf)             \includegraphics on input line 270.
+(epstopdf)             \includegraphics on input line 260.
 Package epstopdf Info: Output file is already uptodate.
-<PLOS-submission-eps-converted-to.pdf, id=48, 216.81pt x 35.13126pt>
+<PLOS-submission-eps-converted-to.pdf, id=32, 216.81pt x 35.13126pt>
 File: PLOS-submission-eps-converted-to.pdf Graphic file (type pdf)
 
 <use PLOS-submission-eps-converted-to.pdf>
 Package pdftex.def Info: PLOS-submission-eps-converted-to.pdf used on input lin
-e 270.
+e 260.
 (pdftex.def)             Requested size: 144.54pt x 23.42201pt.
 
 
@@ -952,20 +960,116 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 
 {/usr/local/texlive/2015/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./PLOS-
 submission-eps-converted-to.pdf>]
-./plos_latex_template.tex:276: You can't use `\spacefactor' in math mode.
+
+LaTeX Warning: Citation `flutre_statistical_2013' on page 2 undefined on input 
+line 263.
+
+
+LaTeX Warning: Citation `wen_bayesian_2014' on page 2 undefined on input line 2
+63.
+
+./plos_latex_template.tex:265: You can't use `\spacefactor' in math mode.
 \cite@adjust ... \@tempa \@zero@skip \spacefactor 
                                                   1001 \fi \ifnum \spacefact...
-l.276 ...lutre_statistical_2013,wen_bayesian_2014}
+l.265 ...as $\it{et a}l$ $\cite{dimas_common_2009}
+                                                  $ with 3 tissues, we found...
+Sorry, but I'm not programmed to handle this case;
+I'll just pretend that you didn't ask for it.
+If you're in the wrong mode, you might be able to
+return to the right one by typing `I}' or `I$' or `I\par'.
+
+./plos_latex_template.tex:265: Improper \spacefactor.
+\cite@adjust ...ctor 1001 \fi \ifnum \spacefactor 
+                                                  >\@m \ \else \hskip \@temp...
+l.265 ...as $\it{et a}l$ $\cite{dimas_common_2009}
+                                                  $ with 3 tissues, we found...
+You can refer to \spacefactor only in horizontal mode;
+you can refer to \prevdepth only in vertical mode; and
+neither of these is meaningful inside \write. So
+I'm forgetting what you said and using zero instead.
+
+
+./plos_latex_template.tex:265: LaTeX Error: Command \bfseries invalid in math m
+ode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.265 ...as $\it{et a}l$ $\cite{dimas_common_2009}
+                                                  $ with 3 tissues, we found...
+
+Please use the math alphabet \mathbf instead of the \bfseries command. 
+
+
+LaTeX Warning: Citation `dimas_common_2009' on page 2 undefined on input line 2
+65.
+
+./plos_latex_template.tex:265: You can't use `\spacefactor' in math mode.
+\@cite ...ivesfalse \citemid {#2}\fi \spacefactor 
+                                                  \@m }\citeright \@restore@...
+l.265 ...as $\it{et a}l$ $\cite{dimas_common_2009}
+                                                  $ with 3 tissues, we found...
+Sorry, but I'm not programmed to handle this case;
+I'll just pretend that you didn't ask for it.
+If you're in the wrong mode, you might be able to
+return to the right one by typing `I}' or `I$' or `I\par'.
+
+Missing character: There is no è in font cmex10!
+
+LaTeX Warning: Citation `flutre_statistical_2013' on page 2 undefined on input 
+line 265.
+
+./plos_latex_template.tex:273: Missing number, treated as zero.
+<to be read again> 
+                   {
+l.273 ...e genetic effects among tissues. \insert{
+                                                  figure}This lends itself t...
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+Package epstopdf Info: Source file: <PLOS-submission.eps>
+(epstopdf)                    date: 2015-03-16 16:44:14
+(epstopdf)                    size: 283246 bytes
+(epstopdf)             Output file: <PLOS-submission-eps-converted-to.pdf>
+(epstopdf)                    date: 2015-08-11 11:31:50
+(epstopdf)                    size: 15292 bytes
+(epstopdf)             Command: <repstopdf --outfile=PLOS-submission-eps-conver
+ted-to.pdf PLOS-submission.eps>
+(epstopdf)             \includegraphics on input line 274.
+Package epstopdf Info: Output file is already uptodate.
+File: PLOS-submission-eps-converted-to.pdf Graphic file (type pdf)
+<use PLOS-submission-eps-converted-to.pdf>
+Package pdftex.def Info: PLOS-submission-eps-converted-to.pdf used on input lin
+e 274.
+(pdftex.def)             Requested size: 144.54pt x 23.42201pt.
+ [2]
+./plos_latex_template.tex:282: Undefined control sequence.
+<recently read> \?
+                  
+l.282 ...es within and between tissues), while $\?
+                                                  _{l}$ determines the scale...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./plos_latex_template.tex:283: You can't use `\spacefactor' in math mode.
+\cite@adjust ... \@tempa \@zero@skip \spacefactor 
+                                                  1001 \fi \ifnum \spacefact...
+l.283 ...lutre_statistical_2013,wen_bayesian_2014}
                                                   )$ these matrices contain ...
 Sorry, but I'm not programmed to handle this case;
 I'll just pretend that you didn't ask for it.
 If you're in the wrong mode, you might be able to
 return to the right one by typing `I}' or `I$' or `I\par'.
 
-./plos_latex_template.tex:276: Improper \spacefactor.
+./plos_latex_template.tex:283: Improper \spacefactor.
 \cite@adjust ...ctor 1001 \fi \ifnum \spacefactor 
                                                   >\@m \ \else \hskip \@temp...
-l.276 ...lutre_statistical_2013,wen_bayesian_2014}
+l.283 ...lutre_statistical_2013,wen_bayesian_2014}
                                                   )$ these matrices contain ...
 You can refer to \spacefactor only in horizontal mode;
 you can refer to \prevdepth only in vertical mode; and
@@ -973,43 +1077,43 @@ neither of these is meaningful inside \write. So
 I'm forgetting what you said and using zero instead.
 
 
-./plos_latex_template.tex:276: LaTeX Error: Command \bfseries invalid in math m
+./plos_latex_template.tex:283: LaTeX Error: Command \bfseries invalid in math m
 ode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.276 ...lutre_statistical_2013,wen_bayesian_2014}
+l.283 ...lutre_statistical_2013,wen_bayesian_2014}
                                                   )$ these matrices contain ...
 
 Please use the math alphabet \mathbf instead of the \bfseries command. 
 
 
-LaTeX Warning: Citation `flutre_statistical_2013' on page 2 undefined on input 
-line 276.
+LaTeX Warning: Citation `flutre_statistical_2013' on page 3 undefined on input 
+line 283.
 
 
-./plos_latex_template.tex:276: LaTeX Error: Command \bfseries invalid in math m
+./plos_latex_template.tex:283: LaTeX Error: Command \bfseries invalid in math m
 ode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.276 ...lutre_statistical_2013,wen_bayesian_2014}
+l.283 ...lutre_statistical_2013,wen_bayesian_2014}
                                                   )$ these matrices contain ...
 
 Please use the math alphabet \mathbf instead of the \bfseries command. 
 
 
-LaTeX Warning: Citation `wen_bayesian_2014' on page 2 undefined on input line 2
-76.
+LaTeX Warning: Citation `wen_bayesian_2014' on page 3 undefined on input line 2
+83.
 
-./plos_latex_template.tex:276: You can't use `\spacefactor' in math mode.
+./plos_latex_template.tex:283: You can't use `\spacefactor' in math mode.
 \@cite ...ivesfalse \citemid {#2}\fi \spacefactor 
                                                   \@m }\citeright \@restore@...
-l.276 ...lutre_statistical_2013,wen_bayesian_2014}
+l.283 ...lutre_statistical_2013,wen_bayesian_2014}
                                                   )$ these matrices contain ...
 Sorry, but I'm not programmed to handle this case;
 I'll just pretend that you didn't ask for it.
@@ -1018,157 +1122,49 @@ return to the right one by typing `I}' or `I$' or `I\par'.
 
 Missing character: There is no è in font cmex10!
 Package epstopdf Info: Source file: <PLOS-submission.eps>
-(epstopdf)                    date: 2015-09-14 12:14:07
+(epstopdf)                    date: 2015-03-16 16:44:14
 (epstopdf)                    size: 283246 bytes
 (epstopdf)             Output file: <PLOS-submission-eps-converted-to.pdf>
-(epstopdf)                    date: 2015-09-14 12:14:07
+(epstopdf)                    date: 2015-08-11 11:31:50
 (epstopdf)                    size: 15292 bytes
 (epstopdf)             Command: <repstopdf --outfile=PLOS-submission-eps-conver
 ted-to.pdf PLOS-submission.eps>
-(epstopdf)             \includegraphics on input line 277.
+(epstopdf)             \includegraphics on input line 364.
 Package epstopdf Info: Output file is already uptodate.
 File: PLOS-submission-eps-converted-to.pdf Graphic file (type pdf)
 <use PLOS-submission-eps-converted-to.pdf>
 Package pdftex.def Info: PLOS-submission-eps-converted-to.pdf used on input lin
-e 277.
+e 364.
 (pdftex.def)             Requested size: 144.54pt x 23.42201pt.
- [2]
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 289.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 289.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 289.
-
-<snptypes.pdf, id=78, 437.30939pt x 325.98822pt>
-File: snptypes.pdf Graphic file (type pdf)
- <use snptypes.pdf>
-Package pdftex.def Info: snptypes.pdf used on input line 293.
-(pdftex.def)             Requested size: 142.26378pt x 106.04936pt.
-
-./plos_latex_template.tex:299: Undefined control sequence.
-l.299 Generative $U_{k}$ for \textcolor
-                                       {blue}{SNPs}
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./plos_latex_template.tex:300: Missing $ inserted.
+ [3]
+./plos_latex_template.tex:380: Missing $ inserted.
 <inserted text> 
                 $
-l.300 \begin{pmatrix}
-                     
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-./plos_latex_template.tex:301: Undefined control sequence.
-l.301    Var(b_{1}) = \textcolor
-                                {blue} {2.0}  &  Cov(b_{1},b_{2})=0.56 \\
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./plos_latex_template.tex:302: Undefined control sequence.
-l.302 ..._{2},b_{1})=0.56 & Var (b_{2})=\textcolor
-                                                  {blue}{0.20}
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./plos_latex_template.tex:303: Missing $ inserted.
-<inserted text> 
-                $
-l.303  \end{pmatrix}
-                    
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
-
-./plos_latex_template.tex:304: LaTeX Error: Lonely \item--perhaps a missing lis
-t environment.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.304 \item A
-             dditional novelty: Ratio between tissues is flexible (not simpl...
-
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-Package epstopdf Info: Source file: <PLOS-submission.eps>
-(epstopdf)                    date: 2015-09-14 12:14:07
-(epstopdf)                    size: 283246 bytes
-(epstopdf)             Output file: <PLOS-submission-eps-converted-to.pdf>
-(epstopdf)                    date: 2015-09-14 12:14:07
-(epstopdf)                    size: 15292 bytes
-(epstopdf)             Command: <repstopdf --outfile=PLOS-submission-eps-conver
-ted-to.pdf PLOS-submission.eps>
-(epstopdf)             \includegraphics on input line 309.
-Package epstopdf Info: Output file is already uptodate.
-File: PLOS-submission-eps-converted-to.pdf Graphic file (type pdf)
-<use PLOS-submission-eps-converted-to.pdf>
-Package pdftex.def Info: PLOS-submission-eps-converted-to.pdf used on input lin
-e 309.
-(pdftex.def)             Requested size: 144.54pt x 23.42201pt.
- [3 <./snptypes.pdf>]
-
-./plos_latex_template.tex:328: LaTeX Error: Lonely \item--perhaps a missing lis
-t environment.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.328 \item{
-            Adaptive Shrinkage: So why does the likelihood increase at the '...
-
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-./plos_latex_template.tex:419: Missing $ inserted.
-<inserted text> 
-                $
-l.419 \item $U_{k=2,l}$ = $\omega_l$X_
+l.380 \item $U_{k=2,l}$ = $\omega_l$X_
                                       {z}$ The (naively) estimated tissue co...
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./plos_latex_template.tex:419: Missing $ inserted.
+./plos_latex_template.tex:380: Missing $ inserted.
 <inserted text> 
                 $
-l.419 ...timated from the column-centered J \times
+l.380 ...timated from the column-centered J \times
                                                    R$ matrix of $Z$ statisti...
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./plos_latex_template.tex:419: Missing $ inserted.
+./plos_latex_template.tex:380: Missing $ inserted.
 <inserted text> 
                 $
-l.419 ...$Z_{center}$: $\frac{1}{J}$ $Z_{center}$^
+l.380 ...$Z_{center}$: $\frac{1}{J}$ $Z_{center}$^
                                                   {t}$ $Z_{center}$
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./plos_latex_template.tex:421: Undefined control sequence.
+./plos_latex_template.tex:382: Undefined control sequence.
 <recently read> \pcv 
                      
-l.421 ...$ eigenvector approximations, where $\pcv
+l.382 ...$ eigenvector approximations, where $\pcv
                                                   _{1...p}$  represent the e...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1176,10 +1172,10 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./plos_latex_template.tex:421: Undefined control sequence.
+./plos_latex_template.tex:382: Undefined control sequence.
 <recently read> \pcd 
                      
-l.421 ...he covariance matrix of tissues and $\pcd
+l.382 ...he covariance matrix of tissues and $\pcd
                                                   _{1...p}$ are the first $p...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1187,29 +1183,302 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
+./plos_latex_template.tex:384: Missing $ inserted.
+<inserted text> 
+                $
+l.384 ...U_{k=4:4+Q-1,l}$ = $\frac{1}{J}(($\Lambda
+                                                  \mathbf{F})^{t} \Lambda \m...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+./plos_latex_template.tex:386: LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.386 \item $U_{k=4+Q,l}$ = $\frac{1}{J}$ ($\(
+                                              $\Lambda \mathbf{F})^{t} \Lamb...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./plos_latex_template.tex:386: Missing $ inserted.
+<inserted text> 
+                $
+l.386 ...U_{k=4+Q,l}$ = $\frac{1}{J}$ ($\($\Lambda
+                                                   \mathbf{F})^{t} \Lambda \...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+./plos_latex_template.tex:393: LaTeX Error: \begin{enumerate} on input line 376
+ ended by \end{itemize}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.393 \end{itemize}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./plos_latex_template.tex:401: Missing $ inserted.
+<inserted text> 
+                $
+l.401 
+      
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+./plos_latex_template.tex:401: Display math should end with $$.
+<to be read again> 
+                   \@@@par 
+l.401 
+      
+The `$' that I just saw supposedly matches a previous `$$'.
+So I shall assume that you typed `$$' both times.
+
+
+./plos_latex_template.tex:403: Package amsmath Error: \begin{aligned} allowed o
+nly in math mode.
+
+See the amsmath package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.403 \phi
+          =\sum_{J} \sum_{K} q_{jk} ln \alpha_{k} \it{N}(\hat{\bm{{b}_{j}}}|...
+
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+./plos_latex_template.tex:403: Missing $ inserted.
+<inserted text> 
+                $
+l.403 \phi
+          =\sum_{J} \sum_{K} q_{jk} ln \alpha_{k} \it{N}(\hat{\bm{{b}_{j}}}|...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+./plos_latex_template.tex:405: Missing $ inserted.
+<inserted text> 
+                $
+l.405 
+      
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+./plos_latex_template.tex:405: Missing } inserted.
+<inserted text> 
+                }
+l.405 
+      
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+./plos_latex_template.tex:405: Missing } inserted.
+<inserted text> 
+                }
+l.405 
+      
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+./plos_latex_template.tex:405: Missing \cr inserted.
+<inserted text> 
+                \cr 
+l.405 
+      
+I'm guessing that you meant to end an alignment here.
+
+./plos_latex_template.tex:405: Missing { inserted.
+<inserted text> 
+                {
+l.405 
+      
+I've put in what seems to be necessary to fix
+the current column of the current alignment.
+Try to go on, since this might almost work.
+
+./plos_latex_template.tex:405: Missing $ inserted.
+<inserted text> 
+                $
+l.405 
+      
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+./plos_latex_template.tex:407: Misplaced \crcr.
+\endaligned ->\crcr 
+                    \egroup \restorecolumn@ \egroup 
+l.407 \end{aligned}
+                   
+I can't figure out why you would want to use a tab mark
+or \cr or \span just now. If something like a right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+./plos_latex_template.tex:407: Extra }, or forgotten $.
+\endaligned ...cr \egroup \restorecolumn@ \egroup 
+                                                  
+l.407 \end{aligned}
+                   
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+./plos_latex_template.tex:407: Missing $ inserted.
+<inserted text> 
+                $
+l.407 \end{aligned}
+                   
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+
+./plos_latex_template.tex:408: LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.408 \end{equation}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./plos_latex_template.tex:408: You can't use `\eqno' in horizontal mode.
+\endmathdisplay@a ...\df@tag \@empty \else \veqno 
+                                                  \alt@tag \df@tag \fi \ifx ...
+l.408 \end{equation}
+                    
+Sorry, but I'm not programmed to handle this case;
+I'll just pretend that you didn't ask for it.
+If you're in the wrong mode, you might be able to
+return to the right one by typing `I}' or `I$' or `I\par'.
+
+./plos_latex_template.tex:408: Missing $ inserted.
+<inserted text> 
+                $
+l.408 \end{equation}
+                    
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+./plos_latex_template.tex:408: Display math should end with $$.
+<to be read again> 
+                   \endgroup 
+l.408 \end{equation}
+                    
+The `$' that I just saw supposedly matches a previous `$$'.
+So I shall assume that you typed `$$' both times.
+
 Package epstopdf Info: Source file: <PLOS-submission.eps>
-(epstopdf)                    date: 2015-09-14 12:14:07
+(epstopdf)                    date: 2015-03-16 16:44:14
 (epstopdf)                    size: 283246 bytes
 (epstopdf)             Output file: <PLOS-submission-eps-converted-to.pdf>
-(epstopdf)                    date: 2015-09-14 12:14:07
+(epstopdf)                    date: 2015-08-11 11:31:50
 (epstopdf)                    size: 15292 bytes
 (epstopdf)             Command: <repstopdf --outfile=PLOS-submission-eps-conver
 ted-to.pdf PLOS-submission.eps>
-(epstopdf)             \includegraphics on input line 422.
+(epstopdf)             \includegraphics on input line 408.
 Package epstopdf Info: Output file is already uptodate.
 File: PLOS-submission-eps-converted-to.pdf Graphic file (type pdf)
 <use PLOS-submission-eps-converted-to.pdf>
 Package pdftex.def Info: PLOS-submission-eps-converted-to.pdf used on input lin
-e 422.
+e 408.
 (pdftex.def)             Requested size: 144.54pt x 23.42201pt.
  [4]
-./plos_latex_template.tex:423: Missing $ inserted.
+
+./plos_latex_template.tex:422: LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.422 \[
+        
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./plos_latex_template.tex:424: Missing \endgroup inserted.
 <inserted text> 
-                $
-l.423 ...U_{k=4:4+Q-1,l}$ = $\frac{1}{J}(($\Lambda
-                                                  \mathbf{F})^{t} \Lambda \m...
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+                \endgroup 
+l.424 \]
+        
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+./plos_latex_template.tex:424: Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.424 \]
+        
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+
+./plos_latex_template.tex:424: LaTeX Error: \begin{equation} on input line 421 
+ended by \end{equation*}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.424 \]
+        
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+./plos_latex_template.tex:424: LaTeX Error: \begin{document} ended by \end{line
+nomath}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.424 \]
+        
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+./plos_latex_template.tex:424: Extra \endgroup.
+<recently read> \endgroup 
+                          
+l.424 \]
+        
+Things are pretty mixed up, but I think the worst is over.
 
 
 ./plos_latex_template.tex:425: LaTeX Error: Bad math environment delimiter.
@@ -1218,9 +1487,22 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.425 \item $U_{k=4+Q,l}$ = $\frac{1}{J}$ ($\(
-                                              $\Lambda \mathbf{F})^{t} \Lamb...
+l.425 \end{equation}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
 
+
+./plos_latex_template.tex:425: LaTeX Error: \begin{document} ended by \end{equa
+tion}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.425 \end{equation}
+                    
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -1228,75 +1510,41 @@ or  <return>  to continue without it.
 ./plos_latex_template.tex:425: Missing $ inserted.
 <inserted text> 
                 $
-l.425 ...U_{k=4+Q,l}$ = $\frac{1}{J}$ ($\($\Lambda
-                                                   \mathbf{F})^{t} \Lambda \...
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+l.425 \end{equation}
+                    
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
 
-
-./plos_latex_template.tex:432: LaTeX Error: \begin{enumerate} on input line 415
- ended by \end{itemize}.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.432 \end{itemize}
-                   
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-./plos_latex_template.tex:440: Missing $ inserted.
-<inserted text> 
-                $
-l.440 
-      
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-./plos_latex_template.tex:440: Display math should end with $$.
+./plos_latex_template.tex:425: Display math should end with $$.
 <to be read again> 
-                   \@@@par 
-l.440 
-      
+                   \endgroup 
+l.425 \end{equation}
+                    
 The `$' that I just saw supposedly matches a previous `$$'.
 So I shall assume that you typed `$$' both times.
 
+./plos_latex_template.tex:425: Extra \endgroup.
+<recently read> \endgroup 
+                          
+l.425 \end{equation}
+                    
+Things are pretty mixed up, but I think the worst is over.
 
-./plos_latex_template.tex:442: Package amsmath Error: \begin{aligned} allowed o
-nly in math mode.
-
-See the amsmath package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.442 \phi
-          =\sum_{J} \sum_{K} q_{jk} ln \alpha_{k} \it{N}(\hat{\bm{{b}_{j}}}|...
-
-You're in trouble here.  Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-./plos_latex_template.tex:442: Missing $ inserted.
+./plos_latex_template.tex:443: Missing $ inserted.
 <inserted text> 
                 $
-l.442 \phi
-          =\sum_{J} \sum_{K} q_{jk} ln \alpha_{k} \it{N}(\hat{\bm{{b}_{j}}}|...
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-./plos_latex_template.tex:444: Missing $ inserted.
-<inserted text> 
-                $
-l.444 
+l.443 
       
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./plos_latex_template.tex:444: Missing } inserted.
+./plos_latex_template.tex:443: Missing } inserted.
 <inserted text> 
                 }
-l.444 
+l.443 
       
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -1304,10 +1552,10 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./plos_latex_template.tex:444: Missing } inserted.
+./plos_latex_template.tex:443: Missing } inserted.
 <inserted text> 
                 }
-l.444 
+l.443 
       
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -1315,34 +1563,34 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./plos_latex_template.tex:444: Missing \cr inserted.
+./plos_latex_template.tex:443: Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.444 
+l.443 
       
 I'm guessing that you meant to end an alignment here.
 
-./plos_latex_template.tex:444: Missing { inserted.
+./plos_latex_template.tex:443: Missing { inserted.
 <inserted text> 
                 {
-l.444 
+l.443 
       
 I've put in what seems to be necessary to fix
 the current column of the current alignment.
 Try to go on, since this might almost work.
 
-./plos_latex_template.tex:444: Missing $ inserted.
+./plos_latex_template.tex:443: Missing $ inserted.
 <inserted text> 
                 $
-l.444 
+l.443 
       
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./plos_latex_template.tex:446: Misplaced \crcr.
+./plos_latex_template.tex:444: Misplaced \crcr.
 \endaligned ->\crcr 
                     \egroup \restorecolumn@ \egroup 
-l.446 \end{aligned}
+l.444 \end{aligned}
                    
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -1350,262 +1598,10 @@ up above has ended a previous alignment prematurely,
 you're probably due for more error messages, and you
 might try typing `S' now just to see what is salvageable.
 
-./plos_latex_template.tex:446: Extra }, or forgotten $.
+./plos_latex_template.tex:444: Extra }, or forgotten \endgroup.
 \endaligned ...cr \egroup \restorecolumn@ \egroup 
                                                   
-l.446 \end{aligned}
-                   
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
-
-./plos_latex_template.tex:446: Missing $ inserted.
-<inserted text> 
-                $
-l.446 \end{aligned}
-                   
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
-
-./plos_latex_template.tex:447: LaTeX Error: Bad math environment delimiter.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.447 \end{equation}
-                    
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-./plos_latex_template.tex:447: You can't use `\eqno' in horizontal mode.
-\endmathdisplay@a ...\df@tag \@empty \else \veqno 
-                                                  \alt@tag \df@tag \fi \ifx ...
-l.447 \end{equation}
-                    
-Sorry, but I'm not programmed to handle this case;
-I'll just pretend that you didn't ask for it.
-If you're in the wrong mode, you might be able to
-return to the right one by typing `I}' or `I$' or `I\par'.
-
-./plos_latex_template.tex:447: Missing $ inserted.
-<inserted text> 
-                $
-l.447 \end{equation}
-                    
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
-./plos_latex_template.tex:447: Display math should end with $$.
-<to be read again> 
-                   \endgroup 
-l.447 \end{equation}
-                    
-The `$' that I just saw supposedly matches a previous `$$'.
-So I shall assume that you typed `$$' both times.
-
-
-./plos_latex_template.tex:461: LaTeX Error: Bad math environment delimiter.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.461 \[
-        
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-./plos_latex_template.tex:463: Missing \endgroup inserted.
-<inserted text> 
-                \endgroup 
-l.463 \]
-        
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
-./plos_latex_template.tex:463: Missing \endgroup inserted.
-<inserted text> 
-                \endgroup 
-l.463 \]
-        
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
-
-./plos_latex_template.tex:463: LaTeX Error: \begin{equation} on input line 460 
-ended by \end{equation*}.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.463 \]
-        
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-
-./plos_latex_template.tex:463: LaTeX Error: \begin{document} ended by \end{line
-nomath}.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.463 \]
-        
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-./plos_latex_template.tex:463: Extra \endgroup.
-<recently read> \endgroup 
-                          
-l.463 \]
-        
-Things are pretty mixed up, but I think the worst is over.
-
-
-./plos_latex_template.tex:464: LaTeX Error: Bad math environment delimiter.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.464 \end{equation}
-                    
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-
-./plos_latex_template.tex:464: LaTeX Error: \begin{document} ended by \end{equa
-tion}.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.464 \end{equation}
-                    
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-./plos_latex_template.tex:464: Missing $ inserted.
-<inserted text> 
-                $
-l.464 \end{equation}
-                    
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
-./plos_latex_template.tex:464: Display math should end with $$.
-<to be read again> 
-                   \endgroup 
-l.464 \end{equation}
-                    
-The `$' that I just saw supposedly matches a previous `$$'.
-So I shall assume that you typed `$$' both times.
-
-./plos_latex_template.tex:464: Extra \endgroup.
-<recently read> \endgroup 
-                          
-l.464 \end{equation}
-                    
-Things are pretty mixed up, but I think the worst is over.
-
-./plos_latex_template.tex:482: Missing $ inserted.
-<inserted text> 
-                $
-l.482 
-      
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-./plos_latex_template.tex:482: Missing } inserted.
-<inserted text> 
-                }
-l.482 
-      
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
-./plos_latex_template.tex:482: Missing } inserted.
-<inserted text> 
-                }
-l.482 
-      
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
-./plos_latex_template.tex:482: Missing \cr inserted.
-<inserted text> 
-                \cr 
-l.482 
-      
-I'm guessing that you meant to end an alignment here.
-
-./plos_latex_template.tex:482: Missing { inserted.
-<inserted text> 
-                {
-l.482 
-      
-I've put in what seems to be necessary to fix
-the current column of the current alignment.
-Try to go on, since this might almost work.
-
-./plos_latex_template.tex:482: Missing $ inserted.
-<inserted text> 
-                $
-l.482 
-      
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-./plos_latex_template.tex:483: Misplaced \crcr.
-\endaligned ->\crcr 
-                    \egroup \restorecolumn@ \egroup 
-l.483 \end{aligned}
-                   
-I can't figure out why you would want to use a tab mark
-or \cr or \span just now. If something like a right brace
-up above has ended a previous alignment prematurely,
-you're probably due for more error messages, and you
-might try typing `S' now just to see what is salvageable.
-
-./plos_latex_template.tex:483: Extra }, or forgotten \endgroup.
-\endaligned ...cr \egroup \restorecolumn@ \egroup 
-                                                  
-l.483 \end{aligned}
+l.444 \end{aligned}
                    
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -1614,61 +1610,44 @@ the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
 Package epstopdf Info: Source file: <PLOS-submission.eps>
-(epstopdf)                    date: 2015-09-14 12:14:07
+(epstopdf)                    date: 2015-03-16 16:44:14
 (epstopdf)                    size: 283246 bytes
 (epstopdf)             Output file: <PLOS-submission-eps-converted-to.pdf>
-(epstopdf)                    date: 2015-09-14 12:14:07
+(epstopdf)                    date: 2015-08-11 11:31:50
 (epstopdf)                    size: 15292 bytes
 (epstopdf)             Command: <repstopdf --outfile=PLOS-submission-eps-conver
 ted-to.pdf PLOS-submission.eps>
-(epstopdf)             \includegraphics on input line 484.
+(epstopdf)             \includegraphics on input line 471.
 Package epstopdf Info: Output file is already uptodate.
 File: PLOS-submission-eps-converted-to.pdf Graphic file (type pdf)
 <use PLOS-submission-eps-converted-to.pdf>
 Package pdftex.def Info: PLOS-submission-eps-converted-to.pdf used on input lin
-e 484.
+e 471.
 (pdftex.def)             Requested size: 144.54pt x 23.42201pt.
  [5]
-Package epstopdf Info: Source file: <PLOS-submission.eps>
-(epstopdf)                    date: 2015-09-14 12:14:07
-(epstopdf)                    size: 283246 bytes
-(epstopdf)             Output file: <PLOS-submission-eps-converted-to.pdf>
-(epstopdf)                    date: 2015-09-14 12:14:07
-(epstopdf)                    size: 15292 bytes
-(epstopdf)             Command: <repstopdf --outfile=PLOS-submission-eps-conver
-ted-to.pdf PLOS-submission.eps>
-(epstopdf)             \includegraphics on input line 529.
-Package epstopdf Info: Output file is already uptodate.
-File: PLOS-submission-eps-converted-to.pdf Graphic file (type pdf)
-
-<use PLOS-submission-eps-converted-to.pdf>
-Package pdftex.def Info: PLOS-submission-eps-converted-to.pdf used on input lin
-e 529.
-(pdftex.def)             Requested size: 144.54pt x 23.42201pt.
- [6]
 
 AED: lastpage setting LastPage
 Package epstopdf Info: Source file: <PLOS-submission.eps>
-(epstopdf)                    date: 2015-09-14 12:14:07
+(epstopdf)                    date: 2015-03-16 16:44:14
 (epstopdf)                    size: 283246 bytes
 (epstopdf)             Output file: <PLOS-submission-eps-converted-to.pdf>
-(epstopdf)                    date: 2015-09-14 12:14:07
+(epstopdf)                    date: 2015-08-11 11:31:50
 (epstopdf)                    size: 15292 bytes
 (epstopdf)             Command: <repstopdf --outfile=PLOS-submission-eps-conver
 ted-to.pdf PLOS-submission.eps>
-(epstopdf)             \includegraphics on input line 628.
+(epstopdf)             \includegraphics on input line 589.
 Package epstopdf Info: Output file is already uptodate.
 File: PLOS-submission-eps-converted-to.pdf Graphic file (type pdf)
 <use PLOS-submission-eps-converted-to.pdf>
 Package pdftex.def Info: PLOS-submission-eps-converted-to.pdf used on input lin
-e 628.
+e 589.
 (pdftex.def)             Requested size: 144.54pt x 23.42201pt.
- [7]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 628.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 628.
+ [6]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 589.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 589.
  (./plos_latex_template.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 628.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 628.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 589.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 589.
 
 
 Package rerunfilecheck Warning: File `plos_latex_template.out' has changed.
@@ -1676,37 +1655,28 @@ Package rerunfilecheck Warning: File `plos_latex_template.out' has changed.
 (rerunfilecheck)                or use package `bookmark'.
 
 Package rerunfilecheck Info: Checksums for `plos_latex_template.out':
-(rerunfilecheck)             Before: 5F2B4B04A2BEAB9F4F437BF2A47F78B5;713
-(rerunfilecheck)             After:  BF4A974B413AA2A1C46522CFB257CCD2;495.
+(rerunfilecheck)             Before: BF4A974B413AA2A1C46522CFB257CCD2;495
+(rerunfilecheck)             After:  59EAEA0D3C74A8E75A709196C51FC9C4;374.
 
 LaTeX Warning: There were undefined references.
 
 
 LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 628.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 589.
  ) 
 Here is how much of TeX's memory you used:
- 10702 strings out of 493089
- 160844 string characters out of 6134842
- 290244 words of memory out of 5000000
- 13900 multiletter control sequences out of 15000+600000
- 20189 words of font info for 93 fonts, out of 8000000 for 9000
+ 10625 strings out of 493089
+ 159704 string characters out of 6134842
+ 290243 words of memory out of 5000000
+ 13843 multiletter control sequences out of 15000+600000
+ 13490 words of font info for 69 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 42i,16n,43p,2001b,447s stack positions out of 5000i,500n,10000p,200000b,80000s
-pdfTeX warning (dest): name{page.8} has been referenced but does not exist, r
+ 42i,16n,43p,1062b,400s stack positions out of 5000i,500n,10000p,200000b,80000s
+pdfTeX warning (dest): name{page.7} has been referenced but does not exist, r
 eplaced by a fixed one
 
-pdfTeX warning (dest): name{subsection.0.9} has been referenced but does not ex
-ist, replaced by a fixed one
-
-pdfTeX warning (dest): name{subsection.0.8} has been referenced but does not ex
-ist, replaced by a fixed one
-
-pdfTeX warning (dest): name{subsection.0.7} has been referenced but does not ex
-ist, replaced by a fixed one
-
-pdfTeX warning (dest): name{subsection.0.6} has been referenced but does not ex
+pdfTeX warning (dest): name{subsection.0.5} has been referenced but does not ex
 ist, replaced by a fixed one
 
 {/usr/local/texlive/2015/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}<
@@ -1715,29 +1685,25 @@ usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></u
 sr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb></usr
 /local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/
 local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/l
-ocal/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/lo
-cal/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/loca
-l/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/
-texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/te
-xlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/local/te
-xlive/2015/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb></usr/loca
-l/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/
-texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/te
-xlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texli
-ve/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/
-2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/texlive/2
-015/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/local/texlive/201
-5/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2015
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2015/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2015/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmti7.pfb></usr/local/texlive/2015/texm
-f-dist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/local/texlive/2015/texmf-
-dist/fonts/type1/public/cm-super/sfrm0700.pfb></usr/local/texlive/2015/texmf-di
-st/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on plos_latex_template.pdf (7 pages, 368715 bytes).
+ocal/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/loc
+al/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/loc
+al/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb></usr
+/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/l
+ocal/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/loc
+al/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/
+texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/t
+exlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/local/tex
+live/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texl
+ive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texliv
+e/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive
+/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmti7.pfb></usr/local/texlive/2
+015/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/local/texlive/201
+5/texmf-dist/fonts/type1/public/cm-super/sfrm0700.pfb></usr/local/texlive/2015/
+texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
+Output written on plos_latex_template.pdf (6 pages, 232840 bytes).
 PDF statistics:
- 260 PDF objects out of 1000 (max. 8388607)
- 215 compressed objects within 3 object streams
- 47 named destinations out of 1000 (max. 500000)
- 19043 words of extra memory for PDF output out of 20736 (max. 10000000)
+ 189 PDF objects out of 1000 (max. 8388607)
+ 158 compressed objects within 2 object streams
+ 41 named destinations out of 1000 (max. 500000)
+ 15422 words of extra memory for PDF output out of 17280 (max. 10000000)
 

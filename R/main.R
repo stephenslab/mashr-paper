@@ -713,7 +713,8 @@ total.quant.per.snp=function(j,covmat,b.gp.hat,se.gp.hat,pis,A,checkpoint=FALSE)
   b.mle=b.gp.hat[j,]
   R=ncol(b.mle)
   lik.snp=lik.func(b.mle,V.gp.hat,covmat)
-  post.weights=t(lik.snp*pis/sum(lik.snp*pis))
+  if(sum(lik.snp*pis)==0){post.weights=rep(1/length(pis),length(pis))}
+  else{post.weights=t(lik.snp*pis/sum(lik.snp*pis))}
                             
   all.arrays=post.array.per.snp(j,covmat,b.gp.hat,se.gp.hat)
   post.means=all.arrays$post.means
@@ -741,7 +742,7 @@ total.quant.per.snp=function(j,covmat,b.gp.hat,se.gp.hat,pis,A,checkpoint=FALSE)
   write.table(marginal.var,paste0(A,"marginal.var.txt"),append=TRUE,col.names=FALSE)
   write.table(lfsr,paste0(A,"lfsr.txt"),append=TRUE,col.names=FALSE)
   write.table(post.weights,paste0(A,"post.weights.txt"),append=TRUE,col.names=FALSE)}
-  else{return(list(posterior.means=all.mus,posterior.downs=all.downs,posterior.ups=all.ups,lfsr=lfsr,marginal.var=marginal.var))}
+  else{return(list(posterior.means=all.mus,posterior.downs=all.downs,posterior.ups=all.ups,lfsr=lfsr,marginal.var=marginal.var,post.weights=post.weights))}
 }
 
 
@@ -1497,3 +1498,13 @@ col.func=function(lfsr,posterior.means,j){
   return(col.mat)
 }
 
+
+fixpoint.play=function(pi, matrix_lik, prior){  
+  pi = normalize(pmax(0,pi)) #avoid occasional problems with negative pis due to rounding
+  m  = t(pi * t(matrix_lik)) # matrix_lik is n by k; so this is also n by k
+  m.rowsum = rowSums(m)
+  badguys=which(m.rowsum==0)
+  classprob = m[-badguys,]/m.rowsum[-badguys] #an n by k matrix
+  pinew = normalize(colSums(classprob) + prior - 1)
+  return(pinew)
+}
