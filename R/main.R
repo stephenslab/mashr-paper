@@ -1498,13 +1498,28 @@ col.func=function(lfsr,posterior.means,j){
   return(col.mat)
 }
 
+#' @title fixpoint.play
+#' @details returns pis for squareEM recognizing that if the rowSums are 0 for certain likmat entries, these need to be removed
+#' @return pi
 
 fixpoint.play=function(pi, matrix_lik, prior){  
   pi = normalize(pmax(0,pi)) #avoid occasional problems with negative pis due to rounding
   m  = t(pi * t(matrix_lik)) # matrix_lik is n by k; so this is also n by k
   m.rowsum = rowSums(m)
-  badguys=which(m.rowsum==0)
-  classprob = m[-badguys,]/m.rowsum[-badguys] #an n by k matrix
+  badguys=which(m.rowsum==0)##if the sum of the pi*lik is zero, the denomenator for class prob will be NaN
+  if(length(badguys)>0){classprob = m[-badguys,]/m.rowsum[-badguys]}
+  else{classprob = m/m.rowsum}#an n by k matrix
   pinew = normalize(colSums(classprob) + prior - 1)
   return(pinew)
+  #return(classprob)
+}
+
+fixtest=function(pi, matrix_lik, prior){  
+  pi = normalize(pmax(0,pi)) #avoid occasional problems with negative pis due to rounding
+  m  = t(pi * t(matrix_lik)) # matrix_lik is n by k; so this is also n by k
+  m.rowsum = rowSums(m)
+  classprob = m/m.rowsum #an n by k matrix
+  pinew = normalize(colSums(classprob) + prior - 1)
+  #return(pinew)
+  #return(classprob)
 }

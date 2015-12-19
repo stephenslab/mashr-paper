@@ -11,6 +11,8 @@ source("~/matrix_ash/R/main.R")
 
 ```{r simulatedata, eval=FALSE}
 source("~/matrix_ash/R/main.R")
+source("~/matrix_ash/R/mixEm.R")
+
 source("~/matrix_ash/R/NewSimulations.R")
 data=factor_sim_new(J = 50000)##simulate 50000 gene snp pairs
 t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta
