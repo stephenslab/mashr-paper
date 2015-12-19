@@ -3,3 +3,7 @@
 .RData
 .DS_Store
 Vignettes/.DS_Store
+Vignettes/*cache
+Vignettes/*files
+Vignettes/*.Rdata
+Vignettes/*.Rhistory

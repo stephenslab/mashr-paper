@@ -28,7 +28,7 @@ mixEM = function(matrix_lik,prior,pi.init=NULL,control=list()){
   if(is.null(pi.init)){
     pi.init = rep(1/k,k)# Use as starting point for pi
   } 
-  res = squarem(par=pi.init,fixptfn=fixpoint.play, objfn=negpenloglik,matrix_lik=matrix_lik, prior=prior, control=controlinput)
+  res = squarem(par=pi.init,fixptfn=fixpoint, objfn=negpenloglik,matrix_lik=matrix_lik, prior=prior, control=controlinput)
   return(list(pihat = normalize(pmax(0,res$par)), B=res$value.objfn, 
               niter = res$iter, converged=res$convergence))
 }
