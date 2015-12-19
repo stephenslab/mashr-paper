@@ -1520,6 +1520,6 @@ fixtest=function(pi, matrix_lik, prior){
   m.rowsum = rowSums(m)
   classprob = m/m.rowsum #an n by k matrix
   pinew = normalize(colSums(classprob) + prior - 1)
-  #return(pinew)
-  #return(classprob)
+  return(pinew)
+  
 }
