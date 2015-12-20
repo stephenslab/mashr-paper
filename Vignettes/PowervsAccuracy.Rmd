@@ -1,0 +1,45 @@
+---
+title: "PowervsLFSR"
+output: html_document
+---
+
+Here, I want to demonstrate that MASH is the best accuracy for power exchange.
+
+```{r,echo=FALSE,cache=TRUE}
+data=readRDS("~/Dropbox/simdata.rds")
+t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta;v.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
+t.truth.test=beta/sebetahat
+mash.means=read.table("~/Dropbox/Simulationsposterior.means.txt")[,-1]
+univariate.ash.pm=read.table("~/Dropbox/univariate.ash.pm.txt")
+bma.pm=read.table("~/Dropbox/testsimBMAonlyposterior.means.txt")[,-1]
+lfsr.bma=read.table("~/Dropbox/testsimBMAonlylfsr.txt")[,-1]
+lfsr.mash=read.table("~/Dropbox/Simulationslfsr.txt")[,-1]
+lfsr.ash=read.table("~/Dropbox/univariate.ash.lfsr.txt")[,-1]
+
+```
+
+REcall RMSE result:
+```{r rmse}
+
+sqrt(mean((t.truth.test[1:10000,]-mash.means)^2))
+sqrt(mean((t.truth.test[1:10000,]-univariate.ash.pm)^2))
+sqrt(mean((t.truth.test[1:10000,]-bma.pm)^2))
+
+cor(unlist(as.vector(t.truth.test[1:10000,])), unlist(as.vector(bma.pm)))
+cor(unlist(as.vector(t.truth.test[1:10000,])), unlist(as.vector(mash.means)))
+cor(unlist(as.vector(t.truth.test[1:10000,])), unlist(as.vector(univariate.ash.pm)))
+```
+
+And here we plot number sig vs significance threshold:
+```{r echo=FALSE,cache=TRUE}
+plot(0.05,length(intersect(which(beta!=0),which(lfsr.mash<0.05))),col="blue",ylim=c(400,2900),xlim=c(0.01,0.10),pch=2,ylab="NumberofTrueAssociationsCaptured",xlab="LFSRThreshold")
+for(thresh in seq(from = 0.01,to = 0.1,by = 0.001)){
+points(thresh,length(intersect(which(beta!=0),which(lfsr.bma<thresh))),col="red",pch=1)}
+for(thresh in seq(from = 0.01,to = 0.1,by = 0.001)){
+points(thresh,length(intersect(which(beta!=0),which(lfsr.mash<thresh))),col="blue",pch=2)}
+for(thresh in seq(from = 0.01,to = 0.1,by = 0.001)){
+points(thresh,length(intersect(which(beta!=0),which(lfsr.ash<thresh))),col="green",pch=3)}
+legend("bottom",legend=c("MASH","BMALite","ASH"),pch=c(2,1,3),col=c("blue","red","green"))
+title("Number of True Association Captured vs Significance (LFSR) Threshold")
+```
+
