@@ -2,7 +2,7 @@
 title: "Using New factor sim"
 output: html_document
 ---
- The purpose is to simulate according to the patterns of sharing present in the GTEX V6 Data, where 100 snps in cis of 500 genes, $pi0$ is 0.80, and there is sharing according to gtex covmats 2:9. 
+ The purpose is to simulate according to the patterns of sharing present in the GTEX V6 Data, where 100 snps in cis of 500 genes, $pi0$ is 0.80, and there is sharing according to gtex covmats 2:9. It's critical to note that in the real GTEX data, 75% of the prior weight is on Uk2-9.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(cache=TRUE)
