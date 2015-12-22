@@ -67,11 +67,11 @@ compute.hm.train(train.b = t[1:20000,],se.train = v.j[1:20000,],covmat = covmat,
 Now, we can compute posteriors for, say, the first 10000 gene snp pairs:
 
 ```{r computeposteriors,eval=FALSE}
-A="testtissuespec"
+A="testtissuespec_dec21"
 pis=readRDS(paste0("pis",A,".rds"))$pihat
 b.test=t[1:10000,]
 se.test=v.j[1:10000,]
-weightedquants=lapply(seq(1:10000),function(j){total.quant.per.snp(j,covmat,b.gp.hat=b.test,se.gp.hat = se.test,pis,A="Simulations",checkpoint = FALSE)})
+weightedquants=lapply(seq(1:10000),function(j){total.quant.per.snp(j,covmat,b.gp.hat=b.test,se.gp.hat = se.test,pis,A="testtissuespec",checkpoint = FALSE)})
 ```
 
 We can compute the root mean squared error:

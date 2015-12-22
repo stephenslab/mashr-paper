@@ -1523,3 +1523,27 @@ fixtest=function(pi, matrix_lik, prior){
   return(pinew)
   
 }
+
+
+#'@title compute.hm.train.bma.only
+#'@export
+compute.hm.train.bma.only=function(train.b,se.train,covmat,A){
+  
+  J=nrow(train.b)
+  R=ncol(train.b)
+  
+  if(file.exists(paste0("liketrain",A,".rds"))==FALSE){
+    lik.mat=t(sapply(seq(1:J),function(x){lik.func(b.mle=train.b[x,],V.gp.hat=diag(se.train[x,])^2,covmat)}))
+    
+    saveRDS(lik.mat,paste0("liketrain",A,".rds"))}
+  
+  else(lik.mat=readRDS(paste0("liketrain",A,".rds")))
+  
+  train=lik.mat
+  pis=mixEMbmaonly(matrix_lik=train,prior=rep(1,ncol(train)))
+  saveRDS(pis,paste0("pis",A,".rds"))
+  
+  pdf(paste0("pis",A,".pdf"))
+  barplot(t(as.matrix(pis$pihat)))
+  dev.off()
+}

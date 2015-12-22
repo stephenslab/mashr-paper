@@ -67,3 +67,21 @@ gradient = function(matrix_lik){
   grad = n - colSums(matrix_lik/matrix_lik[,1]) 
   return(grad)
 }
+
+##for when bma is used and some of the likelihoods are 0
+
+mixEMbmaonly= function(matrix_lik,prior,pi.init=NULL,control=list()){
+  control.default=list(K = 1, method=3, square=TRUE, step.min0=1, step.max0=1, mstep=4, kr=1, objfn.inc=1,tol=1.e-07, maxiter=5000, trace=FALSE)
+  namc=names(control)
+  if (!all(namc %in% names(control.default))) 
+    stop("unknown names in control: ", namc[!(namc %in% names(control.default))])
+  controlinput=modifyList(control.default, control)
+  
+  k=dim(matrix_lik)[2]
+  if(is.null(pi.init)){
+    pi.init = rep(1/k,k)# Use as starting point for pi
+  } 
+  res = squarem(par=pi.init,fixptfn=fixpoint.play,objfn=negpenloglik,matrix_lik=matrix_lik, prior=prior, control=controlinput)
+  return(list(pihat = normalize(pmax(0,res$par)), B=res$value.objfn, 
+              niter = res$iter, converged=res$convergence))
+}
