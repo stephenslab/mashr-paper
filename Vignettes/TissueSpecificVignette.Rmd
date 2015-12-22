@@ -13,6 +13,8 @@ source("~/matrix_ash/R/main.R")
 ```{r simulatedata, eval=FALSE}
 source("~/matrix_ash/R/main.R")
 source("~/matrix_ash/R/NewSimulations.R")
+source("~/matrix_ash/R/mixEm.R")
+library("mvtnorm")
 data=factor_sim_new(J = 50000,tspec=5)##simulate 50000 gene snp pairs, with 5 tissue specific tissues
 saveRDS(data,"~/Dropbox/simdata_tspec.rds")
 c=apply(t,1,function(x){max(abs(x))})
@@ -23,7 +25,7 @@ max.t=t[maxes,]
 factor.mat=as.matrix(read.table("~/Dropbox/tri_sim_spect_F.out"))
 lambda.mat=as.matrix(read.table("~/Dropbox/tri_sim_spect_lambda.out"))
 v.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
-covmat=compute.covmat(b.gp.hat = t,sebetahat = v.j,Q =5, t.stat=max.t,lambda.mat=lambda.mat,P=3,A="testim_tspec", factor.mat = factor.mat,bma = TRUE)##Note that here, we perform our inference including the BMA configs.
+covmat=compute.covmat(b.gp.hat = t,sebetahat = v.j,Q =5, t.stat=max.t,lambda.mat=lambda.mat,P=3,A="testim_tspec_new", factor.mat = factor.mat,bma = TRUE)##Note that here, we perform our inference including the BMA configs.
 ```
 
 To determine how much is tissue specific:
@@ -57,15 +59,15 @@ barplot(data$tstat[j,],names=seq(1,44),las=3,xlab="Tissue",ylab="Tstatistic",mai
 Now, let's fit the model using the random set of 20,000 gene snp pairs.
 
 ```{r, eval=FALSE}
-
-compute.hm.train(train.b = t[1:20000,],se.train = v.j[1:20000,],covmat = covmat,A="Simulations")
+covmat=readRDS("~/Dropbox/covmattestim_tspec.rds")
+compute.hm.train(train.b = t[1:20000,],se.train = v.j[1:20000,],covmat = covmat,A="testtissuespec")
 
 ```
 
 Now, we can compute posteriors for, say, the first 10000 gene snp pairs:
 
 ```{r computeposteriors,eval=FALSE}
-A="Simulations"
+A="testtissuespec"
 pis=readRDS(paste0("pis",A,".rds"))$pihat
 b.test=t[1:10000,]
 se.test=v.j[1:10000,]
@@ -102,9 +104,10 @@ plot(all.arrays$post.means[k,],mu.gp1kl)
 
 ##Now, check to make sure weighting is correct
 post.means=as.matrix(read.table("~/Dropbox/testtissuespecposterior.means.txt")[,-1])
-post.weights=as.matrix(read.table("~/Dropbox/testtissuespecpost.weights.txt")[,-1])
+lik.snp=lik.func(b.mle,V.gp.hat,covmat)
+post.weights=t(lik.snp*pis/sum(lik.snp*pis))
 
-plot(post.means[j,],post.weights[j,]%*%all.arrays$post.means)
+plot(post.means[j,],post.weights%*%all.arrays$post.means)
 #(post.means[j,])
 #(post.weights[j,]%*%all.arrays$post.means)
 
