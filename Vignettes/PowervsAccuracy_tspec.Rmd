@@ -1,20 +1,20 @@
 ---
-title: "PowervsLFSR"
+title: "PowervsAccuracy_tspec"
 output: html_document
 ---
 
-Here, I want to demonstrate that MASH is the best accuracy for power exchange using the sharing simulated data.
+Here, I want to demonstrate that MASH is the best accuracy for power exchange using the tspec simulated data.
 
 ```{r,echo=FALSE,cache=TRUE}
-data=readRDS("~/Dropbox/simdata.rds")
+data=readRDS("~/Dropbox/simdata_tspec.rds")
 t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta;v.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
 t.truth.test=beta/sebetahat
-mash.means=read.table("~/Dropbox/Simulationsposterior.means.txt")[,-1]
-univariate.ash.pm=read.table("~/Dropbox/univariate.ash.pm.txt")
-bma.pm=read.table("~/Dropbox/testsimBMAonlyposterior.means.txt")[,-1]
-lfsr.bma=read.table("~/Dropbox/testsimBMAonlylfsr.txt")[,-1]
-lfsr.mash=read.table("~/Dropbox/Simulationslfsr.txt")[,-1]
-lfsr.ash=read.table("~/Dropbox/univariate.ash.lfsr.txt")[,-1]
+mash.means=read.table("~/Dropbox/testtissuespecposterior.means.txt")[,-1]
+univariate.ash.pm=read.table("~/Dropbox/univariate.ash.pm.tspec.txt")
+bma.pm=read.table("~/Dropbox/testimBMAonly_tspecposterior.means.txt")[,-1]
+lfsr.bma=read.table("~/Dropbox/testimBMAonly_tspeclfsr.txt")[,-1]
+lfsr.mash=read.table("~/Dropbox/testtissuespeclfsr.txt")[,-1]
+lfsr.ash=read.table("~/Dropbox/univariate.ash.lfsr.tspec.txt")
 
 ```
 

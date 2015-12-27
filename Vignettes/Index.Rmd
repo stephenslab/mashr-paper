@@ -1,0 +1,22 @@
+---
+title: "Index"
+output: html_document
+---
+
+**Last updated:** `r Sys.Date()`
+
+**Code version:** `r system("git log -1 --format='%H'", intern = TRUE)`
+
+There are two kinds of simulations in this directory.
+
+1) The purpose is to simulate according to the patterns of sharing present in the GTEX V6 Data, where 100 snps in cis of 500 genes with $\hat{\beta}$ and standard erros available across 44 tissues, pi0 is 0.80, and there is sharing according to gtex covmats 2:9 or, in the 'tspec case', 35% according to tissue specific configuration.
+Thus there are 50,000 gene snp pairs, and 400 'true'.
+We now want to compare to the results using univariate methods (ASH) the bmalite configs and the  for inference.
+## Notes
+
+* [First, I demonstrate the framework using MASH for the shared](FullSimulation.html)
+* [Then, I demonstrate the framework using MASH for the 'tspec case'](TissueSpecificVignette.html)
+* [Here I compare the RMSE and the Number of Associations vs LFSR with the 'full sim' for BMA, MASH, and ASH](PowervsAccuracy.html)
+* [Now, I compare the RMSE and the Number of Associations vs LFSR with the 'tspec' for BMA, MASH, and ASH](PowervsAccuracy_tspec.html)
+* [In the sharing case, I may want to consider how the heterogeneity indices perform](heterogeneity.sim.html)
+* Please refer to dropbox file "BMAFails" to see how BMA fails on real data.
