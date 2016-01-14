@@ -60,7 +60,7 @@ if(sum(lik.snp*pis)==0){post.weights=rep(1/length(pis),length(pis))}
 
 
 And now you can see it works:
-```{r, echo=FALSE}
+```{r, echo=TRUE}
 head(fixpoint.play(pi = rep(1/K,K),matrix_lik = matrix_lik,prior = rep(1,K)))
 ```
 
