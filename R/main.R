@@ -215,6 +215,18 @@ lik.func=function(b.mle,V.gp.hat,covmat)
 { sapply(seq(1:length(covmat)),function(x){dmvnorm(x=b.mle, sigma=covmat[[x]] + V.gp.hat)})
 }
 
+
+#' @title log.lik.func 
+#' @details computes log.likelihood for each betahat
+#' @param b.mle Rx1 vector of mles
+#' @param V.gp.hat RxR matrix of standard errors
+#' @param U.0kl L dimensional list of K dimensional list with prior covairnace matrix for each grid weight, prior covariance pair
+#' @export
+
+log.lik.func=function(b.mle,V.gp.hat,covmat)
+{ sapply(seq(1:length(covmat)),function(x){dmvnorm(x=b.mle, sigma=covmat[[x]] + V.gp.hat,log=TRUE)})
+}
+
 #' @title hm.weight.gen
 #' @param lik.mat = JxK matrix of marginal likelihoods
 #' @param Jtrain = size of train set
@@ -707,14 +719,21 @@ lfsr.per.snp=function(all.ups,all.downs){
 #'@return writes the posterior weighted quantities to a file
 #'@export
 
-total.quant.per.snp=function(j,covmat,b.gp.hat,se.gp.hat,pis,A,checkpoint=FALSE){
+total.quant.per.snp.new=function(j,covmat,b.gp.hat,se.gp.hat,pis,A,checkpoint=FALSE){
   gene.snp.name=rownames(b.gp.hat)[j]
   V.gp.hat=diag(se.gp.hat[j,])^2
   b.mle=b.gp.hat[j,]
   R=ncol(b.mle)
-  lik.snp=lik.func(b.mle,V.gp.hat,covmat)
-  if(sum(lik.snp*pis)==0){post.weights=rep(1/length(pis),length(pis))}
-  else{post.weights=t(lik.snp*pis/sum(lik.snp*pis))}
+#   lik.snp=lik.func(b.mle,V.gp.hat,covmat)
+#   if(sum(lik.snp*pis)==0){post.weights=rep(1/length(pis),length(pis))}
+#   else{post.weights=t(lik.snp*pis/sum(lik.snp*pis))}
+
+log.lik.snp=log.lik.func(b.mle,V.gp.hat,covmat)
+log.lik.minus.max=log.lik.snp-max(log.lik.snp)
+log.pi=log(pis)
+s=log.lik.minus.max+log.pi
+exp.vec=exp(s)
+post.weights=t(exp.vec/sum(exp.vec))
                             
   all.arrays=post.array.per.snp(j,covmat,b.gp.hat,se.gp.hat)
   post.means=all.arrays$post.means
