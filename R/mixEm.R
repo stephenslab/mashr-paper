@@ -101,7 +101,7 @@ compute.hm.train.log.lik=function(train.b,se.train,covmat,A){
   
   else(lik.mat=readRDS(paste0("liketrain",A,".rds")))
   
-  train=lik.mat
+  train=lik.mat###but this matrix is the loglik matrix
   pis=mixEM.normlik(matrix_lik=train,prior=rep(1,ncol(train)))##here the matrix_lik is log normalized
   saveRDS(pis,paste0("pis",A,".rds"))
   
@@ -123,7 +123,7 @@ mixEM.normlik= function(matrix_lik,prior,pi.init=NULL,control=list()){
   if(is.null(pi.init)){
     pi.init = rep(1/k,k)# Use as starting point for pi
   } 
-  res = squarem(par=pi.init,fixptfn=fixpoint.norm.lik,objfn=negpenloglik,matrix_lik=matrix_lik, prior=prior, control=controlinput)
+  res = squarem(par=pi.init,fixptfn=fixpoint.norm.lik,objfn=negpenloglik.normnew,matrix_lik=matrix_lik, prior=prior, control=controlinput)
   return(list(pihat = normalize(pmax(0,res$par)), B=res$value.objfn, 
               niter = res$iter, converged=res$convergence))
 }
@@ -135,20 +135,26 @@ fixpoint.norm.lik = function(pi, matrix_lik, prior){
   log.pi=log(pi)
   s=log.lik.minus.max+log.pi
   exp.vec=exp(s)
-  classprob=exp.vec/sum(exp.vec)
+  classprob=exp.vec/rowSums(exp.vec)
   
   pinew = normalize(colSums(classprob) + prior - 1)
   return(pinew)
 }
 
-negpenloglik = function(pi,matrix_lik,prior){return(-penloglik(pi,matrix_lik,prior))}
+negpenloglik.normnew = function(pi,matrix_lik,prior){return(-penloglik.normnew(pi,matrix_lik,prior))}
 
-penloglik = function(pi, matrix_lik, prior){
+penloglik.normnew = function(pi, matrix_lik, prior){
   pi = normalize(pmax(0,pi))
-  m  = t(pi * t(matrix_lik)) # matrix_lik is n by k; so this is also n by k
-  m.rowsum = rowSums(m)
-  loglik = sum(log(m.rowsum))
+  matrix.log.lik=matrix_lik
+  max.log.lik=apply(matrix.log.lik,1,function(x){max(x)})
+  log.lik.minus.max=t(apply(matrix.log.lik,1,function(x){x-max(x)}))
+  log.pi=log(pi)
+  s=log.lik.minus.max+log.pi
+  exp.vec=exp(s)
+  m.rowsum.logmethod=exp(max.log.lik)*rowSums(exp.vec)
+  loglik.logmethod = sum(log(m.rowsum.logmethod))
+  
   subset = (prior != 1.0)
   priordens = sum((prior-1)[subset]*log(pi[subset]))
-  return(loglik+priordens)
+  return(loglik.logmethod+priordens)
 }
