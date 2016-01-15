@@ -129,13 +129,25 @@ mixEM.normlik= function(matrix_lik,prior,pi.init=NULL,control=list()){
 }
 
 fixpoint.norm.lik = function(pi, matrix_lik, prior){  
-  pi = normalize(pmax(0,pi)) #avoid occasional problems with negative pis due to rounding
+  pi = normalize(pmax(0,pi))
+  log.pi=log(pi)#avoid occasional problems with negative pis due to rounding
   matrix.log.lik=matrix_lik
-  log.lik.minus.max=t(apply(matrix.log.lik,1,function(x){x-max(x)}))
-  log.pi=log(pi)
-  s=log.lik.minus.max+log.pi
-  exp.vec=exp(s)
-  classprob=exp.vec/rowSums(exp.vec)
+  
+  
+  
+  
+  classprob=t(apply(matrix.log.lik,1,function(x){
+    log.lik.minus.max=x-max(x)
+    s=log.lik.minus.max+log.pi
+    exp.vec=exp(s)
+    classprob=exp.vec/sum(exp.vec)
+    return(classprob)}))
+  
+#   log.lik.minus.max=t(apply(matrix.log.lik,1,function(x){x-max(x)}))
+#   log.pi=log(pi)
+#   s=log.lik.minus.max+log.pi
+#   exp.vec=(exp(s))
+#   classprob=exp.vec/rowSums(exp.vec)
   
   pinew = normalize(colSums(classprob) + prior - 1)
   return(pinew)
@@ -145,14 +157,19 @@ negpenloglik.normnew = function(pi,matrix_lik,prior){return(-penloglik.normnew(p
 
 penloglik.normnew = function(pi, matrix_lik, prior){
   pi = normalize(pmax(0,pi))
-  matrix.log.lik=matrix_lik
-  max.log.lik=apply(matrix.log.lik,1,function(x){max(x)})
-  log.lik.minus.max=t(apply(matrix.log.lik,1,function(x){x-max(x)}))
   log.pi=log(pi)
-  s=log.lik.minus.max+log.pi
-  exp.vec=exp(s)
-  m.rowsum.logmethod=exp(max.log.lik)*rowSums(exp.vec)
+  matrix.log.lik=matrix_lik
+  
+  max.log.lik=apply(matrix.log.lik,1,function(x){max(x)})
+  m.rowsum.logmethod=t(apply(matrix.log.lik,1,function(x){
+    max.log.lik=max(x)
+    log.lik.minus.max=x-max.log.lik
+    s=log.lik.minus.max+log.pi
+    exp.vec=exp(s)
+    m.rowsum.logmethod=exp(max.log.lik)*sum(exp.vec)
+    return(m.rowsum.logmethod)}))
   loglik.logmethod = sum(log(m.rowsum.logmethod))
+  
   
   subset = (prior != 1.0)
   priordens = sum((prior-1)[subset]*log(pi[subset]))
