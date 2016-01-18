@@ -31,9 +31,9 @@ covmat=compute.covmat(b.gp.hat = t,sebetahat = v.j,Q =5, t.stat=max.t,lambda.mat
 Now, let's fit the model using the random set of 20,000 gene snp pairs.
 
 ```{r, eval=FALSE}
-
+##show that the two em calculations match##
 compute.hm.train(train.b = t[1:20000,],se.train = v.j[1:20000,],covmat = covmat,A="Simulations")
-
+compute.hm.train.log.lik(train.b = t[1:20000,],se.train = v.j[1:20000,],covmat = covmat,A = "Simulations.log.lik.only")
 ```
 
 Now, we can compute posteriors for, say, the first 10000 gene snp pairs:
