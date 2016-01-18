@@ -141,7 +141,7 @@ write.table(univariate.ash.lfsr,file="univariate.ash.lfsr.tspec.txt")
 Let's compare the RMSE here:
 
 ```{r univariateashcompare}
-univariate.ash.pm=read.table("~/Dropbox/univariate.ash.pm.tspec.txt")
+univariate.ash.pm=as.matrix(read.table("~/Dropbox/univariate.ash.pm.tspec.txt"))
 
 sqrt(mean((t.truth.test[1:10000,]-univariate.ash.pm)^2))
 ```
@@ -153,28 +153,40 @@ We can also plot the scatterplot to observe the behavior of 'null'(in red) and '
 nulls=which(rowSums(data$beta)==0,)
 null.vals=intersect(1:nrow(post.means),nulls)
 tspec=which((data$component.id>8))
-tspec.peep=intersect(1:nrow(post.means),tspec)
+tissues=apply(t.truth.test[tspec,],1,function(x){
+  which(x!=0)
+})
+
+tspecific=cbind(tspec,tissues)
+
+
 post.means=as.matrix(post.means)
 
-png("scatterplot.fittedtspec.png")
+png("~/matrix_ash/Vignettes/Figures/scatterplot.fittedtspec.png")
 plot(as.matrix(t[1:10000,]),as.matrix(post.means),col=adjustcolor("blue", alpha=0.5), pch=16,main="E(Z|Data) vs Zmle",ylab="E(Z|Data)",xlab="Zmle")
 points(t[null.vals,],post.means[null.vals,],col="red")
-points(t[tspec.peep,],post.means[tspec.peep,],col="green")
+points(t[tspecific],post.means[tspecific],col="green")
+dev.off()
+
+png("~/matrix_ash/Vignettes/Figures/scatterplot.fittedtspec.ash.png")
+plot(as.matrix(t[1:10000,]),as.matrix(univariate.ash.pm),col=adjustcolor("blue", alpha=0.5), pch=16,main="E(Z|Data_ash) vs Zmle",ylab="E(Z|Data_ash)",xlab="Zmle")
+points(t[null.vals,],univariate.ash.pm[null.vals,],col="red")
+points(t[tspecific],univariate.ash.pm[tspecific],col="green")
 dev.off()
 
 
-png("scatterplot.truthtspec.png")
+png("~/matrix_ash/Vignettes/Figures/scatterplot.truthtspec.png")
 plot(as.matrix(t.truth.test[1:10000,]),as.matrix(post.means),col=adjustcolor("blue", alpha=0.5), pch=16,main="E(Z|Data) vs Z.true",ylab="E(Z|Data)",xlab="Z.truth")
 points(t.truth.test[null.vals,],post.means[null.vals,],col="red")
-points(t.truth.test[tspec.peep,],post.means[tspec.peep,],col="green")
+points(t.truth.test[tspecific],post.means[tspecific],col="green")
 legend("right",legend=c(paste0("RMSE=",round(sqrt(mean((t.truth.test[1:10000,]-post.means)^2)),2)),"Tissue_specific","TrueNulls"),pch=1,col=c("black","green","red"))
 dev.off()
 
 
-png("scatterplot.TRUTHashtspec.png")
+png("~/matrix_ash/Vignettes/Figures/scatterplot.TRUTHashtspec.png")
 plot(as.matrix(t.truth.test[1:10000,]),as.matrix(univariate.ash.pm),col=adjustcolor("blue", alpha=0.5), pch=16,main="E(Z|Data.ash) vs Z.True",ylab="E(Z|Data)",xlab="Z.True")
 points(t.truth.test[null.vals,],univariate.ash.pm[null.vals,],col="red")
-points(t.truth.test[tspec.peep,],univariate.ash.pm[tspec.peep,],col="green")
+points(t.truth.test[tspecific],univariate.ash.pm[tspecific],col="green")
 legend("right",legend=c(paste0("RMSE=",round(sqrt(mean((t.truth.test[1:10000,]-univariate.ash.pm)^2)),2)),"Tissue_specific","TrueNulls"),pch=1,col=c("black","green","red"))
 dev.off()
 

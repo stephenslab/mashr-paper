@@ -64,3 +64,9 @@ And now you can see it works:
 head(fixpoint.play(pi = rep(1/K,K),matrix_lik = matrix_lik,prior = rep(1,K)))
 ```
 
+We can also design a fixpoint function to work with the matrix of likelihoods:
+
+```{r}
+matrix.log.lik=readRDS("~/Dropbox/liketraintest.new.log.lik.bma.only.rds")
+head(fixpoint.norm.lik(pi = rep(1/K,K),matrix_lik = matrix.log.lik,prior = rep(1,K)))
+```

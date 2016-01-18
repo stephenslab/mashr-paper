@@ -72,11 +72,14 @@ covmat=readRDS(&quot;~/Dropbox/covmattestim.rds&quot;)
 t.truth.test=beta/sebetahat
 mash.means=read.table(&quot;~/Dropbox/Simulationsposterior.means.txt&quot;)[,-1]
 univariate.ash.pm=read.table(&quot;~/Dropbox/univariate.ash.pm.txt&quot;)
+bma.pm=read.table(&quot;~/Dropbox/testsimBMAonlyposterior.means.txt&quot;)[,-1]
 
 sqrt(mean((t.truth.test[1:10000,]-mash.means)^2))</code></pre>
 <pre><code>## [1] 0.09154378</code></pre>
 <pre class="r"><code>sqrt(mean((t.truth.test[1:10000,]-univariate.ash.pm)^2))</code></pre>
 <pre><code>## [1] 0.2803154</code></pre>
+<pre class="r"><code>sqrt(mean((t.truth.test[1:10000,]-bma.pm)^2))</code></pre>
+<pre><code>## [1] 0.4359571</code></pre>
 <p>In the first simulation of ‘het indexes’, for each gene-snp pair, I sum the non-negative normalized effects for the true betas, mash betas, and ash betas and compute the RMSE (i.e., <span class="math">\(\sqrt(\sum(truth-estimated)^2))\)</span></p>
 <pre class="r"><code>het.index=function(data,thresh){
   t(apply(data,1,function(x){
@@ -95,10 +98,13 @@ sqrt(mean((t.truth.test[1:10000,]-mash.means)^2))</code></pre>
 true.h=het.index(beta[1:10000,],thresh=0.5)
 mash.h=het.index(mash.means*sebetahat[1:10000,],0.5)
 ash.h=het.index(univariate.ash.pm*sebetahat[1:10000,],0.5)
+bma.h=het.index(bma.pm*sebetahat[1:10000,],0.5)
 sqrt(mean(true.h-mash.h)^2)</code></pre>
 <pre><code>## [1] 37.03714</code></pre>
 <pre class="r"><code>sqrt(mean(true.h-ash.h)^2)</code></pre>
 <pre><code>## [1] 39.79975</code></pre>
+<pre class="r"><code>sqrt(mean(true.h-bma.h)^2)</code></pre>
+<pre><code>## [1] 38.66761</code></pre>
 <p>In the second, simulation of ‘het indexes’, for each gene-snp pair, I count number of normalized effects greater than 50% of the max effect for the pair for the true betas, mash betas, and ash betas and compute the RMSE (i.e., <span class="math">\(\sqrt(\sum(truth-estimated)^2))\)</span></p>
 <pre class="r"><code>het.index.two=function(data,thresh){
   t(apply(data,1,function(x){
@@ -116,10 +122,36 @@ sqrt(mean(true.h-mash.h)^2)</code></pre>
 true.h=het.index.two(beta[1:10000,],thresh=0.5)
 mash.h=het.index.two(mash.means*sebetahat[1:10000,],0.5)
 ash.h=het.index.two(univariate.ash.pm*sebetahat[1:10000,],0.5)
+bma.h=het.index.two(bma.pm*sebetahat[1:10000,],0.5)
+
 sqrt(mean(true.h-mash.h)^2)</code></pre>
 <pre><code>## [1] 39.3831</code></pre>
 <pre class="r"><code>sqrt(mean(true.h-ash.h)^2)</code></pre>
 <pre><code>## [1] 40.8668</code></pre>
+<pre class="r"><code>sqrt(mean(true.h-bma.h)^2)</code></pre>
+<pre><code>## [1] 39.7779</code></pre>
+<p>I can also do this for the tissue specific examples. For each gene-snp pair, I count number of normalized effects greater than 50% of the max effect for the pair for the true betas, mash betas, and ash betas and compute the RMSE (i.e., <span class="math">\(\sqrt(\sum(truth-estimated)^2))\)</span></p>
+<pre class="r"><code>rm(data)
+data=readRDS(&quot;~/Dropbox/simdata_tspec.rds&quot;)
+t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta;v.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
+
+
+t.truth.test=beta/sebetahat
+mash.means=read.table(&quot;~/Dropbox/testtissuespecposterior.means.txt&quot;)[,-1]
+univariate.ash.pm=read.table(&quot;~/Dropbox/univariate.ash.pm.tspec.txt&quot;)
+bma.pm=read.table(&quot;~/Dropbox/testimBMAonly_tspecposterior.means.txt&quot;)[,-1]
+
+true.h=het.index.two(beta[1:10000,],thresh=0.5)
+mash.h=het.index.two(mash.means*sebetahat[1:10000,],0.5)
+ash.h=het.index.two(univariate.ash.pm*sebetahat[1:10000,],0.5)
+bma.h=het.index.two(bma.pm*sebetahat[1:10000,],0.5)
+
+sqrt(mean(true.h-mash.h)^2)</code></pre>
+<pre><code>## [1] 39.9786</code></pre>
+<pre class="r"><code>sqrt(mean(true.h-ash.h)^2)</code></pre>
+<pre><code>## [1] 40.7654</code></pre>
+<pre class="r"><code>sqrt(mean(true.h-bma.h)^2)</code></pre>
+<pre><code>## [1] 39.5131</code></pre>
 
 
 </div>
