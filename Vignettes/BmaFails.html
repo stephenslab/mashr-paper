@@ -143,6 +143,10 @@ if(sum(lik.snp*pis)==0){post.weights=rep(1/length(pis),length(pis))}
 <p>And now you can see it works:</p>
 <pre class="r"><code>head(fixpoint.play(pi = rep(1/K,K),matrix_lik = matrix_lik,prior = rep(1,K)))</code></pre>
 <pre><code>## [1] 0.001169467 0.001168889 0.001169371 0.001169409 0.001169481 0.001169162</code></pre>
+<p>We can also design a fixpoint function to work with the matrix of log likelihoods:</p>
+<pre class="r"><code>matrix.log.lik=readRDS(&quot;~/Dropbox/liketraintest.new.log.lik.bma.only.rds&quot;)
+head(fixpoint.norm.lik(pi = rep(1/K,K),matrix_lik = matrix.log.lik,prior = rep(1,K)))</code></pre>
+<pre><code>## [1] 0.001169292 0.001168714 0.001169196 0.001169233 0.001169306 0.001168986</code></pre>
 
 
 </div>
