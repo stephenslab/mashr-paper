@@ -72,6 +72,12 @@ img {
 <pre><code>## [1] 0.2803154</code></pre>
 <pre class="r"><code>sqrt(mean((t.truth.test[1:10000,]-bma.pm)^2))</code></pre>
 <pre><code>## [1] 0.4359571</code></pre>
+<pre class="r"><code>sqrt(mean((beta[1:10000,]-mash.means*sebetahat)^2))</code></pre>
+<pre><code>## [1] 0.01010336</code></pre>
+<pre class="r"><code>sqrt(mean((beta[1:10000,]-univariate.ash.pm*sebetahat)^2))</code></pre>
+<pre><code>## [1] 0.03085595</code></pre>
+<pre class="r"><code>sqrt(mean((beta[1:10000,]-bma.pm*sebetahat)^2))</code></pre>
+<pre><code>## [1] 0.04795919</code></pre>
 <pre class="r"><code>cor(unlist(as.vector(t.truth.test[1:10000,])), unlist(as.vector(bma.pm)))</code></pre>
 <pre><code>## [1] 0.843732</code></pre>
 <pre class="r"><code>cor(unlist(as.vector(t.truth.test[1:10000,])), unlist(as.vector(mash.means)))</code></pre>

@@ -25,6 +25,12 @@ sqrt(mean((t.truth.test[1:10000,]-mash.means)^2))
 sqrt(mean((t.truth.test[1:10000,]-univariate.ash.pm)^2))
 sqrt(mean((t.truth.test[1:10000,]-bma.pm)^2))
 
+
+
+sqrt(mean((beta[1:10000,]-mash.means*sebetahat)^2))
+sqrt(mean((beta[1:10000,]-univariate.ash.pm*sebetahat)^2))
+sqrt(mean((beta[1:10000,]-bma.pm*sebetahat)^2))
+
 cor(unlist(as.vector(t.truth.test[1:10000,])), unlist(as.vector(bma.pm)))
 cor(unlist(as.vector(t.truth.test[1:10000,])), unlist(as.vector(mash.means)))
 cor(unlist(as.vector(t.truth.test[1:10000,])), unlist(as.vector(univariate.ash.pm)))
