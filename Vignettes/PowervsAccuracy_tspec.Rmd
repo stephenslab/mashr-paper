@@ -34,6 +34,11 @@ sqrt(mean((beta[1:10000,]-bma.pm*sebetahat)^2))
 cor(unlist(as.vector(t.truth.test[1:10000,])), unlist(as.vector(bma.pm)))
 cor(unlist(as.vector(t.truth.test[1:10000,])), unlist(as.vector(mash.means)))
 cor(unlist(as.vector(t.truth.test[1:10000,])), unlist(as.vector(univariate.ash.pm)))
+
+
+cor(unlist(as.vector(beta[1:10000,])), unlist(as.vector(bma.pm*sebetahat)))
+cor(unlist(as.vector(beta[1:10000,])), unlist(as.vector(mash.means*sebetahat)))
+cor(unlist(as.vector(beta[1:10000,])), unlist(as.vector(univariate.ash.pm*sebetahat)))
 ```
 
 And here we plot number sig vs significance threshold:
