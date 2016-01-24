@@ -88,6 +88,16 @@ mixEMbmaonly= function(matrix_lik,prior,pi.init=NULL,control=list()){
 
 
 
+#'@title compute.hm.train.log.lik
+#' @description = takes a matrix of training sumamry statistics and their standard errors and computes the likelihood matrix according to a list of covariance matrices, using the exponent of the log likelihood - max (llj)
+#' @param train.b =  JxR matrix of training beta hats
+#' @param se.train = JxR matrix of training standard errors
+#' @param covmat = LxK dimenstional (unlisted list) of prior covariance matrices
+#' @param  A  output file name
+#' @return An object containing pis and model fit from the EM, and a pdf barplot
+#' @export
+
+
 
 compute.hm.train.log.lik=function(train.b,se.train,covmat,A){
   
@@ -101,8 +111,13 @@ compute.hm.train.log.lik=function(train.b,se.train,covmat,A){
   
   else(lik.mat=readRDS(paste0("liketrain",A,".rds")))
   
-  train=lik.mat###but this matrix is the loglik matrix
-  pis=mixEM.normlik(matrix_lik=train,prior=rep(1,ncol(train)))##here the matrix_lik is log normalized
+  #train=lik.mat###but this matrix is the loglik matrix
+  train=t(apply(lik.mat,1,function(x){
+    e=exp(x-max(x))
+    return(e)}
+  ))
+  #pis=mixEM.normlik(matrix_lik=train,prior=rep(1,ncol(train)))##here the matrix_lik is log normalized
+  pis=mixEM(matrix_lik=train,prior=rep(1,ncol(train)))
   saveRDS(pis,paste0("pis",A,".rds"))
   
   pdf(paste0("pis",A,".pdf"))
