@@ -730,10 +730,10 @@ total.quant.per.snp.new=function(j,covmat,b.gp.hat,se.gp.hat,pis,A,checkpoint=FA
 
 log.lik.snp=log.lik.func(b.mle,V.gp.hat,covmat)
 log.lik.minus.max=log.lik.snp-max(log.lik.snp)
-log.pi=log(pis)
-s=log.lik.minus.max+log.pi
-exp.vec=exp(s)
-post.weights=t(exp.vec/sum(exp.vec))
+#log.pi=log(pis)
+#s=log.lik.minus.max+log.pi
+exp.vec=exp(log.lik.minus.max)
+post.weights=t(exp.vec*pis/sum(exp.vec*pis))
                             
   all.arrays=post.array.per.snp(j,covmat,b.gp.hat,se.gp.hat)
   post.means=all.arrays$post.means
