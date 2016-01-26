@@ -39,8 +39,8 @@ factor_sim_new=function(J,d=44,betasd=1,esd=0.1,tspec=0){
     mvrnorm(1,mu=rep(0,d),Sigma=omega*covmat[[k]])
   }))
   beta=rbind(beta,matrix(rep(0,(J-n)*d),ncol=d))
-  sgp=abs(matrix(rnorm(J*d,0.11,0.001),ncol=d))##use uniform to simulate 'shrunken'
-  e=t(apply(sgp,1,function(x){rmvnorm(1,mean=rep(0,d),sigma=diag(x)^2)}))
+  sj=abs(matrix(rnorm(J*d,0.11,0.001),ncol=d))##use uniform to simulate 'shrunken'
+  e=t(apply(sj,1,function(x){rmvnorm(1,mean=rep(0,d),sigma=diag(x)^2)}))
   load.e=matrix(rnorm(J*K,0,0.001),ncol=K)##to make sure all loadings are covered
   #sign.index=matrix(rbinom(n*d,size=1,prob=0.5)+1,ncol=d)
   #sign.choice=c(-1,1)
