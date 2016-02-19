@@ -975,17 +975,19 @@ compute.lik.test=function(b.test,J,se.test,covmat,A,pis){
   R=ncol(b.test)
   
   if(file.exists(paste0("liketest",A,".rds"))==FALSE){
-    lik.mat=t(sapply(seq(1:J),function(x){lik.func(b.mle=b.test[x,],V.gp.hat=diag(se.test[x,])^2,covmat)}))
+    #lik.mat=t(sapply(seq(1:J),function(x){lik.func(b.mle=b.test[x,],V.gp.hat=diag(se.test[x,])^2,covmat)}))
+    
+    lik.mat=t(sapply(seq(1:J),function(x){log.lik.func(b.mle=train.b[x,],V.gp.hat=diag(se.train[x,])^2,covmat)}))
     saveRDS(lik.mat,paste0("liketest",A,".rds"))}
   
   else(lik.mat=readRDS(paste0("liketest",A,".rds")))
   
   
 
-  test=lik.mat
+  test=exp(lik.mat)
   write.table(total.lik.func(test,pis),paste0("total.lik.",A,".txt"))
-  post.weights=as.matrix(post.weight.func(pis,lik.mat))
-  saveRDS(post.weights,paste0("post.weight.",A,".rds"))
+  #post.weights=as.matrix(post.weight.func(pis,lik.mat))
+  #saveRDS(post.weights,paste0("post.weight.",A,".rds"))
   rm(post.weights) ## to conserve memory
   rm(lik.mat) ## to conserve memory
   
