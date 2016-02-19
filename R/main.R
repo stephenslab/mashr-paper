@@ -976,8 +976,7 @@ compute.lik.test=function(b.test,J,se.test,covmat,A,pis){
   
   if(file.exists(paste0("liketest",A,".rds"))==FALSE){
     #lik.mat=t(sapply(seq(1:J),function(x){lik.func(b.mle=b.test[x,],V.gp.hat=diag(se.test[x,])^2,covmat)}))
-    
-    lik.mat=t(sapply(seq(1:J),function(x){log.lik.func(b.mle=train.b[x,],V.gp.hat=diag(se.train[x,])^2,covmat)}))
+    lik.mat=t(sapply(seq(1:J),function(x){log.lik.func(b.mle=b.test[x,],V.gp.hat=diag(se.test[x,])^2,covmat)}))
     saveRDS(lik.mat,paste0("liketest",A,".rds"))}
   
   else(lik.mat=readRDS(paste0("liketest",A,".rds")))
