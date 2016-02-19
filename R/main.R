@@ -988,7 +988,7 @@ compute.lik.test=function(b.test,J,se.test,covmat,A,pis){
   write.table(total.lik.func(test,pis),paste0("total.lik.",A,".txt"))
   #post.weights=as.matrix(post.weight.func(pis,lik.mat))
   #saveRDS(post.weights,paste0("post.weight.",A,".rds"))
-  rm(post.weights) ## to conserve memory
+  #rm(post.weights) ## to conserve memory
   rm(lik.mat) ## to conserve memory
   
   
