@@ -3,17 +3,24 @@ title: "NewSimwithTissueSpec"
 output: html_document
 ---
 
-The purpose is to simulate according to the patterns of sharing present in the GTEX V6 Data, where 100 snps in cis of 500 genes, $pi0$ is 0.80, and there is sharing according to gtex covmats 2:9 and about 35% tissues specific.
+The purpose is to simulate according to the patterns of sharing present in the GTEX V6 Data, where 100 snps in cis of 500 genes, $pi0$ is 0.80, and there is sharing according to gtex covmats 2:9 and about 35% tissues specific. Thus the componenet ID for the $'tissue specific QTL'$ will be $SimulatedComponenet=9:13$.
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(cache=TRUE)
-source("~/matrix_ash/R/main.R")
+```
+
+First, install, the package. I've already done this:
+```{r,echo=TRUE,eval=FALSE}
+devtools::install_github("surbut/matrix_ash")
+library("mash")
+library("bigmemory")
+library("SQUAREM")
+library("mvtnorm")
 ```
 
 ```{r simulatedata, eval=FALSE}
-source("~/matrix_ash/R/main.R")
-source("~/matrix_ash/R/NewSimulations.R")
-source("~/matrix_ash/R/mixEm.R")
+
 library("mvtnorm")
 data=factor_sim_new(J = 50000,tspec=5)##simulate 50000 gene snp pairs, with 5 tissue specific tissues
 saveRDS(data,"~/Dropbox/simdata_tspec.rds")
@@ -30,6 +37,7 @@ covmat=compute.covmat(b.gp.hat = t,sebetahat = v.j,Q =5, t.stat=max.t,lambda.mat
 
 To determine how much is tissue specific:
 ```{r definedata,eval=TRUE}
+library("mash")
 data=readRDS("~/Dropbox/simdata_tspec.rds")
 t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta
 sum(data$component.id>8)/length(data$component.id)
@@ -46,7 +54,7 @@ We can find which pairs have tissue specific activity and plot an example of the
 ```
 This corresponds to tissue specificity in:
 ```{r tissuespectissue}
-
+diag(data$component.mats[[9]])
 which(diag(data$component.mats[[9]])!=0)
 ```
 
@@ -56,7 +64,7 @@ Accordingly, a plot of gene-snp pair `r j` t-statistics should show tissue speci
 barplot(data$tstat[j,],names=seq(1,44),las=3,xlab="Tissue",ylab="Tstatistic",main=paste(c("Individual",j,"T stats")))
 ```
 
-Now, let's fit the model using the random set of 20,000 gene snp pairs.
+Now, let's fit the model using the random set of 20,000 gene snp pairs. We computed the covariance matrix above, using the strongest 500 gene snp pairs to estimate the strong 'patterns' of sharing, and building a KxL list that incorporated $\omega$ according to the magntiude of the effect size present in the overall data.
 
 ```{r, eval=FALSE}
 covmat=readRDS("~/Dropbox/covmattestim_tspec.rds")
@@ -65,10 +73,11 @@ compute.hm.train(train.b = t[1:20000,],se.train = v.j[1:20000,],covmat = covmat,
 
 ```
 
+We can visul
 Now, we can compute posteriors for, say, the first 10000 gene snp pairs:
 
 ```{r computeposteriors,eval=FALSE}
-A="testtissuespec_dec21"
+A="testtissuespec"
 pis=readRDS(paste0("pis",A,".rds"))$pihat
 b.test=t[1:10000,]
 se.test=v.j[1:10000,]
