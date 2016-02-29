@@ -719,7 +719,7 @@ lfsr.per.snp=function(all.ups,all.downs){
 #'@return writes the posterior weighted quantities to a file
 #'@export
 
-total.quant.per.snp.new=function(j,covmat,b.gp.hat,se.gp.hat,pis,A,checkpoint=FALSE){
+total.quant.per.snp=function(j,covmat,b.gp.hat,se.gp.hat,pis,A,checkpoint=FALSE){
   gene.snp.name=rownames(b.gp.hat)[j]
   V.gp.hat=diag(se.gp.hat[j,])^2
   b.mle=b.gp.hat[j,]
