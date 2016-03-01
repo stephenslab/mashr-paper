@@ -74,7 +74,6 @@ compute.hm.train(train.b = t[1:20000,],se.train = s.j[1:20000,],covmat = covmat,
 
 ```
 
-We can visul
 Now, we can compute posteriors for, say, the first 10000 gene snp pairs:
 
 ```{r computeposteriors,eval=FALSE}
@@ -84,17 +83,6 @@ b.test=t[1:10000,]
 se.test=s.j[1:10000,]
 weightedquants=lapply(seq(1:10000),function(j){total.quant.per.snp(j,covmat,b.gp.hat=b.test,se.gp.hat = se.test,pis,A="testtissuespec",checkpoint = FALSE)})
 ```
-
-We can compute the root mean squared error:
-```{r RMSE}
-
-covmat=readRDS("~/Dropbox/covmattestim_tspec.rds")
-t.truth.test=beta/sebetahat
-post.means=read.table("~/Dropbox/testtissuespecposterior.means.txt")[,-1]
-sqrt(mean((t.truth.test[1:10000,]-post.means)^2))
-```
-
-
 
 Let's check some stuff out:
 
@@ -149,12 +137,21 @@ write.table(univariate.ash.pm,file="univariate.ash.pm.tspec.txt")
 write.table(univariate.ash.lfsr,file="univariate.ash.lfsr.tspec.txt")
 ```
 
-Let's compare the RMSE here:
+Let's compare the RMSE here using all three methods. We want to compute the mean squared error of the effec, so we multiply by the standard error.
 
 ```{r univariateashcompare}
-univariate.ash.pm=as.matrix(read.table("~/Dropbox/univariate.ash.pm.tspec.txt"))
+data=readRDS("~/Dropbox/simdata_tspec.rds")
+t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta;v.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
+t.truth.test=beta/sebetahat
+mash.means=read.table("~/Dropbox/testtissuespecposterior.means.txt")[,-1]
+univariate.ash.pm=read.table("~/Dropbox/univariate.ash.pm.tspec.txt")
+bma.pm=read.table("~/Dropbox/testimBMAonly_tspecposterior.means.txt")[,-1]
 
-sqrt(mean((t.truth.test[1:10000,]-univariate.ash.pm)^2))
+
+
+sqrt(mean((beta[1:10000,]-mash.means*sebetahat)^2))
+sqrt(mean((beta[1:10000,]-univariate.ash.pm*sebetahat)^2))
+sqrt(mean((beta[1:10000,]-bma.pm*sebetahat)^2))
 ```
 
 We can also plot the scatterplot to observe the behavior of 'null'(in red) and 'real'(in blue) associations. We see that our joint analysis reduces the Root Mean Squared Error (RMSE) and provides ample shrinkage of 'null values'.
@@ -203,7 +200,53 @@ dev.off()
 
 ```
 
-![alt text](Figures/scatterplot.fittedtspec.png) 
-![alt text](Figures/scatterplot.truthtspec.png)
-![alt text](Figures/scatterplot.TRUTHashtspec.png)
 
+![alt text](Figures/scatterplot_fittedtspec.png) 
+![alt text](Figures/scatterplot_fittedtspec_ash.png)
+![alt text](Figures/scatterplot_truthbspec.png)
+![alt text](Figures/scatterplot_TRUTHashbspec.png)
+
+
+
+
+
+And here we plot number sig vs significance threshold:
+```{r echo=FALSE,cache=TRUE}
+lfsr.bma=read.table("~/Dropbox/testimBMAonly_tspeclfsr.txt")[,-1]
+lfsr.mash=read.table("~/Dropbox/testtissuespeclfsr.txt")[,-1]
+lfsr.ash=read.table("~/Dropbox/univariate.ash.lfsr.tspec.txt")
+
+
+beta=as.matrix(beta[1:10000,])
+lfsr.mash=as.matrix(lfsr.mash)
+lfsr.ash=as.matrix(lfsr.ash)
+lfsr.bma=as.matrix(lfsr.bma)
+
+
+sig_func=function(beta,lfsr,thresh){
+sapply(seq(1:nrow(beta)),function(x){
+  nonzero=which(beta[x,]!=0)
+  sigs=which(lfsr[x,]<thresh)
+  length(intersect(sigs,nonzero))
+})
+}
+
+
+# mash.sigs=sig_func(beta,lfsr.mash,thresh=0.10)
+# ash.sigs=sig_func(beta,lfsr.ash,thresh=0.10)
+# bma.sigs=sig_func(beta,lfsr.bma,thresh=0.10)
+
+
+
+plot(0.05,sum(sum(beta!=0&lfsr.mash<0.05)),col="blue",ylim=c(0,10000),xlim=c(0.01,0.10),pch=2,ylab="NumberofTrueAssociationsCaptured",xlab="LFSRThreshold")
+
+for(thresh in seq(from = 0.01,to = 0.1,by = 0.001)){
+points(thresh,sum(beta!=0&lfsr.mash<thresh),col="blue",pch=1)}
+for(thresh in seq(from = 0.01,to = 0.1,by = 0.001)){
+points(thresh,sum(beta!=0&lfsr.bma<thresh),col="red",pch=2)}
+for(thresh in seq(from = 0.01,to = 0.1,by = 0.001)){
+points(thresh,sum(beta!=0&lfsr.ash<thresh),col="green",pch=3)}
+
+legend("bottom",legend=c("MASH","BMALite","ASH"),pch=c(2,1,3),col=c("blue","red","green"))
+title("Number of True Association Captured vs Significance (LFSR) Threshold, with TS")
+```
