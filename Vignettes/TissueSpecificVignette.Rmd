@@ -31,8 +31,9 @@ max.t=t[maxes,]
 
 factor.mat=as.matrix(read.table("~/Dropbox/tri_sim_spect_F.out"))
 lambda.mat=as.matrix(read.table("~/Dropbox/tri_sim_spect_lambda.out"))
-v.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
-covmat=compute.covmat(b.gp.hat = t,sebetahat = v.j,Q =5, t.stat=max.t,lambda.mat=lambda.mat,P=3,A="testim_tspec_new", factor.mat = factor.mat,bma = TRUE)##Note that here, we perform our inference including the BMA configs.
+s.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
+v.j=s.j^2
+covmat=compute.covmat(b.gp.hat = t,sebetahat = s.j,Q =5, t.stat=max.t,lambda.mat=lambda.mat,P=3,A="testim_tspec_new", factor.mat = factor.mat,bma = TRUE)##Note that here, we perform our inference including the BMA configs.
 ```
 
 To determine how much is tissue specific:
@@ -68,7 +69,7 @@ Now, let's fit the model using the random set of 20,000 gene snp pairs. We compu
 
 ```{r, eval=FALSE}
 covmat=readRDS("~/Dropbox/covmattestim_tspec.rds")
-compute.hm.train(train.b = t[1:20000,],se.train = v.j[1:20000,],covmat = covmat,A="testtissuespec")
+compute.hm.train(train.b = t[1:20000,],se.train = s.j[1:20000,],covmat = covmat,A="testtissuespec")
 #compute.hm.train.log.lik for numerical issues
 
 ```
@@ -80,7 +81,7 @@ Now, we can compute posteriors for, say, the first 10000 gene snp pairs:
 A="testtissuespec"
 pis=readRDS(paste0("pis",A,".rds"))$pihat
 b.test=t[1:10000,]
-se.test=v.j[1:10000,]
+se.test=s.j[1:10000,]
 weightedquants=lapply(seq(1:10000),function(j){total.quant.per.snp(j,covmat,b.gp.hat=b.test,se.gp.hat = se.test,pis,A="testtissuespec",checkpoint = FALSE)})
 ```
 
@@ -103,7 +104,7 @@ j=sample.int(100,1)
 all.arrays=post.array.per.snp(j=j,covmat = covmat,b.gp.hat = t,se.gp.hat = v.j)
 
 b.mle=as.vector(t(t[j,]))##turn i into a R x 1 vector
-V.gp.hat=diag(v.j[j,])^2
+V.gp.hat=diag(s.j[j,])^2
 V.gp.hat.inv <- solve(V.gp.hat)
 k=3
 
@@ -125,7 +126,7 @@ plot(post.means[j,],post.weights%*%all.arrays$post.means)
 Now let's compare this to univariate ash measures:
 ```{r univariateash,eval=FALSE}
 train.z=t[1:20000,]
-train.v=v.j[1:20000,]
+train.v=s.j[1:20000,]
 
 z.stat=b.test
 v.j=se.test

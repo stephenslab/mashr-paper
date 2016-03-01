@@ -1282,6 +1282,48 @@ compute.lik.test.semat=function(b.test,J,v.mat,covmat,A,pis){
   
 } 
 
+
+
+#'@title compute.lik.test.loglik.semat
+#'@param b.test JxR matrix with the mles for test gene-snp pairs
+#'@param J number of gene snp pairs to consider
+#'@param v.mat RxR matrix of residual variance matrix, estimated as the same for all genes
+#'@param covmat K list of covariance matrices
+#'@param pis K matrix of HM weights form compute.hm.train
+#'@export
+
+compute.lik.test.loglik.semat=function(b.test,J,v.mat,covmat,A,pis){
+  
+  J=J
+  R=ncol(b.test)
+  
+  if(file.exists(paste0("liketest",A,".rds"))==FALSE){
+    #lik.mat=t(sapply(seq(1:J),function(x){lik.func(b.mle=b.test[x,],V.gp.hat=diag(se.test[x,])^2,covmat)}))
+    lik.mat=t(sapply(seq(1:J),function(x){log.lik.func(b.mle=b.test[x,],V.gp.hat=v.mat,covmat)}))
+    saveRDS(lik.mat,paste0("liketest",A,".rds"))}
+  
+  else(lik.mat=readRDS(paste0("liketest",A,".rds")))
+  
+  
+  
+  test=exp(lik.mat)
+  write.table(total.lik.func(test,pis),paste0("total.lik.",A,".txt"))
+  #post.weights=as.matrix(post.weight.func(pis,lik.mat))
+  #saveRDS(post.weights,paste0("post.weight.",A,".rds"))
+  #rm(post.weights) ## to conserve memory
+  rm(lik.mat) ## to conserve memory
+  
+  
+} 
+
+
+
+
+
+
+
+
+
 #'@title compute.hm.train.semat
 #'@export
 compute.hm.train.semat=function(train.b,v.mat,covmat,A){
@@ -1304,6 +1346,41 @@ compute.hm.train.semat=function(train.b,v.mat,covmat,A){
   barplot(t(as.matrix(pis$pihat)))
   dev.off()
 }
+
+
+#'@title compute.hm.train.log.lik.semat
+#'@details here, use the matrix of residuals that may have non-diagonal elements
+#'@export
+
+
+compute.hm.train.log.lik.semat=function(train.b,v.mat,covmat,A){
+  
+  J=nrow(train.b)
+  R=ncol(train.b)
+  
+  if(file.exists(paste0("liketrain",A,".rds"))==FALSE){
+    lik.mat=t(sapply(seq(1:J),function(x){log.lik.func(b.mle=train.b[x,],V.gp.hat=v.mat,covmat)}))##be sure to use log lik function
+    
+    saveRDS(lik.mat,paste0("liketrain",A,".rds"))}
+  
+  else(lik.mat=readRDS(paste0("liketrain",A,".rds")))
+  
+  #train=lik.mat###but this matrix is the loglik matrix
+  train=t(apply(lik.mat,1,function(x){
+    e=exp(x-max(x))
+    return(e)}
+  ))
+  #pis=mixEM.normlik(matrix_lik=train,prior=rep(1,ncol(train)))##here the matrix_lik is log normalized
+  pis=mixEM(matrix_lik=train,prior=rep(1,ncol(train)))
+  saveRDS(pis,paste0("pis",A,".rds"))
+  
+  pdf(paste0("pis",A,".pdf"))
+  barplot(t(as.matrix(pis$pihat)))
+  dev.off()
+}
+
+
+
 
 
 
