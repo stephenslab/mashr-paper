@@ -1284,7 +1284,7 @@ compute.lik.test.semat=function(b.test,J,v.mat,covmat,A,pis){
 
 
 
-#'@title compute.lik.test.loglik.semat
+#'@title compute.lik.test.loglik.vmat
 #'@param b.test JxR matrix with the mles for test gene-snp pairs
 #'@param J number of gene snp pairs to consider
 #'@param v.mat RxR matrix of residual variance matrix, estimated as the same for all genes
@@ -1292,7 +1292,7 @@ compute.lik.test.semat=function(b.test,J,v.mat,covmat,A,pis){
 #'@param pis K matrix of HM weights form compute.hm.train
 #'@export
 
-compute.lik.test.loglik.semat=function(b.test,J,v.mat,covmat,A,pis){
+compute.lik.test.loglik.vmat=function(b.test,J,v.mat,covmat,A,pis){
   
   J=J
   R=ncol(b.test)
@@ -1348,12 +1348,13 @@ compute.hm.train.semat=function(train.b,v.mat,covmat,A){
 }
 
 
-#'@title compute.hm.train.log.lik.semat
-#'@details here, use the matrix of residuals that may have non-diagonal elements
+#'@title compute.hm.train.log.lik.vmat
+#'@details here, use the matrix of residual variation that may have non-diagonal elements
+#'@details v.mat is the input (as opposed to the vector of standard error) and is the same for all J genes
 #'@export
 
 
-compute.hm.train.log.lik.semat=function(train.b,v.mat,covmat,A){
+compute.hm.train.log.lik.vmat=function(train.b,v.mat,covmat,A){
   
   J=nrow(train.b)
   R=ncol(train.b)
