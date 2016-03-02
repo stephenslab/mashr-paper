@@ -68,11 +68,22 @@ img {
 <pre class="r"><code>data=readRDS(&quot;~/Dropbox/simdata.rds&quot;)
 t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta;v.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
 covmat=readRDS(&quot;~/Dropbox/covmattestim.rds&quot;)
+sebetahat=as.matrix(sebetahat)[1:10000,]
+beta=as.matrix(beta)[1:10000,]
 
 t.truth.test=beta/sebetahat
-mash.means=read.table(&quot;~/Dropbox/Simulationsposterior.means.txt&quot;)[,-1]
-univariate.ash.pm=read.table(&quot;~/Dropbox/univariate.ash.pm.txt&quot;)
-bma.pm=read.table(&quot;~/Dropbox/testsimBMAonlyposterior.means.txt&quot;)[,-1]
+t.truth.test=as.matrix(t.truth.test)
+
+mash.means=as.matrix(read.table(&quot;~/Dropbox/Simulationsposterior.means.txt&quot;)[,-1])
+univariate.ash.pm=as.matrix(read.table(&quot;~/Dropbox/univariate.ash.pm.txt&quot;))
+bma.pm=as.matrix(read.table(&quot;~/Dropbox/testsimBMAonlyposterior.means.txt&quot;)[,-1])
+beta=as.matrix(beta)[1:10000,]
+t.truth.test=as.matrix(t.truth.test)[1:10000,]
+
+mash.beta=mash.means*sebetahat
+ash.beta=univariate.ash.pm*sebetahat
+bma.beta=bma.pm*sebetahat
+
 
 sqrt(mean((t.truth.test[1:10000,]-mash.means)^2))</code></pre>
 <pre><code>## [1] 0.09154378</code></pre>
@@ -95,7 +106,8 @@ sqrt(mean((t.truth.test[1:10000,]-mash.means)^2))</code></pre>
 
 
 
-true.h=het.index(beta[1:10000,],thresh=0.5)
+
+true.h=het.index(beta,thresh=0.5)
 mash.h=het.index(mash.means*sebetahat[1:10000,],0.5)
 ash.h=het.index(univariate.ash.pm*sebetahat[1:10000,],0.5)
 bma.h=het.index(bma.pm*sebetahat[1:10000,],0.5)
@@ -120,9 +132,9 @@ sqrt(mean(true.h-mash.h)^2)</code></pre>
 
 
 true.h=het.index.two(beta[1:10000,],thresh=0.5)
-mash.h=het.index.two(mash.means*sebetahat[1:10000,],0.5)
-ash.h=het.index.two(univariate.ash.pm*sebetahat[1:10000,],0.5)
-bma.h=het.index.two(bma.pm*sebetahat[1:10000,],0.5)
+mash.h=het.index.two(mash.beta,0.5)
+ash.h=het.index.two(ash.beta,0.5)
+bma.h=het.index.two(bma.beta,0.5)
 
 sqrt(mean(true.h-mash.h)^2)</code></pre>
 <pre><code>## [1] 39.3831</code></pre>
@@ -130,16 +142,26 @@ sqrt(mean(true.h-mash.h)^2)</code></pre>
 <pre><code>## [1] 40.8668</code></pre>
 <pre class="r"><code>sqrt(mean(true.h-bma.h)^2)</code></pre>
 <pre><code>## [1] 39.7779</code></pre>
+<pre class="r"><code>sqrt(mean(true.h[1:400]-mash.h[1:400])^2)</code></pre>
+<pre><code>## [1] 0.05</code></pre>
+<pre class="r"><code>sqrt(mean(true.h[1:400]-ash.h[1:400])^2)</code></pre>
+<pre><code>## [1] 5.1</code></pre>
+<pre class="r"><code>sqrt(mean(true.h[1:400]-bma.h[1:400])^2)</code></pre>
+<pre><code>## [1] 13.4525</code></pre>
 <p>I can also do this for the tissue specific examples. For each gene-snp pair, I count number of normalized effects greater than 50% of the max effect for the pair for the true betas, mash betas, and ash betas and compute the RMSE (i.e., <span class="math">\(\sqrt(\sum(truth-estimated)^2))\)</span></p>
 <pre class="r"><code>rm(data)
 data=readRDS(&quot;~/Dropbox/simdata_tspec.rds&quot;)
 t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta;v.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
 
+sebetahat=as.matrix(sebetahat)[1:10000,]
+beta=as.matrix(beta)[1:10000,]
 
 t.truth.test=beta/sebetahat
-mash.means=read.table(&quot;~/Dropbox/testtissuespecposterior.means.txt&quot;)[,-1]
-univariate.ash.pm=read.table(&quot;~/Dropbox/univariate.ash.pm.tspec.txt&quot;)
-bma.pm=read.table(&quot;~/Dropbox/testimBMAonly_tspecposterior.means.txt&quot;)[,-1]
+t.truth.test=as.matrix(t.truth.test)
+
+mash.means=as.matrix(read.table(&quot;~/Dropbox/testtissuespecposterior.means.txt&quot;)[,-1])
+univariate.ash.pm=as.matrix(read.table(&quot;~/Dropbox/univariate.ash.pm.tspec.txt&quot;))
+bma.pm=as.matrix(read.table(&quot;~/Dropbox/testimBMAonly_tspecposterior.means.txt&quot;)[,-1])
 
 true.h=het.index.two(beta[1:10000,],thresh=0.5)
 mash.h=het.index.two(mash.means*sebetahat[1:10000,],0.5)
@@ -152,6 +174,12 @@ sqrt(mean(true.h-mash.h)^2)</code></pre>
 <pre><code>## [1] 40.7654</code></pre>
 <pre class="r"><code>sqrt(mean(true.h-bma.h)^2)</code></pre>
 <pre><code>## [1] 39.5131</code></pre>
+<pre class="r"><code>sqrt(mean(true.h[1:400]-mash.h[1:400])^2)</code></pre>
+<pre><code>## [1] 0.2175</code></pre>
+<pre class="r"><code>sqrt(mean(true.h[1:400]-ash.h[1:400])^2)</code></pre>
+<pre><code>## [1] 2.905</code></pre>
+<pre class="r"><code>sqrt(mean(true.h[1:400]-bma.h[1:400])^2)</code></pre>
+<pre><code>## [1] 9.8575</code></pre>
 
 
 </div>
