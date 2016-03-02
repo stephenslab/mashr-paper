@@ -1,5 +1,5 @@
 ---
-title: "NewSimwithTissueSpec"
+title: "Simulations with Tissue Specificity"
 output: html_document
 ---
 
@@ -19,6 +19,9 @@ library("SQUAREM")
 library("mvtnorm")
 ```
 
+Here, we simulate data and select the genes with maximum T statistic across tissues (here, called t, but assuming the sample size is sufficient that t is normally distributed) in order to capture the `strong patterns' of sharing. We performs SFA on these strong Z statistics, and use these to compute the $U_{k}$ that will be used in inference. We scale each $U_{k}$ by a grid chosen according to the effect sizes present in the overall data set.
+
+
 ```{r simulatedata, eval=FALSE}
 
 library("mvtnorm")
@@ -33,10 +36,11 @@ factor.mat=as.matrix(read.table("~/Dropbox/tri_sim_spect_F.out"))
 lambda.mat=as.matrix(read.table("~/Dropbox/tri_sim_spect_lambda.out"))
 s.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
 v.j=s.j^2
-covmat=compute.covmat(b.gp.hat = t,sebetahat = s.j,Q =5, t.stat=max.t,lambda.mat=lambda.mat,P=3,A="testim_tspec_new", factor.mat = factor.mat,bma = TRUE)##Note that here, we perform our inference including the BMA configs.
+covmat=compute.covmat(b.gp.hat = t,sebetahat = s.j,Q =5, t.stat=max.t,lambda.mat=lambda.mat,P=3,A="testim_tspec_new", factor.mat = factor.mat,bma = TRUE)##Note that here, we perform our inference including the BMA configs, se use the max.t to determine Uk and the overall set of t statistics and their standard errors to choose the grid).
 ```
 
-To determine how much is tissue specific:
+To determine how much is tissue specific, recall that components 9:54 represented tissue specificity; we can ask which gene-snp pairs belong to component 9 or greater.
+
 ```{r definedata,eval=TRUE}
 library("mash")
 data=readRDS("~/Dropbox/simdata_tspec.rds")
@@ -44,7 +48,7 @@ t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta
 sum(data$component.id>8)/length(data$component.id)
 ```
 
-Here, we can see that `r sum(data$component.id>8)/length(data$component.id)` is tissue specific, and the tissue specific tissues are:
+Here, we can see that `r sum(data$component.id>8)/length(data$component.id)`of associations are tissue specific, and the tissue specific tissues are:
 ```{r whichspec}
 lapply((data$component.mats[9:13]),function(x){which(diag(x)!=0)})
 ```
