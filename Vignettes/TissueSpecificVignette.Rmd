@@ -44,7 +44,7 @@ To determine how much is tissue specific, recall that components 9:54 represente
 ```{r definedata,eval=TRUE}
 library("mash")
 data=readRDS("~/Dropbox/simdata_tspec.rds")
-t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta
+t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta;s.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
 sum(data$component.id>8)/length(data$component.id)
 ```
 
@@ -115,6 +115,37 @@ plot(post.means[j,],post.weights%*%all.arrays$post.means)
 #(post.weights[j,]%*%all.arrays$post.means)
 
 ```
+
+Let's take a tissue specific guy and see how well we estimate his posterior weight. 
+
+```{r}
+library('mvtnorm')
+covmat=readRDS("~/Dropbox/covmattestim_tspec.rds")
+pis=readRDS("~/Dropbox/pistesttissuespec.rds")$pihat
+#i=sample(seq(1:139),1)
+i=24
+(tspecindividual=which(data$component.id>8))
+(j=tspecindividual[i])
+(true.componenet=data$component.id[j])##determine which component he arose from
+(tspec=which(diag(data$component.mats[[true.componenet]])!=0))###which tissue is that specific too
+
+
+b.mle=as.vector(t(t[j,]))##turn i into a R x 1 vector
+V.gp.hat=diag(s.j[j,])^2
+
+lik.snp=lik.func(b.mle,V.gp.hat,covmat)
+post.weights=t(lik.snp*pis/sum(lik.snp*pis))
+pi.mat=matrix(pis,ncol = 54,byrow = T)
+pw.mat=matrix(post.weights,ncol = 54,byrow = T)
+
+###ask if the posterior weight at that componenet is higher than the prior weight, recognizing that we must add to the first 9 covmats
+colSums(pi.mat)[tspec+9]
+colSums(pw.mat)[tspec+9]
+
+```
+
+
+
 Now let's compare this to univariate ash measures:
 ```{r univariateash,eval=FALSE}
 train.z=t[1:20000,]

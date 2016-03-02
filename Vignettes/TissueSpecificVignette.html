@@ -88,7 +88,7 @@ covmat=compute.covmat(b.gp.hat = t,sebetahat = s.j,Q =5, t.stat=max.t,lambda.mat
 <p>To determine how much is tissue specific, recall that components 9:54 represented tissue specificity; we can ask which gene-snp pairs belong to component 9 or greater.</p>
 <pre class="r"><code>library(&quot;mash&quot;)
 data=readRDS(&quot;~/Dropbox/simdata_tspec.rds&quot;)
-t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta
+t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta;s.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
 sum(data$component.id&gt;8)/length(data$component.id)</code></pre>
 <pre><code>## [1] 0.3475</code></pre>
 <p>Here, we can see that 0.3475of associations are tissue specific, and the tissue specific tissues are:</p>
@@ -152,6 +152,41 @@ post.weights=t(lik.snp*pis/sum(lik.snp*pis))
 plot(post.means[j,],post.weights%*%all.arrays$post.means)
 #(post.means[j,])
 #(post.weights[j,]%*%all.arrays$post.means)</code></pre>
+<p>Let’s take a tissue specific guy and see how well we estimate his posterior weight.</p>
+<pre class="r"><code>library('mvtnorm')
+covmat=readRDS(&quot;~/Dropbox/covmattestim_tspec.rds&quot;)
+pis=readRDS(&quot;~/Dropbox/pistesttissuespec.rds&quot;)$pihat
+#i=sample(seq(1:139),1)
+i=24
+(tspecindividual=which(data$component.id&gt;8))</code></pre>
+<pre><code>##   [1]   4   5   9  11  14  15  16  20  21  24  28  29  30  42  43  46  49
+##  [18]  60  61  65  69  72  73  74  77  80  82  88  95 102 103 104 109 110
+##  [35] 113 114 116 117 118 119 121 122 125 128 129 130 131 134 143 155 158
+##  [52] 162 164 168 171 177 181 182 185 188 189 192 195 196 197 201 202 205
+##  [69] 206 209 211 215 217 221 222 225 232 233 234 236 237 238 241 243 245
+##  [86] 249 250 254 258 263 265 266 270 272 273 282 288 290 291 295 297 300
+## [103] 309 310 311 315 316 318 323 331 333 342 343 344 347 349 350 361 368
+## [120] 369 370 372 373 374 375 376 379 380 381 383 384 385 386 387 389 393
+## [137] 394 399 400</code></pre>
+<pre class="r"><code>(j=tspecindividual[i])</code></pre>
+<pre><code>## [1] 74</code></pre>
+<pre class="r"><code>(true.componenet=data$component.id[j])##determine which component he arose from</code></pre>
+<pre><code>## [1] 10</code></pre>
+<pre class="r"><code>(tspec=which(diag(data$component.mats[[true.componenet]])!=0))###which tissue is that specific too</code></pre>
+<pre><code>## [1] 14</code></pre>
+<pre class="r"><code>b.mle=as.vector(t(t[j,]))##turn i into a R x 1 vector
+V.gp.hat=diag(s.j[j,])^2
+
+lik.snp=lik.func(b.mle,V.gp.hat,covmat)
+post.weights=t(lik.snp*pis/sum(lik.snp*pis))
+pi.mat=matrix(pis,ncol = 54,byrow = T)
+pw.mat=matrix(post.weights,ncol = 54,byrow = T)
+
+###ask if the posterior weight at that componenet is higher than the prior weight, recognizing that we must add to the first 9 covmats
+colSums(pi.mat)[tspec+9]</code></pre>
+<pre><code>## [1] 0.001079028</code></pre>
+<pre class="r"><code>colSums(pw.mat)[tspec+9]</code></pre>
+<pre><code>## [1] 1</code></pre>
 <p>Now let’s compare this to univariate ash measures:</p>
 <pre class="r"><code>train.z=t[1:20000,]
 train.v=s.j[1:20000,]
