@@ -2,7 +2,12 @@
 % Please edit documentation in R/mixEm.R
 \name{mixEM}
 \alias{mixEM}
-\title{mixEM}
+\title{mixEM
+  Fits a k component mixture model \deqn{f(x|\pi) = \sum_k \pi_k f_k(x)} to independent
+and identically distributed data \eqn{x_1,\dots,x_n}.
+Estimates posterior on mixture proportions \eqn{\pi} by Variational Bayes,
+with a Dirichlet prior on \eqn{\pi}.
+Algorithm adapted from Bishop (2009), Pattern Recognition and Machine Learning, Chapter 10.}
 \usage{
 mixEM(matrix_lik, prior, pi.init = NULL, control = list())
 }
@@ -23,9 +28,7 @@ and a flag to indicate convergence (converged).
 }
 \description{
 mixEM
-}
-\details{
-Fits a k component mixture model \deqn{f(x|\pi) = \sum_k \pi_k f_k(x)} to independent
+  Fits a k component mixture model \deqn{f(x|\pi) = \sum_k \pi_k f_k(x)} to independent
 and identically distributed data \eqn{x_1,\dots,x_n}.
 Estimates posterior on mixture proportions \eqn{\pi} by Variational Bayes,
 with a Dirichlet prior on \eqn{\pi}.

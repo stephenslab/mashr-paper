@@ -6,7 +6,16 @@
 \usage{
 factor_sim(J, d = 3, betasd = 1, esd = 0.1, K = 10)
 }
+\arguments{
+\item{J}{Number of Gene-SNP Pairs (by definition, only 0.08% of them will be true eQTL; pi0 is 0.20 and the number of genes is 1/10 J)}
+
+\item{d}{Number of subgroups}
+
+\item{betasd}{size of covariance of true effects}
+
+\item{esd}{standard error}
+}
 \description{
-factor.sim
+Generate J beta,betahats, T statistics across R tissues from a set of covariance matrices
 }
 

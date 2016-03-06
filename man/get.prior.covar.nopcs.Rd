@@ -4,7 +4,7 @@
 \alias{get.prior.covar.nopcs}
 \title{get.prior.covar.nopcs}
 \usage{
-get.prior.covar.nopcs(lambda.mat, Q, X.c, factor.mat, omega.table, bma = TRUE)
+get.prior.covar.nopcs(lambda.mat, Q, X.c, simat, omega.table, bma = TRUE)
 }
 \description{
 get.prior.covar.nopcs

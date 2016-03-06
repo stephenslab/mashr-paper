@@ -5,7 +5,7 @@
 #'@param d Number of subgroups
 #'@param betasd size of covariance of true effects
 #'@param esd standard error
-#'@details: to simulate strong sharing, I use the gtex covariance matrices
+#'@description to simulate strong sharing, I use the gtex covariance matrices
 #'@export
 
 factor_sim_new=function(J,d=44,betasd=1,esd=0.1,tspec=0){

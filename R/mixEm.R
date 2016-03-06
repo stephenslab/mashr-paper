@@ -1,5 +1,5 @@
 #'@title mixEM
-#'  @details Fits a k component mixture model \deqn{f(x|\pi) = \sum_k \pi_k f_k(x)} to independent
+##'   Fits a k component mixture model \deqn{f(x|\pi) = \sum_k \pi_k f_k(x)} to independent
 ##' and identically distributed data \eqn{x_1,\dots,x_n}. 
 ##' Estimates posterior on mixture proportions \eqn{\pi} by Variational Bayes, 
 ##' with a Dirichlet prior on \eqn{\pi}. 
@@ -88,7 +88,7 @@ mixEMbmaonly= function(matrix_lik,prior,pi.init=NULL,control=list()){
 
 
 
-#'@title compute.hm.train.log.lik
+#' @title compute.hm.train.log.lik
 #' @description = takes a matrix of training sumamry statistics and their standard errors and computes the likelihood matrix according to a list of covariance matrices, using the exponent of the log likelihood - max (llj)
 #' @param train.b =  JxR matrix of training beta hats
 #' @param se.train = JxR matrix of training standard errors

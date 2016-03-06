@@ -4,7 +4,7 @@
 \alias{compute.hm.train.semat}
 \title{compute.hm.train.semat}
 \usage{
-compute.hm.train.semat(train.b, se.mat, covmat, A)
+compute.hm.train.semat(train.b, v.mat, covmat, A)
 }
 \description{
 compute.hm.train.semat
