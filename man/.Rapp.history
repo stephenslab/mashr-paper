@@ -1,1 +1,5 @@
 load("/Users/sarahurbut/matrix_ash/Vignettes/liketrainSimulations.rds")
+library("mash")
+compute.hm.train.log.lik
+total.quant.per.snp
+compute.covmat

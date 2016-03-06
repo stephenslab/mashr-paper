@@ -74,7 +74,7 @@ Now, let's fit the model using the random set of 20,000 gene snp pairs. We compu
 ```{r, eval=FALSE}
 covmat=readRDS("~/Dropbox/covmattestim_tspec.rds")
 compute.hm.train(train.b = t[1:20000,],se.train = s.j[1:20000,],covmat = covmat,A="testtissuespec")
-#compute.hm.train.log.lik for numerical issues
+#Now, use compute.hm.train.log.lik for numerical issues
 
 ```
 
