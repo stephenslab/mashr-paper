@@ -6,21 +6,7 @@
 \usage{
 factor_sim_new(J, d = 44, betasd = 1, esd = 0.1, tspec = 0)
 }
-\arguments{
-\item{J}{Number of Gene-SNP Pairs and by definition, only 0.8 percent of them will be true eQTL; pi0 is 0.20 and the number of genes is J/100)}
-
-\item{d}{Number of subgroups}
-
-\item{betasd}{size of covariance of true effects}
-
-\item{esd}{standard error}
-
-\item{Creates}{factors with magnitude based on betasd where each betaj is loaded on a minimal number of factors by simulating from rmvnorm}
-}
 \description{
 factor.sim.new
-}
-\details{
-Generate J beta,betahats, T statistics across R tissues from a set of covariance matrices
 }
 
