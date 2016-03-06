@@ -1,11 +1,11 @@
 #'@title factor.sim.new
-#'@description Generate J beta,betahats, T statistics across R tissues from a set of covariance matrices
-#'@description Creates factors with magnitude based on betasd - each betaj is loaded on a minimal number of factors by simulating from rmvnorm
-#'@param J Number of Gene-SNP Pairs (by definition, only 0.8% of them will be true eQTL; pi0 is 0.20 and the number of genes is 1/100 J)
+#'@details Generate J beta,betahats, T statistics across R tissues from a set of covariance matrices
+#'@param Creates factors with magnitude based on betasd where each betaj is loaded on a minimal number of factors by simulating from rmvnorm
+#'@param J Number of Gene-SNP Pairs and by definition, only 0.8 percent of them will be true eQTL; pi0 is 0.20 and the number of genes is J/100)
 #'@param d Number of subgroups
 #'@param betasd size of covariance of true effects
 #'@param esd standard error
-#'@description to simulate strong sharing, I use the gtex covariance matrices
+#'@details to simulate strong sharing, I use the gtex covariance matrices
 #'@export
 
 factor_sim_new=function(J,d=44,betasd=1,esd=0.1,tspec=0){
