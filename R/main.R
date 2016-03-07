@@ -425,10 +425,11 @@ compute.covmat.with.rho = function(b.gp.hat,sebetahat,Q,lambda.mat,P,A,factor.ma
 #' @param t.stat matrix of strong t statistics (needs to be R in columns but not necessarily j in rows)
 #' @param factor mat a fxR matrix of factors
 #' @param BMA=true wheter or not to use singleton and shared config
+#' @param zero=true whether or not to include zero matrix
 #' @return A list of covariance matrices
 #' @export
 
-compute.covmat = function(b.gp.hat,sebetahat,Q,t.stat,lambda.mat,P,A,factor.mat,bma=TRUE){
+compute.covmat = function(b.gp.hat,sebetahat,Q,t.stat,lambda.mat,P,A,factor.mat,bma=TRUE,zero=FALSE){
   
   omega=mult.tissue.grid(mult=sqrt(2),b.gp.hat,sebetahat)
   
@@ -456,6 +457,10 @@ U.0kl=get.prior.covar.Ukl(P,X.c,lambda.mat=lambda.mat,Q=Q,factor.mat=factor.mat,
     
    
     covmat=unlist(U.0kl,recursive=F)
+if(zero==TRUE){
+  z=matrix(rep(0,R*R),ncol=R,nrow=R)
+  covmat=c(covmat,list(z))
+}
   saveRDS(covmat,paste0("covmat",A,".rds"))
   
   return(covmat)}

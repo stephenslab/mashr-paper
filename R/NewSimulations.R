@@ -48,8 +48,29 @@ factor_sim_new=function(J,d=44,betasd=1,esd=0.1,tspec=0){
   #e=sign.mat*sebetahat##make some negative and some positive
   betahat = rbind(beta + e)
   #betahat=rbind(betahat,)
-  tstat=betahat/abs(sgp)
+  tstat=betahat/abs(sj)
   lambda=rbind(possible_loadings[z,],matrix(rep(0,(J-n)*K),ncol=K))+load.e
-  return(list(beta=beta,betahat=betahat,component.mats=covmat,sebetahat=sgp,tstat=tstat,component.id=z))
+  return(list(beta=beta,betahat=betahat,component.mats=covmat,sebetahat=sj,tstat=tstat,component.id=z))
 }
+
+
+#' @title independent.simulation
+#' @export
+
+independent.data=function(J,d=44,betasd=1,esd=0.1,tspec=0){
+  n=trunc(0.008*J,units = 0)##number of significant gene-snp Pairs, so there are 100 snps in cis of a gene and one causal snp
+  beta=matrix(rnorm(d*n,mean=0,sd=betasd^2),ncol=d,nrow=n) 
+  beta=rbind(beta,matrix(rep(0,(J-n)*d),ncol=d))
+  sj=abs(matrix(rnorm(J*d,0.11,0.001),ncol=d))##use uniform to simulate 'shrunken'
+  e=t(apply(sj,1,function(x){rmvnorm(1,mean=rep(0,d),sigma=diag(x)^2)}))
+  library("mvtnorm")
+  library("MASS")
+  betahat = rbind(beta + e)
+  
+  tstat=betahat/abs(sj)
+  
+  return(list(beta=beta,betahat=betahat,sebetahat=sj,tstat=tstat))
+}
+
+
 
