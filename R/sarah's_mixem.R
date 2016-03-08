@@ -468,7 +468,7 @@ get.prior.covar.with.all.max.step <- function(X.c,max.step,lambda.mat, Q, factor
 #' @param BMA Whether or not to include singleton and full configurations
 #' @return a list of covariance matrices
 
-compute.hm.covmat.all.max.step = function(b.hat,se.hat,t.stat,v.j,Q,lambda.mat,A,factor.mat,max.step){
+compute.hm.covmat.all.max.step = function(b.hat,se.hat,t.stat,v.j,Q,lambda.mat,A,factor.mat,max.step,zero=FALSE){
   X.real=as.matrix(t.stat)
   X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
   R=ncol(X.c)
@@ -479,6 +479,10 @@ compute.hm.covmat.all.max.step = function(b.hat,se.hat,t.stat,v.j,Q,lambda.mat,A
   factor.mat=factor.mat
   U.0kl=get.prior.covar.with.all.max.step(X.c,max.step = max.step,lambda.mat = lambda.mat,Q = Q,factor.mat = factor.mat,omega.table=omega.table,bma = TRUE)
   covmat=unlist(U.0kl,recursive=F)
+  if(zero==TRUE){
+    z=matrix(rep(0,R*R),ncol=R,nrow=R)
+    covmat=c(covmat,list(z))
+  }
   saveRDS(covmat,paste0("covmat",A,".rds"))
   
   return(covmat)}

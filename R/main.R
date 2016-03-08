@@ -1493,7 +1493,8 @@ get.prior.covar.bmafull.only <- function(R,omega.table)  {
    
     for(c in 1:nrow(configs)) {
       mat=(configs[c,]%*%t(configs[c,]))
-      test[[l]][[c]]=omega*mat}}
+      test[[l]][[c]]=omega*mat}
+  }
   return(U.0kl=test)
 }
 
@@ -1650,3 +1651,60 @@ compute.hm.train.bma.only=function(train.b,se.train,covmat,A){
   barplot(t(as.matrix(pis$pihat)))
   dev.off()
 }
+
+
+
+
+
+
+#' @title get.prior.covar.with.heterogeneity
+#' @param R number of tissues
+#' @param omega.table L vector grid weights
+#' @return a L x K list of covariance matrices
+#' @export
+get.prior.covar.with.heterogeneity <- function(R,omega.table)  {
+  test=list()
+  for(l in 1:nrow(omega.table)){
+    test[[l]]=list()
+    omega=omega.table[l,]
+    test[[l]][[1]]=diag(R)*omega
+    configs=matrix(0,nrow=R,ncol=R)
+    for(r in 1:R){
+      configs[r,r]=1}
+    configs=rbind(configs,rep(1,R),rep(1,R),rep(1,R))##the last three with model varying degrees of heterogeneity
+    for(c in 1:nrow(configs)) {
+      mat=(configs[c,]%*%t(configs[c,]))
+      test[[l]][[c+1]]=omega*mat}
+    test[[l]][[c-1]]=0.5*test[[l]][[c-1]]+diag(0.5*omega,R)
+    test[[l]][[c]]=0.75*test[[l]][[c]]+diag(0.25*omega,R)}
+  
+  return(U.0kl=test)
+}
+
+
+#' @title compute.covmat.with.heterogeneity
+#' @param b.gp.hat a JxR matrix of betahats
+#' @param sebetahat a JxR matrix of their standard errors
+#' @return A list of covariance matrices
+#' @export
+
+
+compute.covmat.with.heterogeneity = function(b.gp.hat,sebetahat,A,zero=FALSE){
+  
+  omega=mult.tissue.grid(mult=sqrt(2),b.gp.hat,sebetahat)
+  
+  omega.table=data.frame(omega)
+  
+  
+  U.0=get.prior.covar.with.heterogeneity(R = ncol(b.gp.hat),omega.table = omega.table)
+  R = ncol(b.gp.hat)
+  
+  covmat=unlist(U.0,recursive=F)
+  if(zero==TRUE){covmat=c(covmat,list(matrix(rep(0,R*R),ncol=R,nrow=R)))}
+  saveRDS(covmat,paste0("covmat",A,".rds"))
+  
+  return(covmat)}
+
+
+
+
