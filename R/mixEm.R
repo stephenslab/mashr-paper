@@ -117,8 +117,13 @@ compute.hm.train.log.lik=function(train.b,se.train,covmat,A,pen=FALSE){
     return(e)}
   ))
   #pis=mixEM.normlik(matrix_lik=train,prior=rep(1,ncol(train)))##here the matrix_lik is log normalized
-  if(pen==TRUE){pis=mixEM(matrix_lik=train,prior=c(rep(1,ncol(train)-1),10))}
-  pis=mixEM(matrix_lik=train,prior=rep(1,ncol(train)))
+if(pen==TRUE){
+    pis=mixEM(matrix_lik=train,prior=c(rep(1,ncol(train)-1),10))
+  }
+  else{
+    pis=mixEM(matrix_lik=train,prior=rep(1,ncol(train)))
+  }
+
   saveRDS(pis,paste0("pis",A,".rds"))
   
   pdf(paste0("pis",A,".pdf"))
