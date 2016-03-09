@@ -1685,11 +1685,28 @@ get.prior.covar.with.heterogeneity <- function(R,omega.table)  {
 }
 
 
-#' @title compute.covmat.with.heterogeneity
+#' @title compute.covmat.with.heterogeneity.no.shrink
 #' @param b.gp.hat a JxR matrix of betahats
 #' @param sebetahat a JxR matrix of their standard errors
 #' @return A list of covariance matrices
 #' @export
+
+
+compute.covmat.with.heterogeneity.no.shrink = function(b.gp.hat,sebetahat,A,zero=FALSE){
+  
+  #omega=mult.tissue.grid(mult=sqrt(2),b.gp.hat,sebetahat)
+  omega=c(0.01,0.04,0.16,0.64,2.56)
+  omega.table=data.frame(omega)
+  
+  
+  U.0=get.prior.covar.with.heterogeneity(R = ncol(b.gp.hat),omega.table = omega.table)
+  R = ncol(b.gp.hat)
+  
+  covmat=unlist(U.0,recursive=F)
+  if(zero==TRUE){covmat=c(covmat,list(matrix(rep(0,R*R),ncol=R,nrow=R)))}
+  saveRDS(covmat,paste0("covmat",A,".rds"))
+  
+  return(covmat)}
 
 
 compute.covmat.with.heterogeneity = function(b.gp.hat,sebetahat,A,zero=FALSE){
@@ -1707,7 +1724,6 @@ compute.covmat.with.heterogeneity = function(b.gp.hat,sebetahat,A,zero=FALSE){
   saveRDS(covmat,paste0("covmat",A,".rds"))
   
   return(covmat)}
-
 
 
 
