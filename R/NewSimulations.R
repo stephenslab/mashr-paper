@@ -73,4 +73,26 @@ independent.data=function(J,d=44,betasd=1,esd=0.1,tspec=0){
 }
 
 
+#' @title independent.from.omega
+#' @export
+
+independent.from.omega=function(J,d=44,betasd=1,esd=0.1,tspec=0){
+  n=trunc(0.008*J,units = 0)##number of significant gene-snp Pairs, so there are 100 snps in cis of a gene and one causal snp
+  betasd=c(0.1,0.5,0.75,1,1.5)
+  beta=matrix(rnorm(d*n,mean=0,sd=sample(betasd,d*n,replace = T)),ncol=d,nrow=n) 
+  beta=rbind(beta,matrix(rep(0,(J-n)*d),ncol=d))
+  sj=abs(matrix(rnorm(J*d,0.11,0.001),ncol=d))##use uniform to simulate 'shrunken'
+  e=t(apply(sj,1,function(x){rmvnorm(1,mean=rep(0,d),sigma=diag(x)^2)}))
+  library("mvtnorm")
+  library("MASS")
+  betahat = rbind(beta + e)
+  
+  tstat=betahat/abs(sj)
+  
+  return(list(beta=beta,betahat=betahat,sebetahat=sj,tstat=tstat))
+}
+
+
+
+
 
