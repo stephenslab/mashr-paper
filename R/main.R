@@ -747,9 +747,10 @@ post.weights=t(exp.vec*pis/sum(exp.vec*pis))
   post.covs=all.arrays$post.covs
   post.nulls=all.arrays$post.nulls
   
+  all.nulls=total.null.per.snp(post.weights,post.nulls)
   all.mus=total.mean.per.snp(post.weights,post.means)
   all.ups=total.up.per.snp(post.weights,post.ups)
-  all.downs=total.down.per.snp(post.weights,post.downs )
+  all.downs=total.down.per.snp(post.weights,post.downs)
   lfsr=t(lfsr.per.snp(all.ups,all.downs))
   all.covs.partone=total.covs.partone.persnp(post.means,post.covs,post.weights)
   marginal.var=all.covs.partone-all.mus^2
@@ -758,15 +759,17 @@ post.weights=t(exp.vec*pis/sum(exp.vec*pis))
   rownames(all.downs)=gene.snp.name
   rownames(lfsr)=gene.snp.name
   rownames(marginal.var)=gene.snp.name
+  rownames(all.nulls)=gene.snp.name
 
   if(checkpoint==FALSE){
   write.table(all.mus,paste0(A,"posterior.means.txt"),append=TRUE,col.names=FALSE)
   write.table(all.ups,paste0(A,"posterior.ups.txt"),append=TRUE,col.names=FALSE)
   write.table(all.downs,paste0(A,"posterior.downs.txt"),append=TRUE,col.names=FALSE)
+  write.table(all.nulls,paste0(A,"posterior.nulls.txt"),append=TRUE,col.names=FALSE)
   write.table(marginal.var,paste0(A,"marginal.var.txt"),append=TRUE,col.names=FALSE)
   write.table(lfsr,paste0(A,"lfsr.txt"),append=TRUE,col.names=FALSE)
   write.table(post.weights,paste0(A,"post.weights.txt"),append=TRUE,col.names=FALSE)}
-  else{return(list(posterior.means=all.mus,posterior.downs=all.downs,posterior.ups=all.ups,lfsr=lfsr,marginal.var=marginal.var,post.weights=post.weights))}
+  else{return(list(posterior.means=all.mus,posterior.nulls=all.nulls,posterior.downs=all.downs,posterior.ups=all.ups,lfsr=lfsr,marginal.var=marginal.var,post.weights=post.weights))}
 }
 
 
