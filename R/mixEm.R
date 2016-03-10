@@ -196,3 +196,39 @@ penloglik.normnew = function(pi, matrix_lik, prior){
   priordens = sum((prior-1)[subset]*log(pi[subset]))
   return(loglik.logmethod+priordens)
 }
+
+
+
+
+
+compute.hm.train.log.lik.pen=function(train.b,se.train,covmat,A,pen){
+  
+  J=nrow(train.b)
+  R=ncol(train.b)
+  
+  if(file.exists(paste0("liketrain",A,".rds"))==FALSE){
+    lik.mat=t(sapply(seq(1:J),function(x){log.lik.func(b.mle=train.b[x,],V.gp.hat=diag(se.train[x,])^2,covmat)}))##be sure to use log lik function
+    
+    saveRDS(lik.mat,paste0("liketrain",A,".rds"))}
+  
+  else(lik.mat=readRDS(paste0("liketrain",A,".rds")))
+  
+  #train=lik.mat###but this matrix is the loglik matrix
+  train=t(apply(lik.mat,1,function(x){
+    e=exp(x-max(x))
+    return(e)}
+  ))
+  #pis=mixEM.normlik(matrix_lik=train,prior=rep(1,ncol(train)))##here the matrix_lik is log normalized
+  #if(pen==TRUE){
+    pis=mixEM(matrix_lik=train,prior=c(rep(1,ncol(train)-1),pen))
+  #}
+  #else{
+    #pis=mixEM(matrix_lik=train,prior=rep(1,ncol(train)))
+  #}
+  
+  saveRDS(pis,paste0("pis",A,".rds"))
+  
+  pdf(paste0("pis",A,".pdf"))
+  barplot(t(as.matrix(pis$pihat)))
+  dev.off()
+}
