@@ -35,7 +35,7 @@ factor_sim_new=function(J,d=44,betasd=1,esd=0.1,tspec=0){
   
   beta=t(sapply(seq(1:n),function(j){
     k=z[j]
-    omega=abs(rnorm(1,mean=0,sd=betasd^2))##effect size can be big or small
+    omega=abs(rnorm(1,mean=0,sd=betasd))##effect size can be big or small
     mvrnorm(1,mu=rep(0,d),Sigma=omega*covmat[[k]])
   }))
   beta=rbind(beta,matrix(rep(0,(J-n)*d),ncol=d))
@@ -59,7 +59,7 @@ factor_sim_new=function(J,d=44,betasd=1,esd=0.1,tspec=0){
 
 independent.data=function(J,d=44,betasd=1,esd=0.1,tspec=0){
   n=trunc(0.008*J,units = 0)##number of significant gene-snp Pairs, so there are 100 snps in cis of a gene and one causal snp
-  beta=matrix(rnorm(d*n,mean=0,sd=betasd^2),ncol=d,nrow=n) 
+  beta=matrix(rnorm(d*n,mean=0,sd=betasd),ncol=d,nrow=n) 
   beta=rbind(beta,matrix(rep(0,(J-n)*d),ncol=d))
   sj=abs(matrix(rnorm(J*d,0.11,0.001),ncol=d))##use uniform to simulate 'shrunken'
   e=t(apply(sj,1,function(x){rmvnorm(1,mean=rep(0,d),sigma=diag(x)^2)}))
@@ -92,7 +92,32 @@ independent.from.omega=function(J,d=44,betasd=1,esd=0.1,tspec=0){
   return(list(beta=beta,betahat=betahat,sebetahat=sj,tstat=tstat))
 }
 
+#' @title independent.totally
+#' @export
 
+independent.totally=function(J,d=44,betasd=1,esd=1,tspec=0){
+  n=trunc(0.02*J,units = 0)##number of significant gene-snp Pairs, so there are 100 snps in cis of a gene and one causal snp
+  betasd=c(0.1,0.5,0.75,1,1.5)
+  beta=matrix(rep(0,J*d),ncol=d)
+  sim.sd=matrix(rep(0,J*d),ncol=d)
+for(r in 1:d){
+    true.effects=sample(seq(1:J),n,replace=FALSE)
+    bsd=sample(betasd,n,replace = T)
+    sim.b=rnorm(n,mean=0,sd=bsd)
+    beta[true.effects,r]=sim.b
+    sim.sd[true.effects,r]=bsd
+}
+  
+  sj=abs(matrix(rnorm(J*d,0.11,0.001),ncol=d))##use uniform to simulate 'shrunken'
+  e=t(apply(sj,1,function(x){rnorm(d,mean=0,sd=x)}))
+  library("mvtnorm")
+  library("MASS")
+  betahat = beta + e
+  
+  tstat=betahat/sj
+  
+  return(list(beta=beta,betahat=betahat,sebetahat=sj,tstat=tstat))
+}
 
 
 
