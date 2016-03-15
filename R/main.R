@@ -200,7 +200,7 @@ mult.tissue.grid = function(mult=sqrt(2),betahat,sebetahat){
   R=ncol(betahat);
 mix.weights=unlist(sapply(seq(1:ncol(betahat)),function(r){
   autoselect.mix.sd(betahat = betahat[,r],sebetahat = sebetahat[,r],mult=2)}))
-    ;sigmaamin=min(mix.weights);sigmaamax=max(mix.weights);npoint = ceiling(log2(sigmaamax/sigmaamin)/log2(mult));
+    ;sigmaamin=min(mix.weights);sigmaamax=1*max(mix.weights);npoint = ceiling(log2(sigmaamax/sigmaamin)/log2(mult));
     omega=mult^((-npoint):0) * sigmaamax;return(omega)}
 
 
