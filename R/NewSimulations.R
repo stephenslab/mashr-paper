@@ -74,6 +74,7 @@ independent.data=function(J,d=44,betasd=1,esd=0.1,tspec=0){
 
 
 #' @title independent.from.omega
+#' @details simulate shared effects with randomly chosen omegas
 #' @export
 
 independent.from.omega=function(J,d=44,betasd=1,esd=0.1,tspec=0){
