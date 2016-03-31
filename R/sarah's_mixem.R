@@ -38,7 +38,7 @@ tarray <- function(x) aperm(x, rev(seq_along(dim(x))))
 
 #' @title dim.true.cov.fun
 #' @details outputs a list of dimensions for both the true covariance matrices and the vector of pis
-#' @export
+#' @export dim.true.cov.fun
 
 
 dim.true.cov.fun=function(max.step.unlist){
@@ -141,7 +141,7 @@ em.array.generator=function(max.step,b.j.hat,se.j.hat){
 #' @param post.covs JxKxR matrix of posterior covariances
 #' @param q.mat JxK matrix of normalixed likelihoods e.g., p(K|D)
 #' @return K x R xR array of 'true covariance matrices' and Kx1 vector of pis
-#' @export
+#' @export max.step.func 
 max.step.func = function(post.means,post.covs,q.mat){
   J=dim(post.means)[1]
   K=dim(post.means)[2]

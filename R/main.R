@@ -221,7 +221,7 @@ lik.func=function(b.mle,V.gp.hat,covmat)
 #' @param b.mle Rx1 vector of mles
 #' @param V.gp.hat RxR matrix of standard errors
 #' @param U.0kl L dimensional list of K dimensional list with prior covairnace matrix for each grid weight, prior covariance pair
-#' @export
+#' @export log.lik.func
 
 log.lik.func=function(b.mle,V.gp.hat,covmat)
 { sapply(seq(1:length(covmat)),function(x){dmvnorm(x=b.mle, sigma=covmat[[x]] + V.gp.hat,log=TRUE)})
