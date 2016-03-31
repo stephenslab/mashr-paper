@@ -199,6 +199,15 @@ penloglik.normnew = function(pi, matrix_lik, prior){
 
 
 
+#' @title compute.hm.train.log.lik.pen
+#' @description = takes a matrix of training sumamry statistics and their standard errors and computes the likelihood matrix according to a list of covariance matrices, using the exponent of the log likelihood - max (llj)
+#' @param train.b =  JxR matrix of training beta hats
+#' @param se.train = JxR matrix of training standard errors
+#' @param covmat = LxK dimenstional (unlisted list) of prior covariance matrices
+#' @param  A  output file name
+#' @param  Pen likelihood penalty, default1
+#' @return An object containing pis and model fit from the EM, and a pdf barplot
+#' @export
 
 
 compute.hm.train.log.lik.pen=function(train.b,se.train,covmat,A,pen){
