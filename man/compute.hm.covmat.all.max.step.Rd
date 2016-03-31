@@ -5,7 +5,7 @@
 \title{compute.hm.covmat.all.max.step}
 \usage{
 compute.hm.covmat.all.max.step(b.hat, se.hat, t.stat, v.j, Q, lambda.mat, A,
-  factor.mat, max.step)
+  factor.mat, max.step, zero = FALSE)
 }
 \arguments{
 \item{b.hat,se.hat}{matrices to help choose grid weights (JxR)}

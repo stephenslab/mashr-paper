@@ -5,7 +5,7 @@
 \title{compute.covmat}
 \usage{
 compute.covmat(b.gp.hat, sebetahat, Q, t.stat, lambda.mat, P, A, factor.mat,
-  bma = TRUE)
+  bma = TRUE, zero = FALSE, max = 1)
 }
 \arguments{
 \item{b.gp.hat}{a JxR matrix of betahats - necessary for grid computation}
@@ -19,6 +19,8 @@ compute.covmat(b.gp.hat, sebetahat, Q, t.stat, lambda.mat, P, A, factor.mat,
 \item{factor}{mat a fxR matrix of factors}
 
 \item{BMA=true}{wheter or not to use singleton and shared config}
+
+\item{zero=true}{whether or not to include zero matrix}
 }
 \value{
 A list of covariance matrices
