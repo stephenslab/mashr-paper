@@ -468,7 +468,7 @@ get.prior.covar.with.all.max.step <- function(X.c,max.step,lambda.mat, Q, factor
 #' @param BMA Whether or not to include singleton and full configurations
 #' @return a list of covariance matrices
 
-compute.hm.covmat.all.max.step = function(b.hat,se.hat,t.stat,v.j,Q,lambda.mat,A,factor.mat,max.step,zero=FALSE,max=1){
+compute.hm.covmat.all.max.step = function(b.hat,se.hat,t.stat,Q,lambda.mat,A,factor.mat,max.step,zero=FALSE,max=1){
   X.real=as.matrix(t.stat)
   X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
   R=ncol(X.c)
