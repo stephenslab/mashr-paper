@@ -202,7 +202,7 @@ mix.weights=unlist(sapply(seq(1:ncol(betahat)),function(r){
   autoselect.mix.sd(betahat = betahat[,r],sebetahat = sebetahat[,r],mult=2)}))
     ;sigmaamin=min(mix.weights);sigmaamax=max*max(mix.weights);npoint = ceiling(log2(sigmaamax/sigmaamin)/log2(mult));
     omega=mult^((-npoint):0) * sigmaamax;return(omega)}
-
+##we tried with omega^2 as output, to be consistent with production of covariance matrices (not coSD matrices) but better likelihood with denser narrower grid
 
 #' @title lik.func 
 #' @details computes likelihood for each betahat
