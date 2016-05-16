@@ -196,11 +196,11 @@ autoselect.mix.sd = function(betahat,sebetahat,mult){
 #' @param sebetahat is matrix of sebetahats
 #' @return omega
 #' @export
-mult.tissue.grid = function(mult=sqrt(2),betahat,sebetahat,max,min){ 
+mult.tissue.grid = function(mult=sqrt(2),betahat,sebetahat,maxp,minp){ 
   R=ncol(betahat);
 mix.weights=unlist(sapply(seq(1:ncol(betahat)),function(r){
   autoselect.mix.sd(betahat = betahat[,r],sebetahat = sebetahat[,r],mult=2)}))
-    ;sigmaamin=min*min(mix.weights);sigmaamax=max*max(mix.weights);npoint = ceiling(log2(sigmaamax/sigmaamin)/log2(mult));
+    ;sigmaamin=minp*min(mix.weights);sigmaamax=maxp*max(mix.weights);npoint = ceiling(log2(sigmaamax/sigmaamin)/log2(mult));
     omega=mult^((-npoint):0) * sigmaamax;return(omega)}
 ##we tried with omega^2 as output, to be consistent with production of covariance matrices (not coSD matrices) but better likelihood with denser narrower grid
 
@@ -429,11 +429,11 @@ compute.covmat.with.rho = function(b.gp.hat,sebetahat,Q,lambda.mat,P,A,factor.ma
 #' @return A list of covariance matrices
 #' @export
 
-compute.covmat = function(b.gp.hat,sebetahat,Q,t.stat,lambda.mat,P,A,factor.mat,bma=TRUE,zero=FALSE,max=1,min=1){
+compute.covmat = function(b.gp.hat,sebetahat,Q,t.stat,lambda.mat,P,A,factor.mat,bma=TRUE,zero=FALSE,maxp=1,minp=1,power=1){
   
-  omega=mult.tissue.grid(mult=sqrt(2),b.gp.hat,sebetahat,max,min)
+  omega=mult.tissue.grid(mult=sqrt(2),b.gp.hat,sebetahat,maxp,minp)
   
-  omega.table=data.frame(omega)
+  omega.table=data.frame(omega^power)
  
   lambda.mat=lambda.mat
   A=A
