@@ -462,9 +462,8 @@ if(zero==TRUE){
   covmat=c(covmat,list(z))
 }
   saveRDS(covmat,paste0("covmat",A,".rds"))
-  
-  return(covmat)}
-
+return(list(covmat=covmat,omega=omega.table))}
+ 
 
 #' @title compute.covmat.bma.only
 #' @param b.gp.hat a JxR matrix of betahats
