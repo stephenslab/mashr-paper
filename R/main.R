@@ -1691,11 +1691,11 @@ get.prior.covar.with.heterogeneity <- function(R,omega.table)  {
 #' @export
 
 
-compute.covmat.with.heterogeneity.no.shrink = function(b.gp.hat,sebetahat,A,zero=FALSE,power=2){
+compute.covmat.with.heterogeneity.no.shrink = function(b.gp.hat,sebetahat,A,zero=FALSE,standard=1,power=1){
   
   #omega=mult.tissue.grid(mult=sqrt(2),b.gp.hat,sebetahat)
-  omega=10*c(0.01,0.04,0.16,0.64,2.56)
-  omega.table=data.frame(omega)^power
+  omega=standard^power*c(0.01,0.04,0.16,0.64,2.56)
+  omega.table=data.frame(omega)
   
   
   U.0=get.prior.covar.with.heterogeneity(R = ncol(b.gp.hat),omega.table = omega.table)
