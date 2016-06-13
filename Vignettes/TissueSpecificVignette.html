@@ -138,7 +138,7 @@ t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta;s.j=matri
 c=apply(t,1,function(x){max(abs(x))})
 maxes=order(c,decreasing = TRUE)[1:400]##take top gene snp pairs
 max.t=t[maxes,]
-##sfa -gen ./maxt.txt -g 400 -n 44 -o tri_sim_strongt i -k 5
+##sfa -gen ./maxt.txt -g 400 -n 44 -o tri_sim_spect i -k 5
 
 A=&quot;yourfavoritename&quot;
 factor.mat=as.matrix(read.table(&quot;../simdata/tri_sim_spect_F.out&quot;))
