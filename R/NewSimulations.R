@@ -1,17 +1,20 @@
-# @details Generate J beta,betahats, T statistics across R tissues from a set of covariance matrices
-# @param Creates factors with magnitude based on betasd where each betaj is loaded on a minimal number of factors by simulating from rmvnorm
-# @param J Number of Gene-SNP Pairs and by definition, only 0.8 percent of them will be true eQTL; pi0 is 0.20 and the number of genes is J/100)
-# @param d Number of subgroups
-# @param betasd size of covariance of true effects
-# @param esd standard error
-# @details to simulate strong sharing, I use the gtex covariance matrices
+#' @details Generate J beta,betahats, T statistics across R tissues from a set of covariance matrices
+#' @param Creates factors with magnitude based on betasd where each betaj is loaded on a minimal number of factors by simulating from rmvnorm
+#' @param J Number of Gene-SNP Pairs and by definition, only 0.8 percent of them will be true eQTL; pi0 is 0.20 and the number of genes is J/100)
+#' @param d Number of subgroups
+#' @param n number of real associations
+#' @param betasd size of covariance of true effects
+#' @param esd standard error
+#' @details to simulate strong sharing, I use the gtex covariance matrices
+
 #' @title factor.sim.new
 #' @export
 
-factor_sim_new=function(J,d=44,betasd=1,esd=0.1,tspec=0){
-  n=trunc(0.008*J,units = 0)##number of significant gene-snp Pairs, so there are 100 snps in cis of a gene and one causal snp
+factor_sim_new=function(J,d=44,betasd=1,esd=0.1,tspec=0,n=400){
+  #n=trunc(0.008*J,units = 0)##number of significant gene-snp Pairs, so there are 100 snps in cis of a gene and one causal snp
+  n=n
   #F=t(sapply(seq(1:K),function(x){rnorm(d,mean=0,sd=betasd)})) 
-  covmat=readRDS("~/Dropbox/Aug12/covmatAug13withED.rds")[2:9]
+  covmat=readRDS("~/matrix_ash/simdata/covmatforsimulation.rds")[2:9]
   covmat=lapply(seq(1:length(covmat)),function(x){covmat[[x]]/max(diag(covmat[[x]]))})
  
   if(tspec!=0){
