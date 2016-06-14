@@ -35,8 +35,9 @@ Now we can read in the data. We will compute according to the ET model and corre
 
 
 ```{r readindata}
+library("mash")
 library("mvtnorm")
-data=readRDS("../simdata/simdata_tspec.rds")
+data=readRDS(system.file("simdata","simdata_tspec.rds", package = "mash"))
 t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta;s.j=matrix
 c=apply(t,1,function(x){max(abs(x))})
 maxes=order(c,decreasing = TRUE)[1:400]##take top gene snp pairs
@@ -44,8 +45,8 @@ max.t=t[maxes,]
 ##sfa -gen ./maxt.txt -g 400 -n 44 -o tri_sim_spect i -k 5
 
 A="yourfavoritename"
-factor.mat=as.matrix(read.table("../simdata/tri_sim_spect_F.out"))
-lambda.mat=as.matrix(read.table("../simdata/tri_sim_spect_lambda.out"))
+factor.mat=as.matrix(read.table(system.file("simdata","tri_sim_spect_F.out",package="mash")))
+lambda.mat=as.matrix(read.table(system.file("simdata","tri_sim_spect_lambda.out",package ="mash")))
 s.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
 v.j=s.j^2
 covmat=compute.covmat(b.gp.hat = t,sebetahat = s.j,Q =5, t.stat=max.t,lambda.mat=lambda.mat,P=3,A=A, factor.mat = factor.mat,bma = TRUE,zero=TRUE)$cov
@@ -94,7 +95,7 @@ Now, we can compute posteriors. For simplicity, let's just do it for the first 5
 
 ```{r computeposteriors,eval=FALSE}
 A="yourfavoritename"
-pis=readRDS(paste0("../simdata/pis",A,".rds"))$pihat
+pis=readRDS(system.file("simdata","pisyourfavoritename.rds", package = "mash"))$pihat
 
 b.test=t[1:5000,]
 se.test=s.j[1:5000,]
@@ -106,8 +107,8 @@ Let's check some stuff out to make sure our computations are correct.
 ```{r checkpoint,eval=TRUE}
 j=sample.int(100,1)
 A="yourfavoritename"
-pis=readRDS(paste0("../simdata/pis",A,".rds"))$pihat
-covmat=readRDS(paste0("../simdata/covmat",A,".rds"))
+pis=readRDS(system.file("simdata","pisyourfavoritename.rds", package = "mash"))$pihat
+covmat=readRDS(system.file("simdata","covmatyourfavoritename.rds", package = "mash"))
 all.arrays=post.array.per.snp(j=j,covmat = covmat,b.gp.hat = t,se.gp.hat = v.j)
 
 b.mle=as.vector(t(t[j,]))##turn i into a R x 1 vector
@@ -121,7 +122,7 @@ mu.gp1kl <- as.array(post.b.gpkl.mean(b.mle, V.gp.hat.inv, U.gp1kl))
 plot(all.arrays$post.means[k,],mu.gp1kl)
 
 ##Now, check to make sure weighting is correct
-post.means=as.matrix(read.table(paste0("../simdata/",A, "posterior.means.txt"))[,-1])
+post.means=as.matrix(read.table(system.file("simdata","yourfavoritenameposterior.means.txt",package = "mash"))[,-1])
 lik.snp=lik.func(b.mle,V.gp.hat,covmat)
 post.weights=t(lik.snp*pis/sum(lik.snp*pis))
 
@@ -188,11 +189,11 @@ write.table(univariate.ash.lfsr,file="uniashlfsr.txt")
 Let's compare the RMSE here between our multivariate and a univariate method. We want to compute the mean squared error of the effect, so we multiply by the standard error.
 
 ```{r univariateashcompare}
-data=readRDS("~/Dropbox/simdata_tspec.rds")
+data=readRDS(system.file("simdata","simdata_tspec.rds",package = "mash"))
 t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta;v.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
 t.truth.test=beta/sebetahat
-mash.means=as.matrix(read.table(paste0("../simdata/",A, "posterior.means.txt"))[,-1])
-univariate.ash.pm=read.table("../simdata/uniashpm.txt")
+mash.means=as.matrix(read.table(system.file("simdata","yourfavoritenameposterior.means.txt",package = "mash"))[,-1])
+univariate.ash.pm=read.table(system.file("simdata","uniashpm.txt",package = "mash"))
 standard=sqrt(mean((beta[1:5000,]-bhat[1:5000,])^2))
 sqrt(mean((beta[1:5000,]-mash.means*sebetahat[1:5000,])^2))/standard
 sqrt(mean((beta[1:5000,]-univariate.ash.pm[1:5000,]*sebetahat[1:5000,])^2))/standard
