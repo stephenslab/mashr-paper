@@ -132,6 +132,8 @@ library(&quot;mvtnorm&quot;)</code></pre>
 data=factor_sim_new(J = 20000)##simulate 20000 gene snp pairs with 400 true effects
 saveRDS(data,&quot;~/Dropbox/newsimdata.rds&quot;)</code></pre>
 <p>Here, I load my previously simulated data:</p>
+<pre class="r"><code>data=readRDS(&quot;newsimdata.rds&quot;)
+t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta</code></pre>
 <p>In this step, we run ash to choose the effects that satisfy a univariate ash lfsr threshold of 0.05 in at least one tissue:</p>
 <pre class="r"><code>library('ashr')
 t.fit=data$tstat

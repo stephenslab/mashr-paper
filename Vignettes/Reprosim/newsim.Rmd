@@ -22,7 +22,7 @@ saveRDS(data,"~/Dropbox/newsimdata.rds")
 ````
 
 Here, I load my previously simulated data:
-```{r,echo=F}
+```{r,echo=T}
 data=readRDS("newsimdata.rds")
 t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta
 ```
