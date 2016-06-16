@@ -1,0 +1,174 @@
+---
+title: "RepoSim"
+output: html_document
+---
+
+First, install the package:
+
+```{r}
+knitr::opts_chunk$set(cache=TRUE)
+devtools::install_github("surbut/matrix_ash")
+library("mash")
+library("bigmemory")
+library("SQUAREM")
+library("mvtnorm")
+```
+
+I simulated the data this way
+```{r, eval=FALSE}
+set.seed(123)
+data=factor_sim_new(J = 20000)##simulate 20000 gene snp pairs with 400 true effects
+saveRDS(data,"~/Dropbox/newsimdata.rds")
+````
+
+Here, I load my previously simulated data:
+```{r,echo=F}
+data=readRDS("newsimdata.rds")
+t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta
+```
+In this step, we run ash to choose the effects that satisfy a univariate ash lfsr threshold of 0.05 in at least one tissue:
+
+```{r,eval=FALSE}
+library('ashr')
+t.fit=data$tstat
+se.fit=data$sebetahat/data$sebetahat
+
+univariate.ash.pm=matrix(nrow=nrow(t.fit),ncol=ncol(t.fit))
+univariate.ash.lfsr=matrix(nrow=nrow(t.fit),ncol=ncol(t.fit))
+
+for(x in 1:44){
+
+b=ash(betahat=t.fit[,x],sebetahat=se.fit[,x],mixcompdist="normal")
+univariate.ash.pm[,x]=b$PosteriorMean
+univariate.ash.lfsr[,x]=b$lfsr
+}
+
+write.table(univariate.ash.lfsr,"~/Dropbox/univariate.ash.lfsrnewdata.txt")
+write.table(univariate.ash.pm,"~/Dropbox/univariate.ash.pmnewdata.txt")
+lfsr=read.table("univariate.ash.lfsrnewdata.txt")
+index=which(rowSums(lfsr<0.05)>0)
+write.table(t[index,],"maxtsim.txt",row.names = F,col.names = F)
+```
+
+
+
+Then we perform SFA on the maxes, however we choose to select them.
+```{r sfa, eval=FALSE}
+wc -l maxtsim.txt
+##here there were 269 rows
+sfa -gen ./maxtsim.txt -g 269 -n 44 -o test i -k 5
+```
+
+Then we load the loadings and factors and compute covariance matrices, train the model, and compute posteriors:
+
+```{r generate covmats,eval=FALSE}
+factor.mat=as.matrix(read.table("reproseed_F.out"))
+lambda.mat=as.matrix(read.table("reproseed_lambda.out"))
+v.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
+
+A="reproseed"
+cov=compute.covmat(b.gp.hat = t,sebetahat = v.j,Q =5, t.stat=t[index,],lambda.mat=lambda.mat,P=3,A=A, factor.mat = factor.mat,bma = FALSE,zero=TRUE)$cov
+
+compute.hm.train.log.lik.pen(train.b = t,se.train = v.j,covmat = cov,A=A,pen=1)
+
+
+pis=readRDS(paste0("pis",A,".rds"))$pihat
+b.test=t[1:20000,]
+se.test=v.j[1:20000,]
+weightedquants=lapply(seq(1:20000),function(j){total.quant.per.snp(j,cov,b.gp.hat=b.test,se.gp.hat = se.test,pis,A=A,checkpoint = FALSE)})
+```
+
+
+Now let's check the results:
+```{r}
+mash.means=read.table("reproseedposterior.means.txt")[,-1]
+univariate.ash.pm=read.table("univariateashpm.txt")
+lfsr.mash=read.table("reproseedlfsr.txt")[,-1]
+lfsr.ash=read.table("univariate.ash.lfsrnewdata.txt")
+                                                      
+sebetahat=data$sebetahat
+sebetahat=sebetahat[1:20000,]
+standard=sqrt(mean((beta[1:20000,]-bhat[1:20000,])^2))
+sqrt(mean((beta[1:20000,]-mash.means[1:20000,]*sebetahat)^2))/standard
+sqrt(mean((beta[1:20000,]-univariate.ash.pm[1:20000,]*sebetahat)^2))/standard
+
+```
+
+
+```{r echo=FALSE,cache=TRUE}
+beta=as.matrix(beta[1:20000,])
+lfsr.mash=as.matrix(lfsr.mash)
+lfsr.ash=as.matrix(lfsr.ash)
+
+mash.means=as.matrix(mash.means)
+ash.means=as.matrix(univariate.ash.pm)
+
+```
+Then, we can ask how many truly non-zero associations we capture at a given threshold.
+
+```{r echo=TRUE}
+thresh=0.05
+sum(sum(beta!=0&lfsr.mash<thresh))/sum(beta!=0)
+sum(sum(beta!=0&lfsr.ash<thresh))/sum(beta!=0)
+
+```
+
+Then, we compute the nominal lfsr (S) value, and we ask how many we correctly and incorrectly sign at a given threshold.
+
+```{r echo=TRUE}
+sign.test.mash=beta*mash.means
+sign.test.ash=beta*ash.means
+###compute nominal lfsr threshold
+mean(lfsr.mash[lfsr.mash<0.05])
+mean(lfsr.ash[lfsr.ash<0.05])
+
+
+##ask what proportion of associations do we correctly sign 
+sum(sign.test.mash>0&lfsr.mash<thresh)/sum(beta!=0)
+sum(sign.test.ash>0&lfsr.ash<thresh)/sum(beta!=0)
+
+```
+And here we plot a power comparison:
+```{r roccurve1shared,echo=FALSE}
+mash.power=NULL
+ash.power=NULL
+
+
+
+mash.fp=NULL
+ash.fp=NULL
+bma.fp=NULL
+
+
+
+thresholds=seq(0.01,1,by=0.01)
+for(s in 1:length(thresholds)){
+thresh=thresholds[s]
+
+##sign power is the proportion of true effects correctly signed at a given threshold
+mash.power[s]=sum(sign.test.mash>0&lfsr.mash<=thresh)/sum(beta!=0)
+ash.power[s]=sum(sign.test.ash>0&lfsr.ash<=thresh)/sum(beta!=0)
+
+
+
+
+##false positives is the proportion of null effects called at a given threshold
+mash.fp[s]=sum(beta==0&lfsr.mash<=thresh)/sum(beta==0)
+ash.fp[s]=sum(beta==0&lfsr.ash<=thresh)/sum(beta==0)
+
+
+
+
+
+
+}
+
+#frow=c(1,2))
+
+plot(mash.fp,mash.power,cex=0.5,pch=1,xlim=c(0,0.2),lwd=1,ylim=c(0,1),col="green",ylab="True Positive Rate",xlab="False Positive Rate",type="l")
+title("True Positive vs False Positive",cex.main=1.5)
+lines(ash.fp,ash.power,cex=0.5,pch=1,ylim=c(0,1),col="red")
+legend("bottomright",legend = c("mash","ash"),col=c("green","red"),pch=c(1,1))
+
+```
+

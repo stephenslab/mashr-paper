@@ -8,3 +8,5 @@ Vignettes/*cache
 Vignettes/*files
 Vignettes/*.Rdata
 Vignettes/*.Rhistory
+Vignettes/Reprosim/*cache*
+Vignettes/Reprosim/*files*
