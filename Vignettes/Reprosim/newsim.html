@@ -121,17 +121,8 @@ $(document).ready(function () {
 
 <p>First, install the package:</p>
 <pre class="r"><code>knitr::opts_chunk$set(cache=TRUE)
-devtools::install_github(&quot;surbut/matrix_ash&quot;)</code></pre>
-<pre><code>## Downloading GitHub repo surbut/matrix_ash@master
-## from URL https://api.github.com/repos/surbut/matrix_ash/zipball/master</code></pre>
-<pre><code>## Installing mash</code></pre>
-<pre><code>## '/Library/Frameworks/R.framework/Resources/bin/R' --no-site-file  \
-##   --no-environ --no-save --no-restore --quiet CMD INSTALL  \
-##   '/private/var/folders/2h/6fmv9psj32v9mzpd6nkrn7zr0000gn/T/RtmpII6Jc7/devtools2c466db0d7de/surbut-matrix_ash-b16c375'  \
-##   --library='/Library/Frameworks/R.framework/Versions/3.2/Resources/library'  \
-##   --install-tests</code></pre>
-<pre><code>## </code></pre>
-<pre class="r"><code>library(&quot;mash&quot;)
+#devtools::install_github(&quot;surbut/matrix_ash&quot;)
+library(&quot;mash&quot;)
 library(&quot;bigmemory&quot;)</code></pre>
 <pre><code>## Loading required package: bigmemory.sri</code></pre>
 <pre class="r"><code>library(&quot;SQUAREM&quot;)
@@ -163,8 +154,8 @@ index=which(rowSums(lfsr&lt;0.05)&gt;0)
 write.table(t[index,],&quot;maxtsim.txt&quot;,row.names = F,col.names = F)</code></pre>
 <p>Then we perform SFA on the maxes, however we choose to select them.</p>
 <pre class="r"><code>wc -l maxtsim.txt
-##here there were 269 rows
-sfa -gen ./maxtsim.txt -g 269 -n 44 -o test i -k 5</code></pre>
+##here there were 269 rows, so -g is 269
+sfa -gen ./maxtsim.txt -g 269 -n 44 -o reproseed i -k 5</code></pre>
 <p>Then we load the loadings and factors and compute covariance matrices, train the model, and compute posteriors:</p>
 <pre class="r"><code>factor.mat=as.matrix(read.table(&quot;reproseed_F.out&quot;))
 lambda.mat=as.matrix(read.table(&quot;reproseed_lambda.out&quot;))
@@ -180,6 +171,7 @@ pis=readRDS(paste0(&quot;pis&quot;,A,&quot;.rds&quot;))$pihat
 b.test=t[1:20000,]
 se.test=v.j[1:20000,]
 weightedquants=lapply(seq(1:20000),function(j){total.quant.per.snp(j,cov,b.gp.hat=b.test,se.gp.hat = se.test,pis,A=A,checkpoint = FALSE)})</code></pre>
+<p>After computing the posteriors, you should have files corresponding to the <span class="math">\(\pi\)</span> hierarchical weights and posterior quantities with the prefix you designated in A. I’ve included my computations in this director using the prefix “reproseed” for you to check your results.</p>
 <p>Now let’s check the results:</p>
 <pre class="r"><code>mash.means=read.table(&quot;reproseedposterior.means.txt&quot;)[,-1]
 univariate.ash.pm=read.table(&quot;univariateashpm.txt&quot;)

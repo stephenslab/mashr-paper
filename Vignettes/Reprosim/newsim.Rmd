@@ -7,7 +7,7 @@ First, install the package:
 
 ```{r}
 knitr::opts_chunk$set(cache=TRUE)
-devtools::install_github("surbut/matrix_ash")
+#devtools::install_github("surbut/matrix_ash")
 library("mash")
 library("bigmemory")
 library("SQUAREM")
@@ -55,8 +55,8 @@ write.table(t[index,],"maxtsim.txt",row.names = F,col.names = F)
 Then we perform SFA on the maxes, however we choose to select them.
 ```{r sfa, eval=FALSE}
 wc -l maxtsim.txt
-##here there were 269 rows
-sfa -gen ./maxtsim.txt -g 269 -n 44 -o test i -k 5
+##here there were 269 rows, so -g is 269
+sfa -gen ./maxtsim.txt -g 269 -n 44 -o reproseed i -k 5
 ```
 
 Then we load the loadings and factors and compute covariance matrices, train the model, and compute posteriors:
@@ -78,6 +78,9 @@ se.test=v.j[1:20000,]
 weightedquants=lapply(seq(1:20000),function(j){total.quant.per.snp(j,cov,b.gp.hat=b.test,se.gp.hat = se.test,pis,A=A,checkpoint = FALSE)})
 ```
 
+
+After computing the posteriors, you should have files corresponding to the $\pi$ hierarchical weights and posterior quantities with the prefix you designated in A. 
+I've included my computations in this director using the prefix "reproseed" for you to check your results. 
 
 Now let's check the results:
 ```{r}
