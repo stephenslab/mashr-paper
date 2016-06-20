@@ -14,7 +14,7 @@ Thus there are 50,000 gene snp pairs, and 400 'true'.
 We now want to compare to the results using univariate methods (ASH) the bmalite configs for inference.
 
 ## Notes
-
+* [First, I demonstrate the framework using MASH for the shared and allow the user to resimulate data or use simulated data](Reprosim/newsim.html)
 * [First, I demonstrate the framework using MASH for the shared](FullSimulation.html)
 * [Then, I demonstrate the framework using MASH for the 'tspec case'](TissueSpecificVignette.html)
 * [Here I compare the RMSE and the Number of Associations vs LFSR with the 'full sim' for BMA, MASH, and ASH](PowervsAccuracy.html)
