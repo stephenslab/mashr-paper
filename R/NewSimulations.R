@@ -10,7 +10,7 @@
 #' @title factor.sim.new
 #' @export
 
-factor_sim_new=function(J,d=44,betasd=1,esd=0.1,tspec=0,n=400){
+factor_sim_new=function(J,d=44,betasd=1,esd=0.11,tspec=0,n=400){
   #n=trunc(0.008*J,units = 0)##number of significant gene-snp Pairs, so there are 100 snps in cis of a gene and one causal snp
   n=n
   #F=t(sapply(seq(1:K),function(x){rnorm(d,mean=0,sd=betasd)})) 
@@ -90,7 +90,7 @@ independent.from.omega=function(J,d=44,betasd=1,esd=0.1,tspec=0){
   e=t(apply(sj,1,function(x){rmvnorm(1,mean=rep(0,d),sigma=diag(x)^2)}))
   library("mvtnorm")
   library("MASS")
-  betahat = rbind(beta + e)
+  betahat = (beta + e)
   
   tstat=betahat/abs(sj)
   
@@ -123,6 +123,50 @@ for(r in 1:d){
   
   return(list(beta=beta,betahat=betahat,sebetahat=sj,tstat=tstat))
 }
+
+#' @title sim.with.error
+#' @export
+
+sim.with.error=function(J,d=44,betasd=1,esd=0.11,n=400,rho=0.8){
+   n=n
+  covmat=readRDS(system.file('simdata/covmatforsimulation.rds', package = 'mash'))[2:9]
+  covmat=lapply(seq(1:length(covmat)),function(x){covmat[[x]]/max(diag(covmat[[x]]))})
+  
+  
+  
+  library("mvtnorm")
+  library("MASS")
+  K=length(covmat)
+  
+  
+  if(n!=0){
+  z = sample(K,n,replace=TRUE)
+  omega=abs(rnorm(n,mean=0,sd=betasd))##effect size variance can be big or small
+  beta=t(sapply(seq(1:n),function(j){
+    k=z[j]
+    o=omega[j]
+    mvrnorm(1,mu=rep(0,d),Sigma=o*covmat[[k]])
+  }))
+  beta=rbind(beta,matrix(rep(0,(J-n)*d),ncol=d))}
+  if(n==0){
+    beta=matrix(rep(0,(J-n)*d),ncol=d)
+  }
+  
+  s.j.r=as.matrix(abs(rnorm(d,esd,0.001)))##simulate with the same standard error for every J
+  v.j.r=s.j.r%*%t(s.j.r)##now v.j.r will be the same for every J
+  v.mat=rho*v.j.r+(1-rho)*diag(diag(v.j.r))#make the errors correlated
+  e=rmvnorm(J,mean=rep(0,d),sigma=v.mat)
+  betahat = beta + e
+  s.j=matrix(rep(s.j.r),nrow(betahat),byrow=T,ncol=d)
+  t.stat=betahat/abs(s.j)
+  if(n!=0){
+    return(list(beta=beta,betahat=betahat,component.mats=covmat,sebetahat=s.j,t.stat=t.stat,component.id=z,error=e,var.mat=v.mat,omega=omega))
+  }
+  if(n==0){
+    return(list(beta=beta,betahat=betahat,sebetahat=s.j,t.stat=t.stat,error=e,var.mat=v.mat))
+  }
+}
+
 
 
 

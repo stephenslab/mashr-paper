@@ -241,3 +241,48 @@ compute.hm.train.log.lik.pen=function(train.b,se.train,covmat,A,pen){
   barplot(t(as.matrix(pis$pihat)))
   dev.off()
 }
+
+
+
+#' @title compute.hm.train.log.lik.pen.vmat
+#' @description = takes a matrix of training sumamry statistics and their standard errors and computes the likelihood matrix according to a list of covariance matrices, using the exponent of the log likelihood - max (llj)
+#' @param train.b =  JxR matrix of training beta hats
+#' @param covmat = LxK dimenstional (unlisted list) of prior covariance matrices
+#' @param  A  output file name
+#' @param  Pen likelihood penalty, default1
+#' @param  matrix of variances of residuals, the same for every gene
+#' @return An object containing pis and model fit from the EM, and a pdf barplot
+#' @export
+
+
+compute.hm.train.log.lik.pen.vmat=function(train.b,covmat,A,pen,vmat){
+  
+  J=nrow(train.b)
+  R=ncol(train.b)
+  
+  if(file.exists(paste0("liketrain",A,".rds"))==FALSE){
+    lik.mat=t(sapply(seq(1:J),function(x){log.lik.func(b.mle=train.b[x,],V.gp.hat=vmat,covmat)}))##be sure to use log lik function
+    
+    saveRDS(lik.mat,paste0("liketrain",A,".rds"))}
+  
+  else(lik.mat=readRDS(paste0("liketrain",A,".rds")))
+  
+  #train=lik.mat###but this matrix is the loglik matrix
+  train=t(apply(lik.mat,1,function(x){
+    e=exp(x-max(x))
+    return(e)}
+  ))
+  #pis=mixEM.normlik(matrix_lik=train,prior=rep(1,ncol(train)))##here the matrix_lik is log normalized
+  #if(pen==TRUE){
+  pis=mixEM(matrix_lik=train,prior=c(rep(1,ncol(train)-1),pen))
+  #}
+  #else{
+  #pis=mixEM(matrix_lik=train,prior=rep(1,ncol(train)))
+  #}
+  
+  saveRDS(pis,paste0("pis",A,".rds"))
+  
+  pdf(paste0("pis",A,".pdf"))
+  barplot(t(as.matrix(pis$pihat)))
+  dev.off()
+}

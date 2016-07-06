@@ -24,9 +24,9 @@ saveRDS(data,"~/Dropbox/newsimdata.rds")
 Here, I load my previously simulated data:
 ```{r,echo=T}
 data=readRDS("newsimdata.rds")
-t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta
+t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta;s.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
 ```
-In this step, we run ash to choose the effects that satisfy a univariate ash lfsr threshold of 0.05 in at least one tissue:
+In this step, we run ash to choose the effects that satisfy a univariate ash lfsr threshold of 0.05 in at least one tissue. Again, you can choose to excecute this step yourself, but for your convenience, I've included these files in the directory.
 
 ```{r,eval=FALSE}
 library('ashr')
@@ -52,7 +52,8 @@ write.table(t[index,],"maxtsim.txt",row.names = F,col.names = F)
 
 
 
-Then we perform SFA on the maxes, however we choose to select them.
+Then we perform SFA on the maxes, however we choose to select them. I chose those which satisfied an LFSR threshold of 0.05 in at least one subgroup, and I saved the factors and loadings for your convenience in the directory as you can see. However, you can reperform yourslef with the SFA software installed.
+
 ```{r sfa, eval=FALSE}
 wc -l maxtsim.txt
 ##here there were 269 rows, so -g is 269
@@ -64,29 +65,29 @@ Then we load the loadings and factors and compute covariance matrices, train the
 ```{r generate covmats,eval=FALSE}
 factor.mat=as.matrix(read.table("reproseed_F.out"))
 lambda.mat=as.matrix(read.table("reproseed_lambda.out"))
-v.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
+s.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
 
-A="reproseed"
-cov=compute.covmat(b.gp.hat = t,sebetahat = v.j,Q =5, t.stat=t[index,],lambda.mat=lambda.mat,P=3,A=A, factor.mat = factor.mat,bma = FALSE,zero=TRUE)$cov
+A="reproseedomega2"
+cov=compute.covmat(b.gp.hat = t,sebetahat = s.j,Q =5, t.stat=t[index,],lambda.mat=lambda.mat,P=3,A=A, factor.mat = factor.mat,bma = TRUE,zero=TRUE,power = 2)$cov
 
-compute.hm.train.log.lik.pen(train.b = t,se.train = v.j,covmat = cov,A=A,pen=1)
+compute.hm.train.log.lik.pen(train.b = t,se.train = s.j,covmat = cov,A=A,pen=1)
 
 
 pis=readRDS(paste0("pis",A,".rds"))$pihat
 b.test=t[1:20000,]
-se.test=v.j[1:20000,]
+se.test=s.j[1:20000,]
 weightedquants=lapply(seq(1:20000),function(j){total.quant.per.snp(j,cov,b.gp.hat=b.test,se.gp.hat = se.test,pis,A=A,checkpoint = FALSE)})
 ```
 
 
 After computing the posteriors, you should have files corresponding to the $\pi$ hierarchical weights and posterior quantities with the prefix you designated in A. 
-I've included my computations in this director using the prefix "reproseed" for you to check your results. 
+I've included my computations in this directory using the prefix "reproseedomega2" for you to check your results. 
 
 Now let's check the results:
 ```{r}
-mash.means=read.table("reproseedposterior.means.txt")[,-1]
+mash.means=read.table("reproseedomega2posterior.means.txt")[,-1]
 univariate.ash.pm=read.table("univariateashpm.txt")
-lfsr.mash=read.table("reproseedlfsr.txt")[,-1]
+lfsr.mash=read.table("reproseedomega2lfsr.txt")[,-1]
 lfsr.ash=read.table("univariate.ash.lfsrnewdata.txt")
                                                       
 sebetahat=data$sebetahat
@@ -105,12 +106,13 @@ lfsr.ash=as.matrix(lfsr.ash)
 
 mash.means=as.matrix(mash.means)
 ash.means=as.matrix(univariate.ash.pm)
-
 ```
 Then, we can ask how many truly non-zero associations we capture at a given threshold.
 
 ```{r echo=TRUE}
 thresh=0.05
+
+
 sum(sum(beta!=0&lfsr.mash<thresh))/sum(beta!=0)
 sum(sum(beta!=0&lfsr.ash<thresh))/sum(beta!=0)
 
@@ -119,6 +121,8 @@ sum(sum(beta!=0&lfsr.ash<thresh))/sum(beta!=0)
 Then, we compute the nominal lfsr (S) value, and we ask how many we correctly and incorrectly sign at a given threshold.
 
 ```{r echo=TRUE}
+
+
 sign.test.mash=beta*mash.means
 sign.test.ash=beta*ash.means
 ###compute nominal lfsr threshold
@@ -174,4 +178,43 @@ lines(ash.fp,ash.power,cex=0.5,pch=1,ylim=c(0,1),col="red")
 legend("bottomright",legend = c("mash","ash"),col=c("green","red"),pch=c(1,1))
 
 ```
+
+
+To show our calculations are correct, we show the calculation for a sample pair.
+
+````{r}
+j=sample.int(100,1)
+
+A="reproseedomega2"
+
+pis=readRDS(paste0("pis",A,".rds"))$pihat
+b.test=t[1:20000,]
+se.test=s.j[1:20000,]
+
+
+
+covmat=readRDS(paste0("covmat",A,".rds"))
+all.arrays=post.array.per.snp(j=j,covmat = covmat,b.gp.hat = t,se.gp.hat = s.j)
+
+b.mle=as.vector(t(t[j,]))##turn i into a R x 1 vector
+V.gp.hat=diag(s.j[j,])^2
+V.gp.hat.inv <- solve(V.gp.hat)
+k=3
+
+U.gp1kl <- (post.b.gpkl.cov(V.gp.hat.inv, covmat[[k]]))
+mu.gp1kl <- as.array(post.b.gpkl.mean(b.mle, V.gp.hat.inv, U.gp1kl))
+#(all.arrays$post.means[k,])
+plot(all.arrays$post.means[k,],mu.gp1kl)
+
+##Now, check to make sure weighting is correct
+post.means=as.matrix(read.table(paste0(A,"posterior.means.txt"))[,-1])
+lik.snp=lik.func(b.mle,V.gp.hat,covmat)
+post.weights=t(lik.snp*pis/sum(lik.snp*pis))
+
+plot(post.means[j,],post.weights%*%all.arrays$post.means)
+#(post.means[j,])
+#(post.weights[j,]%*%all.arrays$post.means)
+
+```
+
 

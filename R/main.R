@@ -1390,57 +1390,10 @@ compute.hm.train.log.lik.vmat=function(train.b,v.mat,covmat,A){
 
 
 
-
-
-#'@title total.quant.per.snp.with.var
-#'@param covmat a K list of covariance matrices
-#'@param b.gp.hat JxR matrix of mles
-#'@param se.gp.hat JxR matrix of standard errs
-#'@param pis Kx1 matrix of prior weights
-#'@return writes the posterior weighted quantities to a file
+#'@title post.array.per.snp.with.vmat
 #'@export
 
-total.quant.per.snp.with.var=function(j,covmat,b.gp.hat,se.mat,pis,A,checkpoint=FALSE){
-  gene.snp.name=rownames(b.gp.hat)[j]
-  b.mle=b.gp.hat[j,]
-  R=ncol(b.mle)
-  lik.snp=lik.func(b.mle,se.mat,covmat)
-  post.weights=t(lik.snp*pis/sum(lik.snp*pis))
-  
-  all.arrays=post.array.per.snp.with.mat(j,covmat,b.gp.hat,se.mat)
-  post.means=all.arrays$post.means
-  post.ups=all.arrays$post.ups
-  post.downs=all.arrays$post.downs
-  post.covs=all.arrays$post.covs
-  post.nulls=all.arrays$post.nulls
-  
-  all.mus=total.mean.per.snp(post.weights,post.means)
-  all.ups=total.up.per.snp(post.weights,post.ups)
-  all.downs=total.down.per.snp(post.weights,post.downs )
-  lfsr=t(lfsr.per.snp(all.ups,all.downs))
-  all.covs.partone=total.covs.partone.persnp(post.means,post.covs,post.weights)
-  marginal.var=all.covs.partone-all.mus^2
-  rownames(all.mus)=gene.snp.name
-  rownames(all.ups)=gene.snp.name
-  rownames(all.downs)=gene.snp.name
-  rownames(lfsr)=gene.snp.name
-  rownames(marginal.var)=gene.snp.name
-  
-  if(checkpoint==FALSE){
-    write.table(all.mus,paste0(A,"posterior.means.txt"),append=TRUE,col.names=FALSE)
-    write.table(all.ups,paste0(A,"posterior.ups.txt"),append=TRUE,col.names=FALSE)
-    write.table(all.downs,paste0(A,"posterior.downs.txt"),append=TRUE,col.names=FALSE)
-    write.table(marginal.var,paste0(A,"marginal.var.txt"),append=TRUE,col.names=FALSE)
-    write.table(lfsr,paste0(A,"lfsr.txt"),append=TRUE,col.names=FALSE)
-    write.table(post.weights,paste0(A,"post.weights.txt"),append=TRUE,col.names=FALSE)}
-  else{return(list(posterior.means=all.mus,posterior.downs=all.downs,posterior.ups=all.ups,lfsr=lfsr,marginal.var=marginal.var))}
-}
-
-
-#'@title post.array.per.snp.with.mat
-#'@export
-
-post.array.per.snp.with.mat=function(j,covmat,b.gp.hat,se.mat){
+post.array.per.snp.with.vmat=function(j,covmat,b.gp.hat,var.mat){
   
   
   R=ncol(b.gp.hat)
@@ -1452,7 +1405,7 @@ post.array.per.snp.with.mat=function(j,covmat,b.gp.hat,se.mat){
   post.downs=array(NA,dim=c(K,R))
   
   b.mle=as.vector(t(b.gp.hat[j,]))##turn i into a R x 1 vector
-  V.gp.hat=se.mat^2
+  V.gp.hat=var.mat
   V.gp.hat.inv <- solve(V.gp.hat)
   
   for(k in 1:K){
@@ -1723,6 +1676,64 @@ compute.covmat.with.heterogeneity = function(b.gp.hat,sebetahat,A,zero=FALSE){
   saveRDS(covmat,paste0("covmat",A,".rds"))
   
   return(covmat)}
+
+
+
+#'@title total.quant.per.snp.with.vmat
+#'@param covmat a K list of covariance matrices
+#'@param b.gp.hat JxR matrix of mles
+#'@param var.mat RxR matrix of variance
+#'@param pis Kx1 matrix of prior weights
+#'@return writes the posterior weighted quantities to a file
+#'@export
+
+total.quant.per.snp.with.vmat=function(j,covmat,b.gp.hat,var.mat,pis,A,checkpoint=FALSE){
+  gene.snp.name=rownames(b.gp.hat)[j]
+  V.gp.hat=var.mat
+  b.mle=b.gp.hat[j,]
+  R=ncol(b.mle)
+  #   lik.snp=lik.func(b.mle,V.gp.hat,covmat)
+  #   if(sum(lik.snp*pis)==0){post.weights=rep(1/length(pis),length(pis))}
+  #   else{post.weights=t(lik.snp*pis/sum(lik.snp*pis))}
+  
+  log.lik.snp=log.lik.func(b.mle,V.gp.hat,covmat)
+  log.lik.minus.max=log.lik.snp-max(log.lik.snp)
+  #log.pi=log(pis)
+  #s=log.lik.minus.max+log.pi
+  exp.vec=exp(log.lik.minus.max)
+  post.weights=t(exp.vec*pis/sum(exp.vec*pis))
+  
+  all.arrays=post.array.per.snp.with.vmat(var.mat =var.mat, j,covmat,b.gp.hat)
+  post.means=all.arrays$post.means
+  post.ups=all.arrays$post.ups
+  post.downs=all.arrays$post.downs
+  post.covs=all.arrays$post.covs
+  post.nulls=all.arrays$post.nulls
+  
+  all.nulls=total.null.per.snp(post.weights,post.nulls)
+  all.mus=total.mean.per.snp(post.weights,post.means)
+  all.ups=total.up.per.snp(post.weights,post.ups)
+  all.downs=total.down.per.snp(post.weights,post.downs)
+  lfsr=t(lfsr.per.snp(all.ups,all.downs))
+  all.covs.partone=total.covs.partone.persnp(post.means,post.covs,post.weights)
+  marginal.var=all.covs.partone-all.mus^2
+  rownames(all.mus)=gene.snp.name
+  rownames(all.ups)=gene.snp.name
+  rownames(all.downs)=gene.snp.name
+  rownames(lfsr)=gene.snp.name
+  rownames(marginal.var)=gene.snp.name
+  rownames(all.nulls)=gene.snp.name
+  
+  if(checkpoint==FALSE){
+    write.table(all.mus,paste0(A,"posterior.means.txt"),append=TRUE,col.names=FALSE)
+    write.table(all.ups,paste0(A,"posterior.ups.txt"),append=TRUE,col.names=FALSE)
+    write.table(all.downs,paste0(A,"posterior.downs.txt"),append=TRUE,col.names=FALSE)
+    write.table(all.nulls,paste0(A,"posterior.nulls.txt"),append=TRUE,col.names=FALSE)
+    write.table(marginal.var,paste0(A,"marginal.var.txt"),append=TRUE,col.names=FALSE)
+    write.table(lfsr,paste0(A,"lfsr.txt"),append=TRUE,col.names=FALSE)
+    write.table(post.weights,paste0(A,"post.weights.txt"),append=TRUE,col.names=FALSE)}
+  else{return(list(posterior.means=all.mus,posterior.nulls=all.nulls,posterior.downs=all.downs,posterior.ups=all.ups,lfsr=lfsr,marginal.var=marginal.var,post.weights=post.weights))}
+}
 
 
 

@@ -170,7 +170,7 @@ max.step.func = function(post.means,post.covs,q.mat){
 #' @title fixpoint.cov
 #' @details combines e and m step
 #' @param max.step a list of K pis and the true.covs arrays KxRxR which will be parsed by the e.step
-#' @param dim.true.covs=kxrxr
+#' @param dimtruecovs = kxrxr
 #' @return a 2 element list of K pis and the KxRxR true.covariance arrays
 #' @export
 fixpoint.cov = function(max.step.unlist,b.j.hat,se.j.hat){  
@@ -226,10 +226,10 @@ penlogliksarah = function(max.step.unlist,b.j.hat,se.j.hat){
 
 #' @title deconvolution.em
 #' @details wrapper to compute denoised estimates of the fuller rank covariance matrices
-#' @param t.stat
-#' @param P = rank of PC approxiatmion
-#' @param Q = rank of SFA approximation
-#' @param permsnp = number of strong stats you want to train on (default is 1000)
+#' @param t stat
+#' @param P rank of PC approxiatmion
+#' @param Q rank of SFA approximation
+#' @param permsnp number of strong stats you want to train on (default is 1000)
 #' @return a 2 element list of K pis and the KxRxR true.covariance arrays
 #' @export
 
@@ -260,9 +260,9 @@ deconvolution.em <- function(t.stat,factor.mat,lambda.mat,K,P,permsnp=1000){
 
 #' @title get.prior.covar.with.max.step
 #' @details wrapper to compute denoised estimates of the fuller rank covariance matrices
-#' @param t.stat
-#' @param P = rank of PC approxiatmion
-#' @param Q = rank of SFA approximation
+#' @param t stat
+#' @param P rank of PC approxiatmion
+#' @param Q rank of SFA approximation
 #' @param permsnp = number of strong stats you want to train on (default is 1000)
 #' @return a 2 element list of K pis and the KxRxR true.covariance arrays
 #' @export
@@ -396,9 +396,9 @@ test.funct=function(j,max.step.unlist,k,R){
 
 #' @title get.prior.covar.with.all.max.step
 #' @details wrapper to compute denoised estimates of the fuller rank covariance matrices
-#' @param t.stat
-#' @param P = rank of PC approxiatmion
-#' @param Q = rank of SFA approximation
+#' @param t stat
+#' @param P rank of PC approxiatmion
+#' @param Q rank of SFA approximation
 #' @param permsnp = number of strong stats you want to train on (default is 1000)
 #' @return a 2 element list of K pis and the KxRxR true.covariance arrays
 #' @export
@@ -492,9 +492,9 @@ compute.hm.covmat.all.max.step = function(b.hat,se.hat,t.stat,Q,lambda.mat,A,fac
 
 #' @title get.prior.covar.with.all.max.step
 #' @details wrapper to compute denoised estimates of the fuller rank covariance matrices
-#' @param t.stat
-#' @param P = rank of PC approxiatmion
-#' @param Q = rank of SFA approximation
+#' @param t stat
+#' @param P rank of PC approxiatmion
+#' @param Q rank of SFA approximation
 #' @param permsnp = number of strong stats you want to train on (default is 1000)
 #' @return a 2 element list of K pis and the KxRxR true.covariance arrays
 #' @export
@@ -565,9 +565,9 @@ compute.hm.covmat.all.max.step.no.pc = function(t.stat,v.j,Q,lambda.mat,A,factor
 
 #' @title deconvolution.em.with.max.iter
 #' @details wrapper to compute denoised estimates of the fuller rank covariance matrices
-#' @param t.stat
-#' @param P = rank of PC approxiatmion
-#' @param Q = rank of SFA approximation
+#' @param t stat
+#' @param P rank of PC approxiatmion
+#' @param Q rank of SFA approximation
 #' @param permsnp = number of strong stats you want to train on (default is 1000)
 #' @return a 2 element list of K pis and the KxRxR true.covariance arrays
 #' @export
@@ -599,9 +599,9 @@ deconvolution.em.with.max.iter <- function(t.stat,factor.mat,lambda.mat,K,P,perm
 
 #' @title deconvolution.em.with.loop
 #' @details wrapper to compute denoised estimates of the fuller rank covariance matrices
-#' @param t.stat
-#' @param P = rank of PC approxiatmion
-#' @param Q = rank of SFA approximation
+#' @param t stat
+#' @param P rank of PC approxiatmion
+#' @param Q rank of SFA approximation
 #' @param permsnp = number of strong stats you want to train on (default is 1000)
 #' @return a 2 element list of K pis and the KxRxR true.covariance arrays
 #' @export
@@ -643,9 +643,9 @@ deconvolution.em.with.loop <- function(t.stat,factor.mat,lambda.mat,K,P,permsnp=
 
 #' @title deconvolution.em.bovy
 #' @details wrapper to compute denoised estimates of the fuller rank covariance matrices
-#' @param t.stat
-#' @param P = rank of PC approxiatmion
-#' @param Q = rank of SFA approximation
+#' @param t stat
+#' @param P rank of PC approxiatmion
+#' @param Q rank of SFA approximation
 #' @param permsnp = number of strong stats you want to train on (default is 1000)
 #' @return a 2 element list of K pis and the KxRxR true.covariance arrays
 #' @export
