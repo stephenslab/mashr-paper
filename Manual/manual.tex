@@ -342,7 +342,7 @@ s=deconvolution.em(t.stat = t.stat,factor.mat = factor.mat,lambda.mat = lambda.m
 We now feed this object containing the 'denoised' empirical covariance matrix into our compute covariance matrices structure to produce the full set of covariance matrices.
 
 \begin{verbatim}
-covmat=compute.hm.covmat(t.stat,v.j,Q,lambda.mat,P,A,factor.mat,max.step=s)
+covmat=compute.hm.covmat.with.max.step(t.stat,v.j,Q,lambda.mat,P,A,factor.mat,max.step=s)
 \end{verbatim}    
 
 We now proceed as before, in estimating the weights on a set of largely null training data, here I use the largely null 'first batch' of summary statistics and compute the hierarchical mixture weights on this data. You can see that this function computes a matrix of likelihoods as described above, and then finds the optimal combination of weights to maximize this likelihood.
