@@ -217,4 +217,22 @@ plot(post.means[j,],post.weights%*%all.arrays$post.means)
 
 ```
 
+```{r,eval=F}
+library('gplots')
+library('colorRamps')
+A="reproseedomega2"
 
+pis=readRDS(paste0("pis",A,".rds"))$pihat
+
+pi.mat=matrix(pis[-length(pis)],byrow = T,ncol=54)
+cov=readRDS(paste0("covmat",A,".rds"))
+
+barplot(colSums(pi.mat))
+mostimportant=c(2:9)
+for(k in mostimportant){
+  x=cov[[k]]/max(diag(cov[[k]]))
+
+  heatmap.2(x,revC = T,col = blue2green(256),dendrogram="none",density="none",trace="none")
+v=svd(cov[[k]])$v
+barplot(v[,1]/max(v[,1]))
+}
