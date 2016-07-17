@@ -22,12 +22,11 @@
 \newcommand{\Prd}{\mathsf{P}} % symbol for discrete proba
 \newcommand{\Exp}{\mathbb{E}} % symbol for expectation
 \newcommand{\Var}{\mathbb{V}} % symbol for variance
-\newcommand{\Cov}{\mathbb{C}} % symbol for covariance
 \newcommand{\Norm}{{\mathcal{N}}} % symbol for Normal distribution
-\newcommand{\BF}{{\text{BF}}} % symbol for Bayes factor
 \newcommand{\Lik}{{\mathcal{L}}} % symbol for likelihood
+
 \nonstopmode
-\title{EM Algorithm Derivation}
+\title{Mash No Basline}
 \author{Sarah Urbut}
 %\date{}							% Activate to display a given date or no date
 
@@ -37,7 +36,7 @@
 \section{The EM Algorithm}
 \subsection{Purpose}
 
-The purpose of this document is to express a way of selecting a set of covariance matrices for fitting a mixture of multivariate normals. Previously, we have used a fixed grid of $U_k$ to represent the prior covariance matrices on the vector of `true' effects across tissues, $\bm{b}$. We then estimate the weights on each of these matrices $\pi$ hierarchically, using the EM algorithm. Here, we propose to estimates these covariance matrices simultaneously, thus reflecting the ideal patterns of covariance present in the data.
+The purpose of this document is to express a way of selecting a set of covariance matrices for fitting a mixture of multivariate normals. Previously, we have used a fixed set of $U_k$ to represent the prior covariance matrices on the vector of `true' effects across tissues, $\bm{b}$. We then estimate the weights on each of these matrices $\pi$ hierarchically, using the EM algorithm. Here, we propose to estimates these covariance matrices simultaneously, thus reflecting the ideal patterns of covariance present in the data.
 
 
 \subsection{Defining the Model}
