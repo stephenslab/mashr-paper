@@ -1391,9 +1391,11 @@ compute.hm.train.log.lik.vmat=function(train.b,v.mat,covmat,A){
 
 
 #'@title post.array.per.snp.with.vmat
+#'@param cormat is the matrix of corerlation of errors
+#'@param segphat is a the JxR matrix of standard errors for scaling
 #'@export
 
-post.array.per.snp.with.vmat=function(j,covmat,b.gp.hat,var.mat){
+post.array.per.snp.with.vmat=function(j,covmat,b.gp.hat,se.gp.hat,cormat){
   
   
   R=ncol(b.gp.hat)
@@ -1405,7 +1407,9 @@ post.array.per.snp.with.vmat=function(j,covmat,b.gp.hat,var.mat){
   post.downs=array(NA,dim=c(K,R))
   
   b.mle=as.vector(t(b.gp.hat[j,]))##turn i into a R x 1 vector
-  V.gp.hat=var.mat
+  sehat=diag(se.gp.hat[j,])
+  
+  V.gp.hat=sehat%*%cormat%*%sehat###make sure to scale the correlation matrix of errors
   V.gp.hat.inv <- solve(V.gp.hat)
   
   for(k in 1:K){
@@ -1682,20 +1686,19 @@ compute.covmat.with.heterogeneity = function(b.gp.hat,sebetahat,A,zero=FALSE){
 #'@title total.quant.per.snp.with.vmat
 #'@param covmat a K list of covariance matrices
 #'@param b.gp.hat JxR matrix of mles
-#'@param var.mat RxR matrix of variance
+#'@param se.gp.hat JxR matrix of standarderrors
+#'@param cormat RxR matrix of variance
 #'@param pis Kx1 matrix of prior weights
 #'@return writes the posterior weighted quantities to a file
 #'@export
 
-total.quant.per.snp.with.vmat=function(j,covmat,b.gp.hat,var.mat,pis,A,checkpoint=FALSE){
+total.quant.per.snp.with.vmat=function(j,covmat,b.gp.hat,cormat,se.gp.hat,pis,A,checkpoint=FALSE){
   gene.snp.name=rownames(b.gp.hat)[j]
-  V.gp.hat=var.mat
+  sehat=diag(se.gp.hat[j,])
+  V.gp.hat=sehat%*%cormat%*%sehat###make sure to scale the correlation matrix of errors
+  V.gp.hat.inv <- solve(V.gp.hat)
   b.mle=b.gp.hat[j,]
   R=ncol(b.mle)
-  #   lik.snp=lik.func(b.mle,V.gp.hat,covmat)
-  #   if(sum(lik.snp*pis)==0){post.weights=rep(1/length(pis),length(pis))}
-  #   else{post.weights=t(lik.snp*pis/sum(lik.snp*pis))}
-  
   log.lik.snp=log.lik.func(b.mle,V.gp.hat,covmat)
   log.lik.minus.max=log.lik.snp-max(log.lik.snp)
   #log.pi=log(pis)
@@ -1703,7 +1706,7 @@ total.quant.per.snp.with.vmat=function(j,covmat,b.gp.hat,var.mat,pis,A,checkpoin
   exp.vec=exp(log.lik.minus.max)
   post.weights=t(exp.vec*pis/sum(exp.vec*pis))
   
-  all.arrays=post.array.per.snp.with.vmat(var.mat =var.mat, j,covmat,b.gp.hat)
+  all.arrays=post.array.per.snp.with.vmat(j,covmat,b.gp.hat,se.gp.hat,cormat)
   post.means=all.arrays$post.means
   post.ups=all.arrays$post.ups
   post.downs=all.arrays$post.downs

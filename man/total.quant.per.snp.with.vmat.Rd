@@ -4,7 +4,7 @@
 \alias{total.quant.per.snp.with.vmat}
 \title{total.quant.per.snp.with.vmat}
 \usage{
-total.quant.per.snp.with.vmat(j, covmat, b.gp.hat, var.mat, pis, A,
+total.quant.per.snp.with.vmat(j, covmat, b.gp.hat, cormat, se.gp.hat, pis, A,
   checkpoint = FALSE)
 }
 \arguments{
@@ -12,7 +12,9 @@ total.quant.per.snp.with.vmat(j, covmat, b.gp.hat, var.mat, pis, A,
 
 \item{b.gp.hat}{JxR matrix of mles}
 
-\item{var.mat}{RxR matrix of variance}
+\item{cormat}{RxR matrix of variance}
+
+\item{se.gp.hat}{JxR matrix of standarderrors}
 
 \item{pis}{Kx1 matrix of prior weights}
 }

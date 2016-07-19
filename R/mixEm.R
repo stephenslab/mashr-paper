@@ -247,21 +247,29 @@ compute.hm.train.log.lik.pen=function(train.b,se.train,covmat,A,pen){
 #' @title compute.hm.train.log.lik.pen.vmat
 #' @description = takes a matrix of training sumamry statistics and their standard errors and computes the likelihood matrix according to a list of covariance matrices, using the exponent of the log likelihood - max (llj)
 #' @param train.b =  JxR matrix of training beta hats
+#' @param train.s =  JxR matrix of training serrors
 #' @param covmat = LxK dimenstional (unlisted list) of prior covariance matrices
 #' @param  A  output file name
 #' @param  Pen likelihood penalty, default1
-#' @param  matrix of variances of residuals, the same for every gene
+#' @param  cormatrix of correlation of residuals, the same for every gene
 #' @return An object containing pis and model fit from the EM, and a pdf barplot
 #' @export
 
 
-compute.hm.train.log.lik.pen.vmat=function(train.b,covmat,A,pen,vmat){
+compute.hm.train.log.lik.pen.vmat=function(train.b,covmat,A,pen,train.s,cormat){
   
   J=nrow(train.b)
   R=ncol(train.b)
   
+  
+
+
+  
   if(file.exists(paste0("liketrain",A,".rds"))==FALSE){
-    lik.mat=t(sapply(seq(1:J),function(x){log.lik.func(b.mle=train.b[x,],V.gp.hat=vmat,covmat)}))##be sure to use log lik function
+    lik.mat=t(sapply(seq(1:J),function(x){
+      sehat=diag(train.s[x,]);
+      vmat=sehat%*%cormat%*%sehat###make sure to scale the correlation matrix of errors
+      log.lik.func(b.mle=train.b[x,],V.gp.hat=vmat,covmat)}))##be sure to use log lik function
     
     saveRDS(lik.mat,paste0("liketrain",A,".rds"))}
   

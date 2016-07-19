@@ -3,3 +3,24 @@ library("mash")
 compute.hm.train.log.lik
 total.quant.per.snp
 compute.covmat
+n=1
+for(i in 1)
+n=5
+mat=matrix(NA,nrow=10,ncol=10);for(i in 1:10){#
+mat[i,i]=1;mat[i,-i]=rep(1/n,10-1)}
+mat
+mat%*%mat
+mat%*%t(mat)
+t(mat)%*%(mat)
+mat
+mat=matrix(NA,nrow=10,ncol=10);for(i in 1:10){#
+mat[i,i]=1;mat[i,-i]=rep(1-1/n,10-1)}
+t(mat)%*%(mat)
+mat%*%t(mat)
+mat
+dim(mat)
+mat%*%mat
+library("limma")
+install.packages("limma")
+1
+1

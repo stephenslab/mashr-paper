@@ -4,7 +4,7 @@
 \alias{compute.hm.train.log.lik.pen.vmat}
 \title{compute.hm.train.log.lik.pen.vmat}
 \usage{
-compute.hm.train.log.lik.pen.vmat(train.b, covmat, A, pen, vmat)
+compute.hm.train.log.lik.pen.vmat(train.b, covmat, A, pen, train.s, cormat)
 }
 \arguments{
 \item{train.b}{=  JxR matrix of training beta hats}
@@ -13,9 +13,11 @@ compute.hm.train.log.lik.pen.vmat(train.b, covmat, A, pen, vmat)
 
 \item{A}{output file name}
 
+\item{train.s}{=  JxR matrix of training serrors}
+
 \item{Pen}{likelihood penalty, default1}
 
-\item{matrix}{of variances of residuals, the same for every gene}
+\item{cormatrix}{of correlation of residuals, the same for every gene}
 }
 \value{
 An object containing pis and model fit from the EM, and a pdf barplot

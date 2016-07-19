@@ -4,6 +4,11 @@
 \alias{post.array.per.snp.with.vmat}
 \title{post.array.per.snp.with.vmat}
 \usage{
-post.array.per.snp.with.vmat(j, covmat, b.gp.hat, var.mat)
+post.array.per.snp.with.vmat(j, covmat, b.gp.hat, se.gp.hat, cormat)
+}
+\arguments{
+\item{cormat}{is the matrix of corerlation of errors}
+
+\item{segphat}{is a the JxR matrix of standard errors for scaling}
 }
 
