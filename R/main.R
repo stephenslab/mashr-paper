@@ -1293,20 +1293,25 @@ compute.lik.test.semat=function(b.test,J,v.mat,covmat,A,pis){
 
 #'@title compute.lik.test.loglik.vmat
 #'@param b.test JxR matrix with the mles for test gene-snp pairs
+#'@param s.test JxR matrix with standard errors for test gene snp pairs
 #'@param J number of gene snp pairs to consider
-#'@param v.mat RxR matrix of residual variance matrix, estimated as the same for all genes
+#'@param cormat RxR matrix of residual variance matrix, estimated as the same for all genes
 #'@param covmat K list of covariance matrices
 #'@param pis K matrix of HM weights form compute.hm.train
 #'@export
 
-compute.lik.test.loglik.vmat=function(b.test,J,v.mat,covmat,A,pis){
+compute.lik.test.loglik.vmat=function(b.test,s.test,J,cormat,covmat,A,pis){
   
   J=J
   R=ncol(b.test)
   
   if(file.exists(paste0("liketest",A,".rds"))==FALSE){
     #lik.mat=t(sapply(seq(1:J),function(x){lik.func(b.mle=b.test[x,],V.gp.hat=diag(se.test[x,])^2,covmat)}))
-    lik.mat=t(sapply(seq(1:J),function(x){log.lik.func(b.mle=b.test[x,],V.gp.hat=v.mat,covmat)}))
+    
+    lik.mat=t(sapply(seq(1:J),function(x){
+      sehat=diag(s.test[x,]);
+      vmat=sehat%*%cormat%*%sehat###make sure to scale the correlation matrix of errors
+      log.lik.func(b.mle=b.test[x,],V.gp.hat=vmat,covmat)}))
     saveRDS(lik.mat,paste0("liketest",A,".rds"))}
   
   else(lik.mat=readRDS(paste0("liketest",A,".rds")))
