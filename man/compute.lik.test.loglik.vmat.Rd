@@ -4,14 +4,16 @@
 \alias{compute.lik.test.loglik.vmat}
 \title{compute.lik.test.loglik.vmat}
 \usage{
-compute.lik.test.loglik.vmat(b.test, J, v.mat, covmat, A, pis)
+compute.lik.test.loglik.vmat(b.test, s.test, J, cormat, covmat, A, pis)
 }
 \arguments{
 \item{b.test}{JxR matrix with the mles for test gene-snp pairs}
 
+\item{s.test}{JxR matrix with standard errors for test gene snp pairs}
+
 \item{J}{number of gene snp pairs to consider}
 
-\item{v.mat}{RxR matrix of residual variance matrix, estimated as the same for all genes}
+\item{cormat}{RxR matrix of residual variance matrix, estimated as the same for all genes}
 
 \item{covmat}{K list of covariance matrices}
 

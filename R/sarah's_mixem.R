@@ -8,7 +8,7 @@ library("mvtnorm")
 #' @param tinv = variance of marginal distirbution of bhat, RxR matrix (e.g.,tinv=solve(U.k+V.j.hat)) )
 #' @param U.k = RxR prior covariance matrix
 #' @return component specific vector of posterior means for the jth gene snp pair
-
+#' @export
 post.b.jk.ed.mean = function(b.mle, tinv,U.k){
   b.jk=U.k%*%tinv%*%b.mle
   return(b.jk)}
@@ -25,7 +25,7 @@ lik.func.em=function(true.covs,b.mle,V.j.hat){sapply(seq(1:K),function(k){dmvnor
 #' @param tinv = variance of marginal distirbution of bhat, RxR matrix (e.g.,tinv=solve(U.k+V.j.hat)) )
 #' @param U.k = prior covariance matrix (RxR)
 #' @return RxR posterior covariance matrix for the Jth gene snp pair at the kth componenet
-
+#' @export
 post.b.jk.ed.cov = function(tinv,U.k){
   B.jk=U.k-U.k%*%tinv%*%U.k
   return(B.jk)}
