@@ -717,12 +717,12 @@ init.covmat.single=function(t.stat=t.stat,factor.mat=factors,lambda.mat=lambda,K
 
 
 
-compute.hm.covmat.all.max.step.withQ = function(b.hat,se.hat,t.stat,v.j,lambda.mat,A,factor.mat,max.step,Q){
+compute.hm.covmat.all.max.step.withQ = function(b.hat,se.hat,t.stat,v.j,lambda.mat,A,factor.mat,max.step,Q,power=1){
   X.real=as.matrix(t.stat)
   X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
   R=ncol(X.c)
   omega=mult.tissue.grid(mult=sqrt(2),b.hat,se.hat)
-  omega.table=data.frame(omega)
+  omega.table=data.frame(omega)^power
   lambda.mat=lambda.mat
   A=A
   factor.mat=factor.mat
