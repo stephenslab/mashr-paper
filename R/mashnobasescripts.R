@@ -260,18 +260,18 @@ init.covmat.single.with.projection=function(t.stat=t.stat,factor.mat=factors,lam
   return(true.covs)
 }
 
-#' @title deconvolution.em.bovy
+#' @title deconvolution.em.bovy.with.L
 #' @details wrapper to compute denoised estimates of the fuller rank covariance matrices
 #' @param t.stat the R centered matrix to initalize covariance matrices (should be w plus the additional column)
 #' @param w, the Mx(R-1) matrix of projected strong t statistics to fit Bovy
-#' @param vj the Mx(R-1) matrix of squared standard errors of w
+#' @param vj the array of LVL' (JxR-1xR-1)
 #' @param P rank of PC approxiatmion
 #' @param Q rank of SFA approximation
 #' @param L projection matrix, this can be Rx(R-1)
 #' @return a 2 element list of K pis and the KxRxR true.covariance arrays
 #' @export
 
-deconvolution.em.with.bovy=function(t.stat,factor.mat,v.j,lambda.mat,P,L,Q){
+deconvolution.em.with.bovy.with.L=function(t.stat,factor.mat,v.j,lambda.mat,P,L,Q){
   K=3+Q
   
   init.cov=init.covmat.single.with.projection(t.stat=t.stat,factor.mat = factor.mat,lambda.mat = lambda.mat,P=P,Q=Q)
