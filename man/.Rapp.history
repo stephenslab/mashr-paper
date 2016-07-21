@@ -23,4 +23,3 @@ mat%*%mat
 library("limma")
 install.packages("limma")
 1
-1

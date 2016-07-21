@@ -1,10 +1,23 @@
 
 
+#' @title post.cov.with.proj
+#' @param L projection matrix
+#' @param b.gp.hat projected L
+#' @param tinv inverse of marginal covariance of b.mle
+#' @param U.k prior covariance of true effect
+#' @export
 
 post.cov.with.proj=function(tinv,U.k,L){
   B.jk=U.k-U.k%*%t(L)%*%tinv%*%L%*%U.k
   return(B.jk)}
 
+
+#' @title post.mean.with.proj
+#' @param L projection matrix
+#' @param b.mle projected L
+#' @param tinv inverse of marginal covariance of b.mle
+#' @param U.k prior covariance of true effect
+#' @export
 
 post.mean.with.proj=function(b.mle, tinv,U.k,L){
   b.jk=U.k%*%t(L)%*%tinv%*%b.mle
@@ -199,3 +212,118 @@ compute.lik.test.withL=function(b.test,J,se.test,covmat,A,pis,L){
   
   
 }
+
+
+#' @title init.covmat.with.projection
+#' @param t.stat matrix of transformed strong statistics (MxR) from which to derive covariance matrices (note this P will need to be RxR)
+#' @param factor.mat KxR matrix of factors that have computed on strong projected ts from SFA
+#' @param lambda.mat KxR matric of loadings that have been computed strong projected ts , also from SFA
+#' @param K number of components to fit (i.e., the first dimension of the array), default is 3+Q
+#' @param P rank of SVD approximation
+#' @return KxRxR matric of prior covariance matrices to initialize the EM
+#' @export
+
+
+init.covmat.single.with.projection=function(t.stat=t.stat,factor.mat=factors,lambda.mat=lambda,P,Q){
+  K=3+Q
+  R=ncol(t.stat)#number of tissues
+  true.covs=array(NA,dim=c(K,R,R))
+  
+  X.t=as.matrix(t.stat)
+  X.real=X.t
+  X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
+  
+  M=nrow(X.c)
+  data.prox=((t(X.c)%*%X.c)/(M-1))
+  true.covs[1,,]=data.prox
+  full.rank=lambda.mat%*%factor.mat
+  if(K>1){
+    sfa.prox=(t(full.rank)%*%full.rank)/(M-1)
+    true.covs[2,,]=sfa.prox
+    
+    svd.X=svd(X.c)
+    v=svd.X$v;u=svd.X$u;d=svd.X$d
+    cov.pc=1/M*v[,1:P]%*%diag(d[1:P])%*%t(u[,1:P])%*%t(v[,1:P]%*%diag(d[1:P])%*%t(u[,1:P]))
+    true.covs[3,,]=cov.pc
+    
+    
+    
+    if(Q!=0){for(q in 1:Q){
+      
+      load=as.matrix(lambda.mat[,q])
+      fact=as.matrix(factor.mat[q,])
+      rank.prox=load%*%t(fact)
+      a=(1/(M-1)*(t(rank.prox)%*% rank.prox))
+      
+      true.covs[3+q,,]=a
+    }}}
+  return(true.covs)
+}
+
+#' @title deconvolution.em.bovy
+#' @details wrapper to compute denoised estimates of the fuller rank covariance matrices
+#' @param t.stat the R centered matrix to initalize covariance matrices (should be w plus the additional column)
+#' @param w, the Mx(R-1) matrix of projected strong t statistics to fit Bovy
+#' @param vj the Mx(R-1) matrix of squared standard errors of w
+#' @param P rank of PC approxiatmion
+#' @param Q rank of SFA approximation
+#' @param L projection matrix, this can be Rx(R-1)
+#' @return a 2 element list of K pis and the KxRxR true.covariance arrays
+#' @export
+
+deconvolution.em.with.bovy=function(t.stat,factor.mat,v.j,lambda.mat,P,L,Q){
+  K=3+Q
+  
+  init.cov=init.covmat.single.with.projection(t.stat=t.stat,factor.mat = factor.mat,lambda.mat = lambda.mat,P=P,Q=Q)
+  init.cov.list=list()
+  for(i in 1:K){init.cov.list[[i]]=init.cov[i,,]}
+  #head(init.cov.list)
+  mean.mat=matrix(rep(0,ncol(t.stat)*nrow(t.stat)),ncol=ncol(t.stat),nrow=nrow(t.stat))
+  
+  ydata=  w
+  xamp= rep(1/K,K)
+  xcovar= init.cov.list
+  fixmean= TRUE     
+  ycovar=  v.j     
+  xmean=   mean.mat   
+  projection=list();for(l in 1:nrow(t.stat)){projection[[l]]=L}
+  
+  e=extreme_deconvolution(ydata=ydata,ycovar=ycovar,xamp=xamp,xmean=xmean,xcovar=init.cov.list,fixmean=T,projection=projection)
+  
+  true.covs=array(dim=c(K,R,R))
+  for(i in 1:K){true.covs[i,,]=e$xcovar[[i]]}
+  pi=e$xamp
+  max.step=list(true.covs=true.covs,pi=pi)
+  return(max.step)}
+
+
+
+
+#' @title convertstandarderrors
+#' @param s.j matrix of unscaled standard errors
+#' @param L projection matrix, this can be Rx(R-1)
+#' @return the standard errors of wj, diag(LVL)
+#' @export
+
+convertstandarderrors=function(s.j,L){
+  t(apply(s.j,1,function(x){
+  v.j=diag(x)^(2)
+  lvl=L%*%v.j%*%t(L)
+  return(sqrt(diag(lvl)))}))}
+
+#' @title genlvlarray
+#' @param s.j matrix of unscaled standard errors
+#' @param L projection matrix, this can be Rx(R-1)
+#' @return the JxRxR (or R-1) array of marginal variances
+#' @export
+
+genlvlarray=function(s.j,L){
+  LVLarray=array(dim=c(nrow(s.j),nrow(L),nrow(L)))
+  for(i in 1:nrow(s.j)){
+    v=diag(s.j[i,])^2
+    LVLarray[i,,]=L%*%v%*%t(L)
+  }
+  return(LVLarray)}
+
+
+
