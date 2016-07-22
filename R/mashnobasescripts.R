@@ -271,7 +271,7 @@ init.covmat.single.with.projection=function(t.stat=t.stat,factor.mat=factors,lam
 #' @return a 2 element list of K pis and the KxRxR true.covariance arrays
 #' @export
 
-deconvolution.em.with.bovy.with.L=function(t.stat,factor.mat,v.j,lambda.mat,P,L,Q){
+deconvolution.em.with.bovy.with.L=function(t.stat,factor.mat,v.j,lambda.mat,P,L,Q,w){
   K=3+Q
   
   init.cov=init.covmat.single.with.projection(t.stat=t.stat,factor.mat = factor.mat,lambda.mat = lambda.mat,P=P,Q=Q)
