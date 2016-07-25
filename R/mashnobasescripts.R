@@ -265,6 +265,7 @@ init.covmat.single.with.projection=function(t.stat=t.stat,factor.mat=factors,lam
 #' @param t.stat the R centered matrix to initalize covariance matrices (should be w plus the additional column)
 #' @param w, the Mx(R-1) matrix of projected strong t statistics to fit Bovy
 #' @param vj the array of LVL' (JxR-1xR-1)
+#' @details note that w and vj, L should all by R-1, while t.stat and factor mat should be R
 #' @param P rank of PC approxiatmion
 #' @param Q rank of SFA approximation
 #' @param L projection matrix, this can be Rx(R-1)
