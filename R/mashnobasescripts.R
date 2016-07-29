@@ -326,7 +326,19 @@ genlvlarray=function(s.j,L){
   }
   return(LVLarray)}
 
+#' @title genlvllist
+#' @param s.j matrix of unscaled standard errors
+#' @param L projection matrix, this can be Rx(R-1)
+#' @return the JxRxR (or R-1) array of marginal variances
+#' @export
 
+genlvllist=function(s.j,L){
+  LVLlist=list()
+  for(i in 1:nrow(s.j)){
+    v=diag(s.j[i,])^2
+    LVLlist[[i]]=L%*%v%*%t(L)
+  }
+  return(LVLlist)}
 
 
 
