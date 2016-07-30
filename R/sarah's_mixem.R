@@ -469,7 +469,7 @@ get.prior.covar.with.all.max.step <- function(X.c,max.step,lambda.mat, Q, factor
 #' @param maxp, minp - what should be the maximum (minimum) factor by which minimum sd and maximum autoselected sd are stretched, default=1
 #' @param Power should omega be autoselect.sd or autoselect.sd ^2; recall that in gtex, this is 1
 #' @return a list of covariance matrices
-
+#' @export 
 compute.hm.covmat.all.max.step = function(b.hat,se.hat,t.stat,Q,lambda.mat,A,factor.mat,max.step,zero=FALSE,maxp=1,minp=1,power=1){
   X.real=as.matrix(t.stat)
   X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
