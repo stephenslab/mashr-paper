@@ -1,0 +1,43 @@
+---
+title: "simscriptformean"
+output: html_document
+---
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+#simulate from factor model
+#' @param n number of SNPs
+#' @param d number of tissues
+#' @param betasd the measurement error
+#' @param esd the variance of the residual matrix E in Y=LF+E
+factor_sim=function(n=1000,d=3,betasd=1,esd=0.1,K=10){
+  
+  
+  configs = matrix((runif(d*K)),byrow=T,ncol=d) # A matrix of K classes (patterns) across R subgroups 
+  F=as.matrix(configs) ## Now think of F[k,1] as how much eigenconfig 1 tissue 1 has across all SNPs,  F[k,2] is how much tissue 2 has eigenconfig 2 (or the relative importance of tissue 1 in eigenconfig1)
+  k = nrow(F) # number of factors
+  
+  possible_loadings = diag(k) #set possible loadings to be "sparse" (loaded on one factor each)
+  z = sample(nrow(F),n,replace=TRUE) # randomly sample factor to be loaded on for each SNP
+  L = possible_loadings[z,] 
+  listofrhos=as.list(runif(K))###correlation coefficients
+  covmat=lapply(seq(1:K),function(k){
+    rho=listofrhos[[k]]
+    cormat=rep(1,d)%*%t(rep(1,d))*rho+(1-rho)*diag(d);#make the errors correlated
+    f=sqrt(F[k,])
+    covmat=diag(f)%*%cormat%*%diag(f)}##now v.j.r will be the same for every J
+  mus=rnorm(n)  return(list(beta=beta,betahat=betahat,L=L,F=F,E=E))
+}
+
+```
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
