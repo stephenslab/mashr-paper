@@ -5,7 +5,7 @@
 #' @param betasd the vriance of true effect
 #' @param esd the standard error of E in chat=mu+c+E, i.e., E~N(0,diag(esd^2))
 #' @export
-library()
+
 chat_sim=function(n=1000,d=3,betasd=1,esd=0.1,K=10){
   J=0.10*n
   
@@ -45,5 +45,5 @@ t=chat/sj
  return(list(beta=beta,chat=chat,covmat=covmat,components=z,t=t,mumat=mumat,shat=sj))
 }
 
-```
+
 
