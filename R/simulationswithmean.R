@@ -9,13 +9,13 @@
 chat_sim=function(n=1000,d=3,betasd=1,esd=0.1,K=10){
   J=0.10*n
   
-  configs = matrix((rnorm(d*K)),byrow=T,ncol=d) # A matrix of K classes (patterns) across R subgroups 
-  F=as.matrix(configs);ftf=lapply(seq(1:K),function(k){F[k,]%*%t(F[k,])}) ## each entry of F is the the factor of decomposition of covariance of effect sizes
-  cormat=lapply(seq(1:K),function(k){A=matrix(runif(d*d),nrow=d);cormat=A+t(A);diag(cormat)=rep(1,d);return(cormat)})
-  k = nrow(F) # number of factors
-  
-  possible_loadings = diag(k) #set possible loadings to be "sparse" (loaded on one factor each)
-  z = sample(nrow(F),J,replace=TRUE) # randomly sample factor to be loaded on for each real snp
+#   configs = matrix((rnorm(d*K)),byrow=T,ncol=d) # A matrix of K classes (patterns) across R subgroups 
+#   F=as.matrix(configs);ftf=lapply(seq(1:K),function(k){F[k,]%*%t(F[k,])}) ## each entry of F is the the factor of decomposition of covariance of effect sizes
+#   cormat=lapply(seq(1:K),function(k){A=matrix(runif(d*d),nrow=d);cormat=A+t(A);diag(cormat)=rep(1,d);return(cormat)})
+#   k = nrow(F) # number of factors
+#   
+#   possible_loadings = diag(k) #set possible loadings to be "sparse" (loaded on one factor each)
+  z = sample(K,J,replace=TRUE) # randomly sample factor to be loaded on for each real snp
  
 #   covmat=lapply(seq(1:K),function(k){
 #     A=ftf[[k]]*cormat[[k]]##multiply by pairwise correlations;
@@ -42,7 +42,7 @@ chat_sim=function(n=1000,d=3,betasd=1,esd=0.1,K=10){
   e=t(apply(sj,1,function(x){rmvnorm(1,mean=rep(0,d),sigma=diag(x)^2)}))
   chat=c+e
 t=chat/sj
- return(list(beta=beta,chat=chat,covmat=covmat,components=z,t=t,mumat=mumat,shat=sj))
+ return(list(beta=beta,chat=chat,covmat=covmat,components=z,t=t,mumat=mumat,shat=sj,error=e,ceff=c))
 }
 
 

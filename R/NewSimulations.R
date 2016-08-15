@@ -169,5 +169,56 @@ sim.with.error=function(J,d=44,betasd=1,esd=0.11,n=400,rho=0.8){
 }
 
 
+gtexchatsim=function(J,d=44,betasd=1,esd=0.11,tspec=0,n=400){
+  #n=trunc(0.008*J,units = 0)##number of significant gene-snp Pairs, so there are 100 snps in cis of a gene and one causal snp
+  n=n
+  #F=t(sapply(seq(1:K),function(x){rnorm(d,mean=0,sd=betasd)})) 
+  #covmat=readRDS("~/matrix_ash/inst/simdata/covmatforsimulation.rds")[2:9]
+  covmat=readRDS(system.file('simdata/covmatforsimulation.rds', package = 'mash'))[2:9]
+  covmat=lapply(seq(1:length(covmat)),function(x){covmat[[x]]/max(diag(covmat[[x]]))})
+  mus=rnorm(J)  ###generate a list of n mus
+  mumat=matrix(rep(mus,d),ncol=d) ##generate a matrix of mus for each gene
+  
+  if(tspec!=0){
+    configs=matrix(0,nrow=R,ncol=R)
+    for(r in 1:R){
+      configs[r,r]=1}
+    specs=sample(seq(1:d),tspec,replace=FALSE)##generate tissue specific configs if required
+    singleton.mat=list()
+    for(t in 1:length(specs)){
+      tissue=specs[t]
+      singleton.mat[[t]]=(configs[tissue,]%*%t(configs[tissue,]))}
+    covmat=append(covmat,singleton.mat)
+  }
+  
+  library("mvtnorm")
+  library("MASS")
+  K=length(covmat)
+  
+  z = sample(K,n,replace=TRUE)
+  
+  beta=t(sapply(seq(1:n),function(j){
+    k=z[j]
+    omega=abs(rnorm(1,mean=0,sd=betasd))##effect size variance can be big or small
+    mvrnorm(1,mu=rep(0,d),Sigma=omega*covmat[[k]])
+  }))
+  beta=rbind(beta,matrix(rep(0,(J-n)*d),ncol=d))
+  sj=abs(matrix(rnorm(J*d,0.11,0.001),ncol=d))##use uniform to simulate 'shrunken'
+  e=t(apply(sj,1,function(x){rmvnorm(1,mean=rep(0,d),sigma=diag(x)^2)}))
+  mus=rnorm(J)  ###generate a list of n mus
+  mumat=matrix(rep(mus,d),ncol=d) ##generate a matrix of mus for each gene
+  c=beta+mumat
+
+  chat=c+e
+  t=chat/sj
+  #betahat=rbind(betahat,)
+  tstat=chat/abs(sj)
+  return(list(beta=beta,chat=chat,covmat=covmat,components=z,t=t,mumat=mumat,shat=sj,error=e,ceff=c))
+  #return(list(beta=beta,betahat=betahat,component.mats=covmat,sebetahat=sj,tstat=tstat,component.id=z))
+}
+
+
+
+
 
 
