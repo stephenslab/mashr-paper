@@ -169,6 +169,9 @@ sim.with.error=function(J,d=44,betasd=1,esd=0.11,n=400,rho=0.8){
 }
 
 
+#' @title gtexchatsim
+#' @export
+
 gtexchatsim=function(J,d=44,betasd=1,esd=0.11,tspec=0,n=400){
   #n=trunc(0.008*J,units = 0)##number of significant gene-snp Pairs, so there are 100 snps in cis of a gene and one causal snp
   n=n
