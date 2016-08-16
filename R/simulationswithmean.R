@@ -34,7 +34,8 @@ chat_sim=function(n=1000,d=3,betasd=1,esd=0.1,K=10){
    beta=t(sapply(seq(1:J),function(j){
     k=z[j]
     omega=abs(rnorm(1,mean=0,sd=betasd))##effect size variance can be big or small
-    mvrnorm(1,mu=rep(0,d),Sigma=omega*covmat[[k]])
+    #mvrnorm(1,mu=rep(0,d),Sigma=omega*covmat[[k]])
+    rmvnorm(1,mean = rep(0,d),sigma=omega*covmat[[k]])
   }))
   
   beta=rbind(beta,matrix(rep(0,(n-J)*d),ncol=d))
