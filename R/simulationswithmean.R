@@ -22,8 +22,8 @@ chat_sim=function(n=1000,d=3,betasd=1,esd=0.1,K=10){
 #     A%*%t(A)##ensure positive semidefinite
 #     A/max(diag(A))##scale so max diag is 1
 #     })
-  library('clusterGeneration')
-RNGkind("Mersenne-Twister")##make sure not to mess with seed
+
+  #RNGkind("Mersenne-Twister")##make sure not to mess with seed
     covmat=lapply(seq(1:K),function(k){
    A=genPositiveDefMat("eigen",dim=d)$Sigma
     A/max(diag(A))##scale so max diag is 1
