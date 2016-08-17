@@ -206,7 +206,7 @@ gtexchatsim=function(J,d=44,betasd=1,esd=0.11,tspec=0,n=400){
     mvrnorm(1,mu=rep(0,d),Sigma=omega*covmat[[k]])
   }))
   beta=rbind(beta,matrix(rep(0,(J-n)*d),ncol=d))
-  sj=abs(matrix(rnorm(J*d,0.11,0.001),ncol=d))##use uniform to simulate 'shrunken'
+  sj=abs(matrix(rnorm(J*d,esd,0.001),ncol=d))##use uniform to simulate 'shrunken'
   e=t(apply(sj,1,function(x){rmvnorm(1,mean=rep(0,d),sigma=diag(x)^2)}))
   mus=rnorm(J)  ###generate a list of n mus
   mumat=matrix(rep(mus,d),ncol=d) ##generate a matrix of mus for each gene
