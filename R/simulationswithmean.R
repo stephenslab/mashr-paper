@@ -63,7 +63,10 @@ chat_sim_fact=function(n=1000,d=3,betasd=1,esd=0.1,K=10){
   
     configs = matrix((rnorm(d*K)),byrow=T,ncol=d) # A matrix of K classes (patterns) across R subgroups 
     F=as.matrix(configs);
-    covmat=lapply(seq(1:K),function(k){F[k,]%*%t(F[k,])}) ## each entry of F is the the factor of decomposition of covariance of effect sizes
+    covmat=lapply(seq(1:K),function(k){
+      A=F[k,]%*%t(F[k,]);
+      A/max(diag(A))})
+          ## each entry of F is the the factor of decomposition of covariance of effect sizes
     z = sample(K,J,replace=TRUE) # randomly sample factor to be loaded on for each real snp
   
      
@@ -82,5 +85,5 @@ chat_sim_fact=function(n=1000,d=3,betasd=1,esd=0.1,K=10){
   e=t(apply(sj,1,function(x){rmvnorm(1,mean=rep(0,d),sigma=diag(x)^2)}))
   chat=c+e
   t=chat/sj
-  return(list(beta=beta,chat=chat,covmat=covmat,components=z,t=t,mumat=mumat,shat=sj,error=e,ceff=c))
+  return(list(beta=beta,chat=chat,covmat=covmat,components=z,t=t,mumat=mumat,shat=sj,error=e,ceff=c,F=F))
 }
