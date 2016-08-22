@@ -4,7 +4,7 @@
 \alias{chat_sim_fact}
 \title{chat_sim_fact}
 \usage{
-chat_sim_fact(n = 1000, d = 3, betasd = 1, esd = 0.1, K = 10)
+chat_sim_fact(n = 1000, d = 44, betasd = 1, esd = 0.1, K = 10)
 }
 \arguments{
 \item{n}{number of SNPs}
@@ -14,5 +14,8 @@ chat_sim_fact(n = 1000, d = 3, betasd = 1, esd = 0.1, K = 10)
 \item{betasd}{the vriance of true effect}
 
 \item{esd}{the standard error of E in chat=mu+c+E, i.e., E~N(0,diag(esd^2))}
+}
+\value{
+omega the size of the effects
 }
 

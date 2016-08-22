@@ -54,28 +54,29 @@ t=chat/sj
 #' @param d number of subgroups
 #' @param betasd the vriance of true effect
 #' @param esd the standard error of E in chat=mu+c+E, i.e., E~N(0,diag(esd^2))
+#' @return omega the size of the effects
 #' @export
 
-chat_sim_fact=function(n=1000,d=3,betasd=1,esd=0.1,K=10){
- library("MASS")
- library("mvtnorm")
- J=0.10*n
+chat_sim_fact=function(n=1000,d=44,betasd=1,esd=0.1,K=10){
+  library("MASS")
+  library("mvtnorm")
+  J=0.10*n
   
-    configs = matrix((rnorm(d*K)),byrow=T,ncol=d) # A matrix of K classes (patterns) across R subgroups 
-    F=as.matrix(configs);
-    covmat=lapply(seq(1:K),function(k){
-      A=F[k,]%*%t(F[k,]);
-      A/max(diag(A))})
-          ## each entry of F is the the factor of decomposition of covariance of effect sizes
-    z = sample(K,J,replace=TRUE) # randomly sample factor to be loaded on for each real snp
+  configs = matrix((rnorm(d*K)),byrow=T,ncol=d) # A matrix of K classes (patterns) across R subgroups 
+  F=as.matrix(configs);
+  covmat=lapply(seq(1:K),function(k){
+    A=F[k,]%*%t(F[k,]);
+    A/max(diag(A))})
+  ## each entry of F is the the factor of decomposition of covariance of effect sizes
+  z = sample(K,J,replace=TRUE) # randomly sample factor to be loaded on for each real snp
   
-     
+  
   mus=rnorm(n)  ###generate a list of n mus
-  mumat=matrix(rep(mus,d),ncol=d) ##generate a matrix of mus for each gene
+  mumat=matrix(rep(mus,d),ncol=d)##generate a matrix of mus for each gene
+  omega=abs(rnorm(J,mean=0,sd=betasd))##effect size variance can be big or small
   beta=t(sapply(seq(1:J),function(j){
     k=z[j]
-    omega=abs(rnorm(1,mean=0,sd=betasd))##effect size variance can be big or small
-    mvrnorm(1,mu=rep(0,d),Sigma=omega*covmat[[k]])
+    mvrnorm(1,mu=rep(0,d),Sigma=omega[j]*covmat[[k]])
     #rmvnorm(1,mean = rep(0,d),sigma=omega*covmat[[k]])
   }))
   
@@ -85,5 +86,5 @@ chat_sim_fact=function(n=1000,d=3,betasd=1,esd=0.1,K=10){
   e=t(apply(sj,1,function(x){rmvnorm(1,mean=rep(0,d),sigma=diag(x)^2)}))
   chat=c+e
   t=chat/sj
-  return(list(beta=beta,chat=chat,covmat=covmat,components=z,t=t,mumat=mumat,shat=sj,error=e,ceff=c,F=F))
+  return(list(beta=beta,chat=chat,covmat=covmat,components=z,t=t,mumat=mumat,shat=sj,error=e,ceff=c,F=F,omega=omega))
 }
