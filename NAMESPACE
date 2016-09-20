@@ -3,6 +3,7 @@
 export(autoselect.mix.sd)
 export(chat_sim)
 export(chat_sim_fact)
+export(chat_sim_fsimple)
 export(checkfunc)
 export(checkfunc.html)
 export(compare.func)
