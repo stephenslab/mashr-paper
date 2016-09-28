@@ -1744,4 +1744,3 @@ total.quant.per.snp.with.vmat=function(j,covmat,b.gp.hat,cormat,se.gp.hat,pis,A,
 }
 
 
-
