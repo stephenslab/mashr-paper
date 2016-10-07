@@ -40,3 +40,24 @@ get.prior.covar.with.truth <- function(R,omega.table,covlist)  {
 
 
 
+#'@title compute.covmat.using.truth.fixed.omega
+#'@param covmat a K list of covariance matrices
+#'@param b.gp.hat JxR matrix of mles
+#'@param se.gp.hat JxR matrix of standarderrors
+#'@export
+
+compute.covmat.using.truth.fixed.omega = function(covlist,A,omega,zero=TRUE){
+  
+  test=list()
+  R=dim(covlist[[1]])[1]
+  test[[1]]=diag(1,R)
+  for(c in 1:length(covlist)){
+test[[c+1]]=omega*covlist[[c]]}
+if(zero==TRUE){covmat=c(test,list(matrix(rep(0,R*R),ncol=R,nrow=R)))}
+  saveRDS(covmat,paste0("covmat",A,".rds"))
+  
+  return(covmat)}
+
+
+
+

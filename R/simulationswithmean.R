@@ -165,3 +165,37 @@ chat_sim_fsingle=function(n=1000,d=8,betasd=1,esd=0.1,K=10){
   t=chat/sj
   return(list(beta=beta,chat=chat,covmat=covmat,t=t,mumat=mumat,shat=sj,error=e,ceff=c,omega=omega))
 }
+
+
+#' @title chat_sim_fsingle_fixedomega
+#' @param n number of SNPs
+#' @param d number of subgroups
+#' @param betasd the vriance of true effect
+#' @param esd the standard error of E in chat=mu+c+E, i.e., E~N(0,diag(esd^2))
+#' @return omega the size of the effects
+#' @return f the factors from which they were simulated
+#' @export
+
+chat_sim_fsingle_fixedomega=function(n=1000,d=8,omega=2,esd=0.1){
+  library("MASS")
+  library("mvtnorm")
+  J=0.10*n
+  config=rep(0,d)
+  config[d]=1
+  config[d-1]=1
+  mus=rnorm(n)  ###generate a list of n mus
+  covmat=(config)%*%t(config)##only active in tissues d and d-1
+  mumat=matrix(rep(mus,d),ncol=d)##generate a matrix of mus for each gene
+  
+  beta=t(sapply(seq(1:J),function(j){
+    
+    mvrnorm(1,mu=rep(0,d),Sigma=omega*covmat)}))
+  
+  beta=rbind(beta,matrix(rep(0,(n-J)*d),ncol=d))
+  c=beta+mumat
+  sj=abs(matrix(rnorm(n*d,esd,0.001),ncol=d))##use uniform to simulate 'shrunken'
+  e=t(apply(sj,1,function(x){rmvnorm(1,mean=rep(0,d),sigma=diag(x)^2)}))
+  chat=c+e
+  t=chat/sj
+  return(list(beta=beta,chat=chat,covmat=covmat,t=t,mumat=mumat,shat=sj,error=e,ceff=c,omega=omega))
+}
