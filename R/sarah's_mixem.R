@@ -715,23 +715,46 @@ init.covmat.single=function(t.stat=t.stat,factor.mat=factors,lambda.mat=lambda,K
 
 
 
+#' @title compute.hm.covmat.all.max.step.withQ
+#' @details wrapper to compute denoised estimates of the fuller rank covariance matrices
+#' @param t stat
+#' @param P rank of PC approxiatmion
+#' @param Q rank of SFA approximation
+#' @param permsnp = number of strong stats you want to train on (default is 1000)
+#' @return a 2 element list of K pis and the KxRxR true.covariance arrays
+#' @export
 
-
-compute.hm.covmat.all.max.step.withQ = function(b.hat,se.hat,t.stat,v.j,lambda.mat,A,factor.mat,max.step,Q,power=1){
+compute.hm.covmat.all.max.step.withQ = function(b.hat,se.hat,t.stat,v.j,lambda.mat,A,factor.mat,max.step,Q,power=1,zero=TRUE,maxp=1,minp=1){
   X.real=as.matrix(t.stat)
   X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
   R=ncol(X.c)
-  omega=mult.tissue.grid(mult=sqrt(2),b.hat,se.hat)
-  omega.table=data.frame(omega)^power
+  omega=mult.tissue.grid(mult=sqrt(2),b.hat,se.hat,maxp,minp)^power
+  omega.table=data.frame(omega)
   lambda.mat=lambda.mat
   A=A
   factor.mat=factor.mat
   U.0kl=get.prior.covar.with.all.max.step.withQ(X.c,max.step = max.step,lambda.mat = lambda.mat,Q = Q,factor.mat = factor.mat,omega.table=omega.table,bma = TRUE)
   covmat=unlist(U.0kl,recursive=F)
-  saveRDS(covmat,paste0("covmat",A,".rds"))
   
-  return(covmat)}
+  if(zero==TRUE){
+    z=matrix(rep(0,R*R),ncol=R,nrow=R)
+    covmat=c(covmat,list(z))
+  }
+  
+  saveRDS(covmat,paste0("covmat",A,".rds"))
+  return(list(covmat=covmat,omega=omega.table))
+  #return(covmat)
+}
 
+
+#' @title get.prior.covar.with.all.max.step.withQ
+#' @details wrapper to compute denoised estimates of the fuller rank covariance matrices
+#' @param t stat
+#' @param P rank of PC approxiatmion
+#' @param Q rank of SFA approximation
+#' @param permsnp = number of strong stats you want to train on (default is 1000)
+#' @return a 2 element list of K pis and the KxRxR true.covariance arrays
+#' @export
 
 get.prior.covar.with.all.max.step.withQ <- function(X.c,max.step,lambda.mat, Q, factor.mat,omega.table,bma=TRUE)  {
   test=list()
