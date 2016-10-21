@@ -5,7 +5,7 @@
 \title{compute.hm.covmat.all.max.step.withQ}
 \usage{
 compute.hm.covmat.all.max.step.withQ(b.hat, se.hat, t.stat, v.j, lambda.mat, A,
-  factor.mat, max.step, Q, power = 1)
+  factor.mat, max.step, Q, power = 1, zero = TRUE, maxp = 1, minp = 1)
 }
 \arguments{
 \item{Q}{rank of SFA approximation}
