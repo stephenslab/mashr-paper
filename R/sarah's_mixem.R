@@ -470,7 +470,7 @@ get.prior.covar.with.all.max.step <- function(X.c,max.step,lambda.mat, Q, factor
 #' @param Power should omega be autoselect.sd or autoselect.sd ^2; recall that in gtex, this is 1
 #' @return a list of covariance matrices
 #' @export 
-compute.hm.covmat.all.max.step = function(b.hat,se.hat,t.stat,Q,lambda.mat,A,factor.mat,max.step,zero=FALSE,maxp=1,minp=1,power=1){
+compute.hm.covmat.all.max.step = function(b.hat,se.hat,t.stat,Q,lambda.mat,A,factor.mat,max.step,zero=FALSE,maxp=1,minp=1,power=1,bma=TRUE){
   X.real=as.matrix(t.stat)
   X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
   R=ncol(X.c)
@@ -479,7 +479,7 @@ compute.hm.covmat.all.max.step = function(b.hat,se.hat,t.stat,Q,lambda.mat,A,fac
   lambda.mat=lambda.mat
   A=A
   factor.mat=factor.mat
-  U.0kl=get.prior.covar.with.all.max.step(X.c,max.step = max.step,lambda.mat = lambda.mat,Q = Q,factor.mat = factor.mat,omega.table=omega.table,bma = TRUE)
+  U.0kl=get.prior.covar.with.all.max.step(X.c,max.step = max.step,lambda.mat = lambda.mat,Q = Q,factor.mat = factor.mat,omega.table=omega.table,bma = bma)
   covmat=unlist(U.0kl,recursive=F)
   if(zero==TRUE){
     z=matrix(rep(0,R*R),ncol=R,nrow=R)
