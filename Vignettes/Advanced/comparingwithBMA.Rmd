@@ -1,0 +1,114 @@
+---
+title: "bmaonly"
+output: html_document
+---
+The purpose is to simulate according to the patterns of sharing present in the GTEX V6 Data, where 100 snps in cis of 500 genes, $pi0$ is 0.80, and there is sharing according to gtex covmats 2:9. We now want to compare to the results using the bmalite configs for inference.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE)
+source("~/matrix_ash/R/main.R")
+```
+
+```{r simulatedata, eval=FALSE}
+source("~/matrix_ash/R/main.R")
+source("~/matrix_ash/R/NewSimulations.R")
+data=factor_sim_new(J = 50000)##simulate 50000 gene snp pairs
+t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta
+saveRDS(data,"~/Dropbox/simdata.rds")
+c=apply(t,1,function(x){max(abs(x))})
+maxes=order(c,decreasing = TRUE)[1:400]##take top 100 gene snp pairs
+max.t=t[maxes,]
+##sfa -gen ./maxt.txt -g 400 -n 44 -o tri_sim_strongt i -k 5
+
+factor.mat=as.matrix(read.table("~/Dropbox/tri_sim_strongt_F.out"))
+lambda.mat=as.matrix(read.table("~/Dropbox/tri_sim_strongt_lambda.out"))
+v.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
+covmat=compute.covmat(b.gp.hat = t,sebetahat = v.j,Q =5, t.stat=max.t,lambda.mat=lambda.mat,P=3,A="testim", factor.mat = factor.mat,bma = FALSE)
+```
+
+Now, let's fit the model using the random set of 20,000 gene snp pairs.
+
+```{r, eval=FALSE}
+
+compute.hm.train(train.b = t[1:20000,],se.train = v.j[1:20000,],covmat = covmat,A="Simulations")
+
+```
+
+Now, we can compute posteriors for, say, the first 10000 gene snp pairs:
+
+```{r computeposterior,eval=FALSE}
+A="Simulations"
+pis=readRDS(paste0("pis",A,".rds"))$pihat
+b.test=t[1:10000,]
+se.test=v.j[1:10000,]
+weightedquants=lapply(seq(1:10000),function(j){total.quant.per.snp(j,covmat,b.gp.hat=b.test,se.gp.hat = se.test,pis,A="Simulations",checkpoint = FALSE)})
+```
+
+We can compute the root mean squared error using MASH:
+```{r RMSE}
+data=readRDS("~/Dropbox/simdata.rds")
+t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta;v.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
+covmat=readRDS("~/Dropbox/covmattestim.rds")
+
+t.truth.test=beta/sebetahat
+post.means.mash=read.table("~/Dropbox/Simulationsposterior.means.txt")[,-1]
+sqrt(mean((t.truth.test[1:10000,]-post.means.mash)^2))
+```
+
+
+Now we want to perform the same inference, but using the BMAlite configs to estimate the posteriors.
+
+```{r estimate.with.bma}
+data=readRDS("~/Dropbox/simdata.rds")
+t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta;v.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
+c=apply(t,1,function(x){max(abs(x))})
+maxes=order(c,decreasing = TRUE)[1:400]##take top 100 gene snp pairs
+max.t=t[maxes,]
+##sfa -gen ./maxt.txt -g 400 -n 44 -o tri_sim_strongt i -k 5
+v.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
+covmat=compute.covmat.bma.only(b.gp.hat = t,sebetahat = v.j,A="testimBMAonly")
+```
+
+Now, let's fit the model using the random set of 20,000 gene snp pairs.
+
+```{r, eval=FALSE}
+A="testsimBMAonly"
+compute.hm.train.bma.only(train.b = t[1:20000,],se.train = v.j[1:20000,],covmat = covmat,A)
+compute.hm.train.log.lik(train.b = t[1:20000,],se.train = v.j[1:20000,],covmat = covmat,A = "test.new.log.lik.bma.only")
+
+```
+
+Now, we can compute posteriors for, say, the first 10000 gene snp pairs:
+
+```{r computeposteriorsbma,eval=FALSE}
+A="testsimBMAonly"
+pis=readRDS(paste0("pis",A,".rds"))$pihat
+b.test=t[1:10000,]
+se.test=v.j[1:10000,]
+weightedquants=lapply(seq(1:10000),function(j){total.quant.per.snp(j,covmat,b.gp.hat=b.test,se.gp.hat = se.test,pis,A=A,checkpoint = FALSE)})
+```
+
+Now, let's compute the RMSE:
+
+```{r rmsebma}
+t.truth.test=beta/sebetahat
+post.means=read.table("~/Dropbox/testsimBMAonlyposterior.means.txt")[,-1]
+sqrt(mean((t.truth.test[1:10000,]-post.means)^2))
+```
+
+Gutcheck:
+```{r gutcheck,eval=FALSE}
+j=sample.int(100,1)
+k=which.max(post.weights)
+b.mle=as.vector(t(t[j,]))##turn i into a R x 1 vector
+V.j.hat=diag(v.j[j,])^2
+V.j.hat.inv <- solve(V.j.hat)
+lik.snp=lik.func(b.mle,V.j.hat,covmat)
+post.weights=t(lik.snp*pis/sum(lik.snp*pis))
+a=post.array.per.snp(j,covmat = covmat,b.gp.hat = t,se.gp.hat = v.j)
+U.gp1kl <- (post.b.gpkl.cov(V.j.hat.inv, covmat[[k]]))
+mu.gp1kl <- as.array(post.b.gpkl.mean(b.mle, V.j.hat.inv, U.gp1kl))
+
+plot(a$post.means[k,],mu.gp1kl)
+plot(a$post.covs[k,],diag(U.gp1kl))
+plot(as.matrix(post.means[j,]),as.matrix(post.weights%*%a$post.means))

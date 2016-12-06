@@ -1,0 +1,42 @@
+---
+title: "test.R"
+output: html_document
+---
+
+Here is a sample way to run the script using an RMD file. First we load some data:
+
+```{r, echo=TRUE, warning=FALSE}
+rm(list=ls())
+setwd("/Users/sarahurbut/Dropbox/cyclingstatistician/beta_gp_continuous/matched")
+source("~/matrix_ash/R/main.R")
+source("~/matrix_ash/R/mixEm.R")
+start="firstbatch"
+
+b.gp.hat=na.omit(read.table(paste0(start,"beta.hat.unstd.txt"),header=F,skip=1)[,-c(1,2)])
+se.gp.hat=na.omit(read.table(paste0(start,"se.beta.hat.txt"),header=F,skip=1)[,-c(1,2)])
+t.stat=na.omit(read.table("filtered_SNP_batcht.stat.txt",header=F,skip=1)[,-c(1,2,3,48)])
+
+library("mvtnorm")
+
+
+R=ncol(b.gp.hat)#number of tissues
+X.t=as.matrix(t.stat)
+#X.real=X.t[which(truth$config!=0),]
+X.real=X.t
+X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
+R=ncol(X.t)
+M=nrow(X.c)
+
+library("mvtnorm")
+lambda=as.matrix(read.table("tri_gtex_strongmay10_lambda.out"))
+factor=as.matrix(read.table("tri_gtex_strongmay10_F.out"))
+covmat=compute.covmat(b.gp.hat,se.gp.hat,Q=5,X.c,lambda,P=2,A="filename",factor,bma=TRUE)
+all.arrays=compute.mixture.dist(b.gp.hat,J=5,se.gp.hat,covmat,A="filename",save=TRUE)
+compute.total.quant(A="filename",J=5)
+##Note that the checkfunc will only work if you saved the RDS objects##
+checkfunc(2,b.gp.hat,se.gp.hat,A="filename",k=8)
+
+```
+
+Checkfunc creates three checkpoint plots to check that componenet specific means and variances match the manual computation, and that the weighted posterior mean is computed and stored correctly. I ran on just the first 5 snps for illustration, but you can try if for any number of SNPS. Also, the readRDS(paste0("covmat",A,".rds")) allows you to see that the length of the list of your covariance matrices should correspond to the number of componenets in your mixture distribution.
+

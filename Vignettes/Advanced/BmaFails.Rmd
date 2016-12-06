@@ -1,0 +1,72 @@
+---
+title: "showingbmafaultwithfixpoint"
+output: html_document
+---
+
+The purpose of this document is to show that eQTLBMA configs sometimes fail:
+
+```{r}
+source("~/matrix_ash/R/mixEM.R")
+source("~/matrix_ash/R/main.R")
+library('mvtnorm')
+data=readRDS("~/Dropbox/simdata.rds")
+t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta;v.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
+covmat=readRDS("~/Dropbox/covmattestimBMAonly.rds")
+```
+Show that the likelihood computation is correct and that it matches the entries of the JxK matric of likelihoods that is input:
+```{r}
+dmvnorm(x=t[1,], sigma=covmat[[1]] + diag(v.j[1,]))
+matrix_lik=readRDS("~/Dropbox/liketraintestsimBMAonly.rds")
+head(lik.func(b.mle = t[1,],V.gp.hat = diag(v.j[1,]),covmat = covmat))
+head(matrix_lik[1,])
+```
+Make sure that the covmatrices are correct in that they recapitulate the bma configs:
+
+```{r}
+
+diag(covmat[[1]])
+diag(covmat[[45]])
+K=length(covmat)
+```
+Indeed, the problem is that the fit of BMA is so poor that the rowSums of the matrix of likelihoods is actually zero for some of the observed values, meaning that the EM algorithm will not work. I developed a workaround to exclude those rows from the parameter estimation, but this just goes to show how poor of a fit the model is:
+
+```{r show.rowsums}
+r=rowSums(matrix_lik)
+which(r==0)
+```
+
+Indeed, you'll note that the fixpoint function requires the rowSums to be non-zero:
+```{r}
+fixpoint
+```
+
+Look at the output:
+```{r}
+head(fixpoint(pi = rep(1/K,K),matrix_lik = matrix_lik,prior = rep(1,K)))
+```
+
+I created a workaround and also made the posterior weights default to 1/K if the $sum(pi*lik.snp)$ was 0 (because $p(K|D)=lik.snp*pi_k/sum_k(lik.snp*pi_k$)).
+
+```{r fixpoint.play}
+fixpoint.play
+```
+Workaround for post.weights:
+```{r eval=FALSE}
+lik.snp=lik.func(b.mle,V.gp.hat,covmat)
+if(sum(lik.snp*pis)==0){post.weights=rep(1/length(pis),length(pis))}
+  else{post.weights=t(lik.snp*pis/sum(lik.snp*pis))}
+```
+
+
+
+And now you can see it works:
+```{r, echo=TRUE}
+head(fixpoint.play(pi = rep(1/K,K),matrix_lik = matrix_lik,prior = rep(1,K)))
+```
+
+We can also design a fixpoint function to work with the matrix of log likelihoods:
+
+```{r}
+matrix.log.lik=readRDS("~/Dropbox/liketraintest.new.log.lik.bma.only.rds")
+head(fixpoint.norm.lik(pi = rep(1/K,K),matrix_lik = matrix.log.lik,prior = rep(1,K)))
+```

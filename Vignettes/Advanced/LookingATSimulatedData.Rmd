@@ -1,0 +1,47 @@
+---
+title: "UNDERSTANDINGSIMULATIONS"
+output: html_document
+---
+
+
+```{r}
+data=readRDS("~/Dropbox/simdata_tspec.rds")
+t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta
+```
+
+Show which tissues are tissue specific:
+```{r}
+for(i in 9:13){
+  print(which(diag(data$component.mats[[i]])!=0))
+}
+```
+
+Show which componenet each is loaded on:
+```{r}
+cbind(seq(1:400),data$component.id)
+```
+
+Make a list of the components where the tissue spec componenets are described by active tissue and show distribution of loading.
+```{r}
+names=c(c(2:9),sapply(c(9:13),function(i){(which(diag(data$component.mats[[i]])!=0))}))
+class=cbind(names,(table(data$component.id))/400)
+barplot(class[,2],names=class[,1],main="TrueComponentFrequency")
+```
+Compare to estimated pis with MASH and BMA.lite:
+```{r estimated.pis}
+pi.t.spec=readRDS("~/Dropbox/pistesttissuespec.rds")$pihat
+pi.mat.mash=matrix(pi.t.spec,ncol=54,byrow=TRUE)
+barplot(colSums(pi.mat.mash),names=c(1:54),las=2,xlab="ComponenetID")
+pi.t.spec.bma=readRDS("~/Dropbox/pistestimBMAonly_tspec.rds")$pihat
+pi.mat.bma=matrix(pi.t.spec.bma,ncol=45,byrow=TRUE)
+barplot(colSums(pi.mat.bma),names=c(1:45),las=2,xlab="TissueID")
+```
+
+
+Show that a snp loaded on one of the 'shared' configs looks correct:
+```{r}
+j=which(data$component.id==2)[5]
+barplot(abs(t(t[j,])))
+barplot(diag(data$component.mats[[2]]))
+```
+

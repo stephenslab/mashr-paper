@@ -1,0 +1,318 @@
+\documentclass[11pt, oneside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
+
+\usepackage{amsmath}
+
+% EPS and PDF figures
+\usepackage{graphicx}
+
+% EPS and PDF figures
+%\usepackage[nomarkers,figuresonly]{endfloat}
+
+
+\usepackage{amssymb}
+\usepackage{bm}
+% \graphicspath{{./figures/}} % save all figures in the same directory
+\usepackage{color} 
+\usepackage{hyperref}
+\usepackage{parskip}
+
+\newcommand{\Prob}{\mathbb{P}} % symbol for proba
+\newcommand{\Prd}{\mathsf{P}} % symbol for discrete proba
+\newcommand{\Exp}{\mathbb{E}} % symbol for expectation
+\newcommand{\Var}{\mathbb{V}} % symbol for variance
+\newcommand{\Norm}{{\mathcal{N}}} % symbol for Normal distribution
+\newcommand{\Lik}{{\mathcal{L}}} % symbol for likelihood
+
+\nonstopmode
+\title{Mash No Basline}
+\author{Sarah Urbut}
+%\date{}							% Activate to display a given date or no date
+
+\date{\today}
+\begin{document}
+\maketitle
+\section{The EM Algorithm}
+\subsection{Purpose}
+
+The purpose of this document is to express a way of selecting a set of covariance matrices for fitting a mixture of multivariate normals. Previously, we have used a fixed set of $U_k$ to represent the prior covariance matrices on the vector of `true' effects across tissues, $\bm{b}$. We then estimate the weights on each of these matrices $\pi$ hierarchically, using the EM algorithm. Here, we propose to estimates these covariance matrices simultaneously, thus reflecting the ideal patterns of covariance present in the data.
+
+
+\subsection{Defining the Model}
+
+For a given gene-snp pair, $\bm{b}$ represents the $R$ vector of unknown standardized effect. We model the prior distribution from which $\bm{b}$ is drawn as a mixture of multivariate {\it Normals}.
+ 
+ \begin{equation}
+  \label{prior_b_mixt_grid}
+  \bm{b} | \bm{\pi},\bf{U} \sim \sum_{k,l} \pi_{k,l} \;{\it N}_R(\bm{0}, \omega_l U_{k})
+\end{equation}
+
+\begin{itemize}  
+\item Choice of $U_k$ determines the direction, while $\omega_l$ determines the 'stretch' or 'tails' of each distribution
+\item $\pi_{k,l}$ to represent the (unknown) prior weight on prior covariance matrix $U_{k,l}$ 
+\item  Use the EM algorithm to estimate the optimal combination of weights: How often does this particular pattern of sharing  occur in the data?
+\item Now, we will also the EM algorithm to estimate these prior covariance matrices, thus simultaneously inferring both the patterns and the relative frequencies that maximize the likelihood of the data set
+\end{itemize} 
+
+Furthermore, for a given gene-snp pair, the Likelihood on $\bm{b}$: 
+\begin{equation}
+  \label{new_lik}
+  \hat{\bm{b}} | \bm{b} \sim {\it N}_R(\bm{b}, \hat{V})
+\end{equation}
+
+We know that for a single multivariate {\it Normal}  the posterior on  $\bm{b} | U_0$ is  simply: 
+\[
+\bm{b} | \hat{\bm{b}} \sim {\it N}_R(\bm{\mu}_{1}, U_{1})
+\]
+where:
+\begin{itemize}
+\item $\bm{\mu}_{1} = U_{1} (\hat{V}^{-1} \hat{\bm{b}})$;
+\item $U_{1} = (U_{0}^{-1} + \hat{V}^{-1})^{-1}$.
+\end{itemize}
+}
+
+If we added the subscript k, then for each component, we have a component specific posterior covariance matrix $U__{1k}$ and a component specific posterior mean $\bm{\mu_{1k}}$, as in the JxKxR \begin{verbatim}all.arrays$post.means\end{verbatim} object, where the [j,k,] element represents the posterior mean for the $jth$ snp across all $R$ tissues.
+
+\section{Algorithm}
+\subsection{E-Step}
+For a data set with J gene snp pairs and $K$ components:
+\begin{itemize}
+\item $U_{k}$ to represent the `true' covariance matrix of effects,
+\item$B_{jk}$ to represent the $RxR$ posterior conditional covariance matrix for each gene-snp pair at each component ($U_{1}$ above) 
+\item$\bm{b_{jk}}$ to represent the $R$-dimensional posterior mean for each gene-snp pair at each component (analogous $\bm{\mu_{1}}$) above.
+\item $\pi_{k}$ to represent the mixture proportions.
+\end{itemize}
+
+In the E- step, using the same notation as the authors Bovy et al where $q_{jk}$ represents the latent 'label' of each gene-snp pair according to its membership:
+
+\begin{equation}
+\begin{align*}
+q_{jk} &= \frac{\pi_{k} N (  \hat{\bm{b}} |0,U_{k}+V_{j})}{\sum_{k}{\pi_{k} N (\hat{\bm{b_{j}}}|0,U_{k}+V_{j}})} \\
+\bm{b_{jk}} &=  B_{jk} (U_{k}^{-1} \bm{m_{k}}+\hat{V_{j}}^{-1}  \hat{\bm{b}}) \\
+B_{jk}&=(U_{k}^{-1} + \hat{V_{j}^{-1}})^{-1}
+\end{align*}
+\end{equation}
+
+Quite simply, the latent indicator label is simply the likelihood at a particular component times the current update of the prior weight $\pi_{k}$ at that component, divided by the marginal probability of observing that gene snp pair. This is equivalent the posterior probability that a data point $j$ arose from component $K$. Note that the distribution $\hat{\bm{b_{j}}}|0,U_{k}+V_{j}})} $ results from integrating over the uncertainty in $\bm{b}_{j}$ and thus represents the variance of the marginal distribution of $\hat{b}$, the T used in ${\it Bovy et al}.$
+
+
+The current component specific posterior covariance $B_{jk}$ is the posterior covariance matrix of a single multivariate normal distribution and the current component-specific posterior mean $\bm{b_{jk}}$ is the posterior mean of a single multivariate normal. (see \href{http://en.wikipedia.org/wiki/Conjugate_prior#Continuous_distributions}{Wikipedia})
+
+Note that this is slightly different than our expression for the posterior conditional mean $\bm{\mu_{1k}}$ above because in the previous model, we assumed that each $\bm{b_{j}} \sim N(0,U_{k})$ (i.e., the prior mean was $\bm{0}$) where here we estimate the underlying mean for each component, $\bm{m_{k}}$ using the EM algorithm and so we need to use the full formula for a multivariate normal with known residual matrix $V_{j}$ (please see section: Posteriors on genotype effect sizes for algebraic derivation).
+
+\subsection{M-Step}
+Now, let $q_{k}$ = $\sum_{j}{q_{j,k}}$. We can write the following Maximization step down.
+
+
+\begin{equation}
+\begin{align*}
+\pi_{k} &= \frac{1}{J}\sum_{j} {q_{jk}}\\
+\bm{m_{k}}&=\frac{1}{q_{k}}\sum_{j}{q_{jk} \bm{b_{jk}}}\\
+U_{k} &= \frac{1}{q_{k}}\sum_{j} {q_{jk}[(\bm{m_{k}}-\bm{b_{jk}})(\bm{m_{j}}-\bm{b_{jk}})^{T}+B_{jk}}]
+\end{align*}
+\end{equation}
+
+\section{Derivation of Conditional Posterior}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Posteriors on genotype effect sizes}
+
+By maximum likelihood in each tissue separately, we can easily obtain the estimates of the standardized genotype effect sizes, $\hat{\bm{b}}_{j}$, and their standard errors recorded on the diagonal of an $R \times R$ matrix noted $\hat{V}_{j} = \Var(\hat{\bm{b}}_{j})$.
+Using each pair of tissues, we can also fill the off-diagonal elements of $\hat{V}_{j}$.
+
+If we now view $\hat{\bm{b}}_{j}$ and $\hat{V}_{j}$ as \emph{observations} (i.e. known), we can write a new ``likelihood'' (using only the sufficient statistics):
+\begin{equation}
+  \label{new_lik}
+  \hat{\bm{b}}_{j} | \bm{b}_{j} \sim \Norm_R(\bm{b}_{j}, \hat{V}_{j})
+\end{equation}
+
+
+Let us imagine first that the prior on $\bm{b}_{j}$ is not a mixture but a single Normal:
+
+$\bm{b}_{j} \sim \Norm_R (\bm{0}, U_{0})$.
+As this prior is conjuguate to the ``likelihood'' above, the posterior simply is (see \href{http://en.wikipedia.org/wiki/Conjugate_prior#Continuous_distributions}{Wikipedia}):
+\[
+\bm{b}_{j} | \hat{\bm{b}}_{j} \sim \Norm_R(\bm{\mu}_{j1}, U_{j1})
+\]
+where:
+\begin{itemize}
+\item $\bm{\mu}_{j1} = U_{j1} (\hat{V}_{j}^{-1} \hat{\bm{b}}_{j})$;
+\item $U_{j} = (U_{0}^{-1} + \hat{V}_{j}^{-1})^{-1}$.
+\end{itemize}
+
+In practice however, we use a mixture, as defined at the beginning of the document.
+
+
+Inside the sums, the posterior of the effect size for component $k$ can be written as:
+\begin{equation}
+  \begin{aligned}
+    p(\bm{b}_{j} | \hat{\bm{b}}_{j}, \hat{V}_{j}, K) &= p(\bm{b}_{j} | \hat{\bm{b}}_{j}, \hat{V}_{j}, U_{0k}) \\
+    &\propto \Lik(\bm{b}_{j}) p(\bm{b}_{j} | U_{0k}) \\
+    &\propto \exp[(\hat{\bm{b}}_{j} - \bm{b}_{j})^T \hat{V}_{j}^{-1} (\hat{\bm{b}}_{j} - \bm{b}_{j})] \; \exp(\bm{b}_{j}^T U_{0k}^{-1} \bm{b}_{j}) \\
+    &\propto \exp[\bm{b}_{j}^T (\hat{V}_{j}^{-1} + U_{0k}^{-1}) \bm{b}_{j} - \hat{\bm{b}}_{j}^T \hat{V}_{j}^{-1} \bm{b}_{j} - \bm{b}_{j}^T \hat{V}_{j}^{-1} \hat{\bm{b}}_{j}]
+  \end{aligned}
+\end{equation}
+
+Note that this also results from the fact that we assume that $\bm{b}_{j} \sim \Norm_R(\bm{0}, U_{0})$
+and thus that $\bm{\mu}_{0}$ is 0. Thus in the EM algorithm where we will keep updated the `true $\mu_{0}$ we can no longer consider this and so instead, we have:
+
+
+
+
+\begin{equation}
+  \begin{aligned}
+    p(\bm{b}_{j} | \hat{\bm{b}}_{j}, \hat{V}_{j}, K) &= p(\bm{b}_{j} | \hat{\bm{b}}_{j}, \hat{V}_{j}, U_{0k}) \\
+    &\propto \Lik(\bm{b}_{j}) p(\bm{b}_{j} | U_{0k}) \\
+    &\propto \exp[(\hat{\bm{b}}_{j} - \bm{b}_{j})^T \hat{V}_{j}^{-1} (\hat{\bm{b}}_{j} - \bm{b}_{j})] \; \exp(\bm{b}_{j}-\bm{\mu}_{0})^T U_{0k}^{-1} (\bm{b}_{j}-\bm{\mu}_{0}) \\
+    &\propto \exp[\bm{b}_{j}^T (\hat{V}_{j}^{-1} + U_{0k}^{-1}) \bm{b}_{j} - ( \hat{\bm{b}}_{j} ^{T} \hat{V}_{j}^{-1} + U_{0k}^{-1}\bm{\mu}_{0}) \bm{b}_{j} - \bm{b}_{j}^T (\hat{V}_{j}^{-1} \hat{\bm{b}}_{j} + U_{0k}^{1}\bm{\mu}_{0})]
+  \end{aligned}
+\end{equation}
+
+
+
+
+Defining $\Omega = (\hat{V}_{j}^{-1} + U_{0k}^{-1})^{-1}$ and noting that it is symmetric, we can use the property $\Omega^{-1} \Omega^T = I$ to factorize everything (and ``complete the square''):
+\begin{equation}
+  \begin{aligned}
+    p(\bm{b}_{j} | \hat{\bm{b}}_{j}, \hat{V}_{j}, U_{0k}) &\propto \exp[(\bm{b}_{j} - \Omega (\hat{V}_{j}^{-1} \hat{\bm{b}}_{j} + U_{0k}^{-1} \bm{\mu}_{0}))^T \Omega^{-1} (\bm{b}_{j} - \Omega (\hat{V}_{j}^{-1} \hat{\bm{b}}_{j} + U_{0k}^{-1} \bm{\mu}_{0}))]
+  \end{aligned}
+\end{equation}
+
+For some configurations, $U_{0k}$ may not be positive-definite, and thus not invertible.
+We therefore need to avoid writing $\Omega$ as a function of $U^{-1}$ in favor of $U$:
+\begin{equation}
+  \label{omega}
+  \begin{aligned}
+    \Omega &= (V^{-1} + U^{-1})^{-1} \\
+    &= ((V^{-1} + U^{-1}) U U^{-1})^{-1} \\
+    &= ((V^{-1} U + I) U^{-1})^{-1} \\
+    &= U (V^{-1} U + I)^{-1}
+  \end{aligned}
+\end{equation}
+
+Recognizing the kernel of a Normal distribution, we get:
+\begin{equation}
+  \label{post_b_jl}
+  \begin{aligned}
+    \bm{b}_{j} | \hat{\bm{b}}_{j}, \hat{V}_{j}, K \;  &\sim \; \Norm_R(\bm{\mu}_{j1k}, U_{j1k})
+  \end{aligned}
+\end{equation}
+where
+\begin{equation}
+  \label{post_b_jl_covar}
+  \begin{aligned}
+    U_{j1k} &= \Omega \\
+    &= U_{0k} \left( \hat{V}_{j}^{-1} U_{0k} + I \right)^{-1}
+  \end{aligned}
+\end{equation}
+and
+\begin{equation}
+  \label{post_b_jl_mean}
+  \begin{aligned}
+    \bm{\mu}_{j1k} &= \Omega \hat{V}_{j}^{-1} \hat{\bm{b}}_{j} \\
+    &= U_{j1k} \hat{V}_{j}^{-1} \hat{\bm{b}}_{j} \\
+  \end{aligned}
+\end{equation}
+
+and in the case when we do not assume $\bm{\mu}_{0}$ = 0, we have 
+
+
+\begin{equation}
+  \label{post_b_k_mean_notnull}
+  \begin{aligned}
+    \bm{\mu}_{j1k} &= \Omega (\hat{V}_{j}^{-1} \hat{\bm{b}}_{j} + U_{0k}^{-1} \bm{\mu}_{0})) \\
+    &= U_{j1k}  (\hat{V}_{j}^{-1} \hat{\bm{b}}_{j} + U_{0k}^{-1} \bm{\mu}_{0})) \\
+  \end{aligned}
+\end{equation}
+
+
+To compute the posterior weights, we will exploit the fact that the marginal likelihood corresponds to a Normal density when the conditional likelihood is Normal with known variance and the prior of its mean is also Normal (see Berger, 1985, example 1 in section 4.2).
+This means that we only need the mean and covariance matrix of this Normal density.
+
+With a small abuse of notation, let us consider below that $\hat{\bm{b}}_{j}$ is random and, using the law of total expectation with $\bm{b}_{j}$ as well as \ref{new_lik}, we obtain:
+\begin{equation}
+  \begin{aligned}
+    \Exp[\hat{\bm{b}}_{j} | \hat{V}_{j}, K] &= \Exp_{\bm{b}_{j}}[ \Exp[\hat{\bm{b}}_{j} | \hat{V}_{j}, K, \bm{b}_{j}] ]\\
+    &= \Exp_{\bm{b}_{j}}[\bm{b}_{j} | K] \\
+    &= \bm{0}
+  \end{aligned}
+\end{equation}
+
+Now using the law of total variance with $\bm{b}_{j}$ as well as \ref{new_lik} and \ref{prior_b_mixt_grid_config}, we obtain:
+\begin{equation}
+  \begin{aligned}
+    \Var[\hat{\bm{b}}_{j} | \hat{V}_{j}, K] &= \Exp_{\bm{b}_{j}}[ \Var[\hat{\bm{b}}_{j} | \hat{V}_{j}, K, \bm{b}_{j}] ] \\
+    &+ \Var_{\bm{b}_{j}}[ \Exp[\hat{\bm{b}}_{j} | \hat{V}_{j}, K, \bm{b}_{j}] ] \\
+    &= \Exp_{\bm{b}_{j}}[\hat{V}_{j}] + \Var_{\bm{b}_{j}}[\bm{b}_{j} | k] \\
+    &= \hat{V}_{j} + U_{0k}
+  \end{aligned}
+\end{equation}
+
+Therefore the posterior weight is:
+\begin{equation}
+  \label{post_w_jl}
+  \begin{aligned}
+    \tilde{w}_{jl} = \frac{\hat{\pi_k} \; \Norm_R(\hat{\bm{b}}_{j}; \bm{0}, U_{0k} + \hat{V}_{j})}{\sum_{k} \hat{\pi}_{k} \; \Norm_R(\hat{\bm{b}}_{j}; \bm{0}, U_{0k} + \hat{V}_{j})}
+  \end{aligned}
+\end{equation}
+
+The notation $\Norm_R(\hat{\bm{b}}_{j}; \bm{0}, U_{0k} + \hat{V}_{j})$ means that we calculate the multivariate Normal density with mean $\bm{0}$ and covariance matrix $U_{0k} + \hat{V}_{j}$ at the point $\hat{\bm{b}}_{j}$.
+
+
+\end{equation}
+
+It is quite straightforward from this document that \ref{post_b_k_mean_notnull} is equivalent to $\bm{b}_{jk}$ (the conditional component-specific posterior mean) and that   \ref{post_b_jl_covar} is equivalent to $B_{jk}$ ((the conditional component-specific posterior covariance matrix). Furthermore, $\mu_{0k}$ is equivalent to the $\bm{m_{k}}$ (representing the component-specific ``true" mean) and $U_{0k}$ is $U_{k}$ the same (the component specific `true covariance of the underlying effect).
+
+\section{Translation Algebra}
+
+For the authors:
+\begin{equation}
+  \begin{aligned}
+    \bm{b}_{jk}=U_{k} [U_{k}+\hat{V}_{j}]^{-1}\hat{\bm{b}_{j}}\\
+    B_{jk}=U_{k}-U_{k}[U_{k}+\hat{V}_{j}]^{-1}U_{k}
+    \end{aligned}
+\end{equation}
+
+For us:
+\begin{equation}
+  \begin{aligned}
+    \bm{b}_{jk}= U_{k} \left( \hat{V}_{j}^{-1} U_{k} + I \right)^{-1} \hat{V}_{j}^{-1} \hat{\bm{b}}_{j}\\
+    B_{jk} = U_{k} \left( \hat{V}_{j}^{-1} U_{k} + I \right)^{-1}
+    \end{aligned}
+\end{equation}
+
+
+Thus
+
+\begin{equation}
+U_{k}[U_{k}+\hat{V}_{j}]^{-1}U_{k} + U_{k} \left( \hat{V}_{j}^{-1} U_{k} + I \right)^{-1} = U_{k}
+\end{equation}
+
+Now, we recognize the $[AB]^{-1}$ = $B^{-1}A^{-1}$ and we let $[U_{k}+\hat{V}_{j}] = B$ and $\hat{V}^{-1} = A$.
+
+Then, if we adjust by $(\hat{V}^{-1})^{-1}\hat{V}^{-1}$, we can get  for the first part of the LHS
+\begin{equation}
+  \begin{aligned}
+U_{k}[U_{k}+\hat{V}_{j}]^{-1}(\hat{V}^{-1})^{-1}\hat{V}^{-1}U_{k}
+  \end{aligned}
+\end{equation}
+
+and break up $[U_{k}+\hat{V}_{j}]^{-1}(\hat{V}^{-1})^{-1}$
+into $(\hat{V}^{-1} [U_{k}+\hat{V}_{j}] )^{-1}$
+
+ Now plugging this back in,we have:
+  
+\begin{equation}
+  \begin{aligned}
+&=U_{k}[\hat{V}_{j}^{-1}U_{k}+I]^{-1} \hat{V}_{j}^{-1} U_{k} + U_{k} \left( \hat{V}_{j}^{-1} U_{k} + I \right)^{-1} \\
+&= U_{k}[\hat{V}_{j}^{-1}U_{k}+I]^{-1}(\hat{V}_{j}^{-1} U_{k} + I )
+&=U_{k}
+\end{aligned}
+\end{equation}
+
+
+
+
+\end{document}  
