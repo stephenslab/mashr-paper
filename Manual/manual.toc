@@ -1,7 +1,0 @@
-\contentsline {section}{\numberline {1}Posterior Effect Computation}{1}{section.1}
-\contentsline {section}{\numberline {2}Intuition}{2}{section.2}
-\contentsline {subsection}{\numberline {2.1}Intuition}{3}{subsection.2.1}
-\contentsline {section}{\numberline {3}Focus on a single gene-SNP pair}{3}{section.3}
-\contentsline {section}{\numberline {4}Choice of Covariance Matrices}{3}{section.4}
-\contentsline {section}{\numberline {5}Denoising Our Covariance Matrices}{4}{section.5}
-\contentsline {section}{\numberline {6}Quantity Per SNP}{5}{section.6}
