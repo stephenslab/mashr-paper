@@ -128,7 +128,7 @@ f(x \; | \; \sigma) = \frac{1}{\sigma\sqrt{2\pi} } \; e^{ -\frac{(x)^2}{2\sigma^
 \end{equation}
   
 We can see that this will be largest when $\sigma^{2}$ approaches the MLE, which is simply $\hat{b_{r}}^{2}$. \widehat\sigma^2 = \frac{1}{n} \sum_{i=1}^{1} (x) ^2 = \frac{1}{1}\sum_{i=1}^1 x^2$
-This is the intuition behind the bayes factor being the largest at the 'true component'. 
+This is the intuition behind the Bayes factor being the largest at the 'true component'. 
   
 Furthermore, now we know that the posterior mean is $\bm{\mu}_{1} = U_{1} (\hat{V}^{-1} \hat{\bm{b}})$ where $U_{1} = (U_{0}^{-1} + \hat{V}^{-1})^{-1}$ and so quite obviously, the posterior mean for a particular tissue in the components with a large prior variance will also be large because they are 'very roughly' $\propto U_{0k} (\hat{V}^{-1} \hat{\bm{b}})$. 
 
@@ -198,13 +198,13 @@ covmat=compute.covmat(b.j.hat,s.j.hat,Q,t.stat,lambda.mat,P,A;
 factor.mat,bma=TRUE,zero=FALSE,maxp=1,minp=1,power=1)
 \end{verbatim}
 
-where b.gp.hat and se.j.hat represent the JxR matrix of $\hat{\beta}$ and their standard errors (or z statistics and a matrix of 1 in the EZ model, as in \mash t.stat represents the MxR matrix of strong t statistics, and lambda, factor.mat, Q represent the matrices of loadings and factors and the corresponding number of single rank approximations to use. P represents the rank approximation using singular value decomposition of the PC matrix. If the bma option is true, then R singleton and 1 'full' (i.e., active with the same prior variance on the effect size in all tissues) is used.
+where b.j.hat and se.j.hat represent the JxR matrix of $\hat{\beta}$ and their standard errors (or z statistics and a matrix of 1 in the EZ model, as in \mash t.stat represents the MxR matrix of strong t statistics, and lambda, factor.mat, Q represent the matrices of loadings and factors and the corresponding number of single rank approximations to use. P represents the rank approximation using singular value decomposition of the PC matrix. If the bma option is true, then R singleton and 1 'full' (i.e., active with the same prior variance on the effect size in all tissues) is used.
 %
 %\begin{verbatim}
 %omega=mult.tissue.grid(mult=sqrt(2),b.j.hat,se.j.hat)
 %\end{verbatim}
 
-We allow for the input of b.j.hat and se.j.hat because there may be situations in which the Exchangeable Effects (and not the Exchangeable T) shows a larger likelihood, and so we would want the scaling by $\omega$ to reflect this grid choice. The $covmat$ will then be a list of length $P$, where $P$ corresponds to the total number of components (grid weights times directions). In the event that you are interesting in only scaling these models to reflect the ET model, you can simply replace b.j.hat and se.j.hat with t.stat and v.j
+We allow for the input of b.j.hat and se.j.hat (and not just t statistics or z statistics) because there may be situations in which the Exchangeable Effects (and not the Exchangeable T) shows a larger likelihood, and so we would want the scaling by $\omega$ to reflect this grid choice. The $covmat$ will then be a list of length $P$, where $P$ corresponds to the total number of components (grid weights times directions). In the event that you are interesting in only scaling these models to reflect the ET model, you can simply replace b.j.hat and se.j.hat with t.stat and v.j
 
 \section{Denoising Our Covariance Matrices}
 
