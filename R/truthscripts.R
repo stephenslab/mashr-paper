@@ -191,3 +191,27 @@ compute.hm.mash.covmat.all.max.step.fixed.omega=function(bma=TRUE,omega,Q,lambda
   saveRDS(covmat,paste0("covmat",A,".rds"))
   
   return(list(covmat=covmat,omega))}
+
+
+
+
+#'@title compute.covmat.using.oneK.fixed.omega
+#'@param covmat a K list of covariance matrices
+#'@param b.gp.hat JxR matrix of mles
+#'@param se.gp.hat JxR matrix of standarderrors
+#'@export
+
+compute.covmat.using.oneK.fixed.omega = function(covlist,A,omega,zero=TRUE){
+  
+  test=list()
+  R=dim(covlist[[1]])[1]
+  test[[1]]=omega*diag(1,R)
+  for(c in 1:length(covlist)){
+    xnorm=covlist[[c]]/max(covlist[[c]])
+    test[[c+1]]=omega*xnorm}
+  if(zero==TRUE){covmat=c(test,list(matrix(rep(0,R*R),ncol=R,nrow=R)))}
+  saveRDS(covmat,paste0("covmat",A,".rds"))
+  
+  return(covmat)}
+
+

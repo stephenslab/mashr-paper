@@ -341,5 +341,38 @@ genlvllist=function(s.j,L){
   return(LVLlist)}
 
 
-
+#' @title deconvolution.em.with.bovy.with.L.oneK
+#' @param s.j matrix of unscaled standard errors
+#' @param L projection matrix, this can be Rx(R-1)
+#' @return the JxRxR (or R-1) array of marginal variances
+#' @export
+#' 
+#' 
+deconvolution.em.with.bovy.with.L.oneK=function(t.stat,v.j,L,w){
+  K=1
+  
+  X.t=as.matrix(t.stat)
+  X.real=X.t
+  X.c=apply(X.real,2,function(x) x-mean(x)) ##Column centered matrix of t statistics
+  data.prox=((t(X.c)%*%X.c))/nrow(X.t)
+  init.cov.list=list()
+  init.cov.list[[1]]=data.prox
+  #head(init.cov.list)
+  mean.mat=matrix(rep(0,ncol(t.stat)*nrow(t.stat)),ncol=ncol(t.stat),nrow=nrow(t.stat))
+  
+  ydata=  w
+  xamp= 1
+  xcovar= init.cov.list
+  fixmean= TRUE     
+  ycovar=  v.j     
+  xmean=   mean.mat   
+  projection=list();for(l in 1:nrow(t.stat)){projection[[l]]=L}
+  
+  e=extreme_deconvolution(ydata=ydata,ycovar=ycovar,xamp=xamp,xmean=xmean,xcovar=init.cov.list,fixmean=T,projection=projection)
+  
+  true.covs=array(dim=c(K,R,R))
+  for(i in 1:K){true.covs[i,,]=e$xcovar[[i]]}
+  pi=e$xamp
+  max.step=list(true.covs=true.covs,pi=pi)
+  return(max.step)}
 

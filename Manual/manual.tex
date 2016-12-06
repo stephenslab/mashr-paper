@@ -29,7 +29,7 @@
 \newcommand{\Norm}{{\mathcal{N}}} % symbol for Normal distribution
 \newcommand{\BF}{{\text{BF}}} % symbol for Bayes factor
 \newcommand{\Lik}{{\mathcal{L}}} % symbol for 
-
+\newcommand{\mash}{{\tt mash}}
 \begin{document}
 
 \title{Manual for the Use of Matrix-Ash}
@@ -118,7 +118,7 @@ Note also that $\hat\pi_{kl}$ represents the prior weights which are estimated h
 
 
 
-So why does the likelihood increase at the 'right component'?
+So why does the likelihood increase at the `right component'?
 
 Consider the univariate single tissue case case case. Here, think about x as $\hat{b_{1}}$ as the Maximum Likelihood Estimate of the effect size in tissue 1, and $\sigma$ as $U_{k[1,1]]} + \hat{V}_{j[1,1]}$ as the marginal variance at a given component (integrating over the uncertainty in $\bm{b}$.
 
@@ -194,16 +194,17 @@ The function $\textbf{compute.covmat}$ performs this using a JxR matrix of the '
 
 In order to run the model, one first executes 
 \begin{verbatim}
-covmat=compute.covmat(b.j.hat,se.j.hat,Q=5,t.stat,lambda.mat,P=2,A="simulation",factor.mat=factors,bma=TRUE)
+covmat=compute.covmat(b.j.hat,s.j.hat,Q,t.stat,lambda.mat,P,A;
+factor.mat,bma=TRUE,zero=FALSE,maxp=1,minp=1,power=1)
 \end{verbatim}
 
-where b.j.hat and se.j.hat represent the JxR matrix of strong $\hat{\beta}$ and their standard errors, t.stat represents the MxR matrix of strong t statistics, and lambda, factor.mat, Q represent the matrices of loadings and factors and the corresponding number of single rank approximations to use. P represents the rank approximation using singular value decomposition of the PC matrix. If the bma option is true, then R singleton and 1 'full' (i.e., active with the same prior variance on the effect size in all tissues) is used.
+where b.gp.hat and se.j.hat represent the JxR matrix of $\hat{\beta}$ and their standard errors (or z statistics and a matrix of 1 in the EZ model, as in \mash t.stat represents the MxR matrix of strong t statistics, and lambda, factor.mat, Q represent the matrices of loadings and factors and the corresponding number of single rank approximations to use. P represents the rank approximation using singular value decomposition of the PC matrix. If the bma option is true, then R singleton and 1 'full' (i.e., active with the same prior variance on the effect size in all tissues) is used.
+%
+%\begin{verbatim}
+%omega=mult.tissue.grid(mult=sqrt(2),b.j.hat,se.j.hat)
+%\end{verbatim}
 
-\begin{verbatim}
-omega=mult.tissue.grid(mult=sqrt(2),b.j.hat,se.j.hat)
-\end{verbatim}
-
-We allow for the input of b.j.hat and se.j.hat because there may be situations in which the Exchangeable Effects (and not the Exchangeable T) shows a larger likelihood, and so we would want the scaling by $\omega$ to reflect this grid choice. The $covmat$ will then be a list of length $K$, where $K$ corresponds to the total number of components (grid weights times directions). In the event that you are interesting in only scaling these models to reflect the ET model, you can simply replace b.j.hat and se.j.hat with t.stat and v.j
+We allow for the input of b.j.hat and se.j.hat because there may be situations in which the Exchangeable Effects (and not the Exchangeable T) shows a larger likelihood, and so we would want the scaling by $\omega$ to reflect this grid choice. The $covmat$ will then be a list of length $P$, where $P$ corresponds to the total number of components (grid weights times directions). In the event that you are interesting in only scaling these models to reflect the ET model, you can simply replace b.j.hat and se.j.hat with t.stat and v.j
 
 \section{Denoising Our Covariance Matrices}
 
@@ -211,7 +212,7 @@ We allow for the input of b.j.hat and se.j.hat because there may be situations i
 The observed data likelihood function can be optimized in several ways, one of which is to use a generic optimizer to increase the likelihood until it reaches a maximum. This approach is complicated by parameter constraints (e.g., the amplitudes $\pi_{k}$ must all be nonnegative and add up to one, the variance matrices must be positive definite and symmetric) and multimodality of the likelihood surface. In what follows we will describe a different approach that is natural in this setting: An EM algorithm that iteratively and monotonically maximizes the likelihood, while naturally respecting the restrictions on the parameters.
 Because these t-statistics need to be 'denoised' (they represent the statistics of the 'observed effects' and not the real effects') we can use an EM algorithm to obtain a set of denoised full rank approximations from which to generate further covariance matrices. 
 
-This option is achieved with the use of $\textbf{deconvolution.em.with.bovy.R}$ which follows directly from Bovy $\etal$. Briefly, we fit a K=3 component mixture model to obtain the RxR 'true covariance matrix' that is initialized with the empirical covariance matrix $X'X$, the rank $P$ SVD approximation and the rank Q $SFA$ approximation. This returns a set of true covariance matrices in a $KxRxR$ arrays and an $K$ vector of their corresponding mixture weights. We can then create a list of covariance matrices using these 3 full rank matrices as matrices K=2, K=3, and K=4+Q - each of these matrices will be scaled and the grid weighting procedure will then proceed as defined in the step above. For derivation, please see the document "EMUpdates" in the matrix_ash/Documents Directory.
+This option is achieved with the use of $\textbf{deconvolution.em.with.bovy.R}$ which follows directly from Bovy $\etal$. Briefly, we fit a K=3 component mixture model to obtain the RxR 'true covariance matrix' that is initialized with the empirical covariance matrix $X'X$, the rank $P$ SVD approximation and the rank Q $SFA$ approximation. This returns a set of true covariance matrices in a $KxRxR$ arrays and an $K$ vector of their corresponding mixture weights. We can then create a list of covariance matrices using these 3 full rank matrices as matrices K=2, K=3, and K=4+Q - each of these matrices will be scaled and the grid weighting procedure will then proceed as defined in the step above. For derivation, please see the document "EMUpdates" in the $\textbf{matrix_ash/Documents}$ Directory.
 
 %Because this can take some time on a large data set, you might initially choose to denoise only the empirical covariance matrix, thus fitting a K=1 component mixture model initialized with the empirical covariance matrix. The function $\textbf{deconvolution.em.with.bovy.R}$ updates each of the prior covariance matrices and corresponding mixture weights by computing the posterior mean and covariance quantities for each gene-pair at each of the K components. This is performed in the E step and contained in the function $\textbf{emarray.generator.R}$, generating a JxKxRxR array of posterior covariances and a JxKxR array of posterior means at each iteration.
 %
@@ -259,16 +260,22 @@ This option is achieved with the use of $\textbf{deconvolution.em.with.bovy.R}$ 
 Now, we remove the 'strong data' and train our model on a relatively 'null' data set. This allows for shrinkage (see Stephens et al, $\textit{Ash}$). Essentially while every gene-snp pair falls along a particular direction defined by the relationship in effect sizes between subgroups, some SNPs have much larger effects than others across subgroups. Because the majority of snp-gene associations in the genome are 'null' we expect this training set to reflect heavy loadings on low $\omega$ but reflect the patterns of the relative directions present in the data well. When we then compute the posterior on strong SNPa of interest, strong likelihoods will overwhelm low priors for large $\omegas$.
 
 
-After defining our training data, we use the function $\textbf{compute.hm.train(train.b = b.train,se.train = se.train,covmat = covmat,A="Simulations")}$ to produce a matrix  of likelihood based based on the set of covariance matrices contained in the K list $\textbf{covmat}$. 
+After defining our training data as the beta hats (or t-statistics) which represent a sufficiently large subset of the data, we use the function 
 
 \begin{verbatim}
-J=nrow(train.b)
-R=ncol(train.b)
-lik.mat=t(sapply(seq(1:J),function(x){lik.func(b.mle,V.j.hat,covmat)}))
-train=lik.mat
-pis=mixEM(matrix_lik=train,prior=rep(1,ncol(train)))
-barplot(t(as.matrix(pis$pihat)))
+compute.hm.train.log.lik.pen(train.b = train.estimates,se.train = se.estimates;
+covmat = covmash,A=A,pen=1)
 \end{verbatim}
+to produce a matrix  of likelihood based based on the set of covariance matrices contained in the P list $\textbf{covmat}$.  
+
+%\begin{verbatim}
+%J=nrow(train.b)
+%R=ncol(train.b)
+%lik.mat=t(sapply(seq(1:J),function(x){lik.func(b.mle,V.j.hat,covmat)}))
+%train=lik.mat
+%pis=mixEM(matrix_lik=train,prior=rep(1,ncol(train)))
+%barplot(t(as.matrix(pis$pihat)))
+%\end{verbatim}
 
 The matrix of likelihoods is then used to estimate the optimal combination of $\pis$ that maximize the probability of observing the data. This function thus returns a matrix of likelihoods, an .rds object of training weights and a corresponding barplot indicating the significance of each weight in the training data set. This is useful in visualizing the relative shrinkage of the method - a method which places large weight on low $\omegas$ will shrink associations with relatively flat likelihoods.
 
@@ -285,7 +292,8 @@ In order to perform this step, simply separate training and testing data and loa
 \begin{verbatim}
 A="filename"
 pis=readRDS(paste0("pis",A,".rds"))$pihat
-compute.lik.test(b.test = b.test,J = 100,se.test = se.test,covmat,A="filename",pis) 
+compute.lik.test(b.test = b.test,J = 100;
+se.test = se.test,covmat,A="filename",pis) 
 \end{verbatim}
 
 This will output a matrix of likelihoods, a text file with the sum of the log-likelihoods of the test data set, and a matrix of posterior weights for the test data set (i.e., where $\textbf{post.weight.func}$ computes the likelihood times the prior weight, normalized by the marginal likelihood across all components).
@@ -294,89 +302,94 @@ We also wish to produce a matrix of posterior quantities for all gene snp pairs 
 
 For a given gene-snp pair j and the corresponding matrix of it's standard effect sizes and their standard errors, this function computes a list of KxR arrays  containing the component specific posterior means, tissue-specific variances (obtained from the diagonal of the component specific posterior covariance matrix) and component specific marginal tail probabilities for each tissue. This occurs in the nested $\textbf{post.array.per.snp}$ portion of the function.
 
-The function then computes the posterior weights for that gene snp pair as the aforementioned produce of the prior weigh $\pi_{k}$ at that component and the likelihood at that component. The total weighted quantity for each gene snp pair is simply a linear combination of each tissue specific quantity, where each is weighted by the posterior weight corresponding to that tissue specific quantity This weighting procedure is accomplished by each of the $\textbf{total.X.per.snp}$ functions.
+The function then computes the posterior weights for that gene snp pair as the aforementioned produce of the prior weight $\pi_{k}$ at that component and the likelihood at that component. The total weighted quantity for each gene snp pair is simply a linear combination of each tissue specific quantity, where each is weighted by the posterior weight corresponding to that tissue specific quantity This weighting procedure is accomplished by each of the $\textbf{total.X.per.snp}$ functions.
 
 The function then returns  6 files, containing the R vector of posterior means (as weighted across all component), posterior upper and lower tail probabilities, the marginal tissue-specific weighted posterior variances and marginal tissue-specific local false sign rate. The function also returns the K vector of posterior weights for each gene snp pair. We can submit a job to loop through all J pairs under interrogation, and thus generate 5 JxR test files and 1 JxK posterior weights file.
 
 \begin{verbatim}
-weightedquants=lapply(seq(1:100),function(j){total.quant.per.snp(j,covmat,b.gp.hat=b.test,se.gp.hat = se.test,pis,A="Simulations",checkpoint = FALSE)})
-                          
-  all.arrays=post.array.per.snp(j,covmat,b.gp.hat,se.gp.hat)
-  post.means=all.arrays$post.means
-  post.ups=all.arrays$post.ups
-  post.downs=all.arrays$post.downs
-  post.covs=all.arrays$post.covs
-  post.nulls=all.arrays$post.nulls
-  
-  all.mus=total.mean.per.snp(post.weights,post.means)
-  all.ups=total.up.per.snp(post.weights,post.ups)
-  all.downs=total.down.per.snp(post.weights,post.downs )
-  lfsr=t(lfsr.per.snp(all.ups,all.downs))
-  all.covs.partone=total.covs.partone.persnp(post.means,post.covs,post.weights)
-  marginal.var=all.covs.partone-all.mus^2
-
+weightedquants=lapply(seq(1:100),function(j);
+{total.quant.per.snp(j,covmat,b.gp.hat=b.test,se.gp.hat = se.test;
+pis,A="Simulations",checkpoint = FALSE)}
+)
 \end{verbatim}
+
+                          
+%  all.arrays=post.array.per.snp(j,covmat,b.gp.hat,se.gp.hat)
+%  post.means=all.arrays$post.means
+%  post.ups=all.arrays$post.ups
+%  post.downs=all.arrays$post.downs
+%  post.covs=all.arrays$post.covs
+%  post.nulls=all.arrays$post.nulls
+%  
+%  all.mus=total.mean.per.snp(post.weights,post.means)
+%  all.ups=total.up.per.snp(post.weights,post.ups)
+%  all.downs=total.down.per.snp(post.weights,post.downs )
+%  lfsr=t(lfsr.per.snp(all.ups,all.downs))
+%  all.covs.partone=total.covs.partone.persnp(post.means,post.covs,post.weights)
+%  marginal.var=all.covs.partone-all.mus^2
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Putting it All together}
-
-First, we load the strong t statistics from which to derive the covariance matrices. Note that we remove the row-names for this portion and store the vector of names in 'genesnpnames'.
-
-\begin{verbatim}
-gene.snp.names=na.omit(read.table("~/Dropbox/AllGeneSNPStuff/max_tscore_eQTL.table.txt"))[,1]
-t.stat=na.omit(read.table("~/Dropbox/AllGeneSNPStuff/max_tscore_eQTL.table.txt"))[,-c(1,2,47)]
-v.j=matrix(rep(1,nrow(t.stat)*ncol(t.stat)),nrow=nrow(t.stat),ncol(t.stat))
-lambda.mat=as.matrix(read.table("~/Dropbox/AllGeneSNPStuff//tri_gtex_allstrongt_lambda.out"))
-factor.mat=as.matrix(read.table("~/Dropbox/AllGeneSNPStuff/tri_gtex_allstrongt_F.out"))
-\end{verbatim}
-
-Now, we perform the matrix deconvolution in using the EM algorithm to estimate a 'denoised' empirical covariance matrix using the strongest 1000 gene snp pairs.
-
-\begin{verbatim}
-s=deconvolution.em(t.stat = t.stat,factor.mat = factor.mat,lambda.mat = lambda.mat,K = 1,P=2,permsnp = 1000)
-\end{verbatim}
-
-
-We now feed this object containing the 'denoised' empirical covariance matrix into our compute covariance matrices structure to produce the full set of covariance matrices.
-
-\begin{verbatim}
-covmat=compute.hm.covmat.with.max.step(t.stat,v.j,Q,lambda.mat,P,A,factor.mat,max.step=s)
-\end{verbatim}    
-
-We now proceed as before, in estimating the weights on a set of largely null training data, here I use the largely null 'first batch' of summary statistics and compute the hierarchical mixture weights on this data. You can see that this function computes a matrix of likelihoods as described above, and then finds the optimal combination of weights to maximize this likelihood.
-
-
-\begin{verbatim}
-start="~/Dropbox/cyclingstatistician/beta_gp_continuous/matched/firstbatch"
-t.stat=na.omit(read.table(paste0(start,"t.stat.txt"),header=F,skip=1)[,-c(1,2)])
-v.j=matrix(rep(1,nrow(t.stat)*ncol(t.stat)),nrow=nrow(t.stat),ncol(t.stat))
-b.train=t.stat[1:1000,]
-se.train=v.j[1:1000,]
-compute.hm.train(train.b = b.train,se.train = se.train,covmat = covmat,A="1000trained")
-\end{verbatim}   
-
-
-If we want to compare with previous approaches, we can compute the test-set likelihood. Critically, note that our test set does NOT contain our training set.
-
-\begin{verbatim}
-b.test=t.stat[1001:nrow(t.stat),]
-se.test=v.j[1001:nrow(v.j),]
-A="1000trained"
-pis=readRDS(paste0("pis",A,".rds"))$pihat
-compute.lik.test(b.test = b.test,J = nrow(b.test),se.test = se.test,covmat,A,pis)
-\end{verbatim}  
-
-We now simply compute the posterior quantities. 
-
-\begin{verbatim}
-A="1000trained"
-pis=readRDS(paste0("pis",A,".rds"))$pihat
-rownames(b.test)=gene.snp.names
-weightedquants=lapply(seq(1:100),function(j){total.quant.per.snp(j,covmat,b.gp.hat=b.test,se.gp.hat = se.test,pis,A="Simulations",checkpoint = FALSE)})
-\end{verbatim}
-
-This will return a set of 6 files containing the JxR matrix of posterior means, marginal variances, tail probabilities, local false sign rates, and the JxK matrix of posterior weights. Checkpoint = FALSE means that the files will be created (rather than simply outputting an object array which contains the posterior quantities.
+%\section{Putting it All together On The Gtex Data}
+%
+%First, we load the strong t statistics from which to derive the covariance matrices. Note that we remove the row-names for this portion and store the vector of names in 'genesnpnames'.
+%
+%\begin{verbatim}
+%gene.snp.names=na.omit(read.table("~/Dropbox/AllGeneSNPStuff/max_tscore_eQTL.table.txt"))[,1]
+%t.stat=na.omit(read.table("~/Dropbox/AllGeneSNPStuff/max_tscore_eQTL.table.txt"))[,-c(1,2,47)]
+%v.j=matrix(rep(1,nrow(t.stat)*ncol(t.stat)),nrow=nrow(t.stat),ncol(t.stat))
+%lambda.mat=as.matrix(read.table("~/Dropbox/AllGeneSNPStuff//tri_gtex_allstrongt_lambda.out"))
+%factor.mat=as.matrix(read.table("~/Dropbox/AllGeneSNPStuff/tri_gtex_allstrongt_F.out"))
+%\end{verbatim}
+%
+%Now, we perform the matrix deconvolution in using the EM algorithm to estimate a 'denoised' empirical covariance matrix using the strongest 1000 gene snp pairs.
+%
+%\begin{verbatim}
+%s=deconvolution.em(t.stat = t.stat,factor.mat = factor.mat,lambda.mat = lambda.mat,K = 1,P=2,permsnp = 1000)
+%\end{verbatim}
+%
+%
+%We now feed this object containing the 'denoised' empirical covariance matrix into our compute covariance matrices structure to produce the full set of covariance matrices.
+%
+%\begin{verbatim}
+%covmat=compute.hm.covmat.with.max.step(t.stat,v.j,Q,lambda.mat,P,A,factor.mat,max.step=s)
+%\end{verbatim}    
+%
+%We now proceed as before, in estimating the weights on a set of largely null training data, here I use the largely null 'first batch' of summary statistics and compute the hierarchical mixture weights on this data. You can see that this function computes a matrix of likelihoods as described above, and then finds the optimal combination of weights to maximize this likelihood.
+%
+%
+%\begin{verbatim}
+%start="~/Dropbox/cyclingstatistician/beta_gp_continuous/matched/firstbatch"
+%t.stat=na.omit(read.table(paste0(start,"t.stat.txt"),header=F,skip=1)[,-c(1,2)])
+%v.j=matrix(rep(1,nrow(t.stat)*ncol(t.stat)),nrow=nrow(t.stat),ncol(t.stat))
+%b.train=t.stat[1:1000,]
+%se.train=v.j[1:1000,]
+%compute.hm.train(train.b = b.train,se.train = se.train,covmat = covmat,A="1000trained")
+%\end{verbatim}   
+%
+%
+%If we want to compare with previous approaches, we can compute the test-set likelihood. Critically, note that our test set does NOT contain our training set.
+%
+%\begin{verbatim}
+%b.test=t.stat[1001:nrow(t.stat),]
+%se.test=v.j[1001:nrow(v.j),]
+%A="1000trained"
+%pis=readRDS(paste0("pis",A,".rds"))$pihat
+%compute.lik.test(b.test = b.test,J = nrow(b.test),se.test = se.test,covmat,A,pis)
+%\end{verbatim}  
+%
+%We now simply compute the posterior quantities. 
+%
+%\begin{verbatim}
+%A="1000trained"
+%pis=readRDS(paste0("pis",A,".rds"))$pihat
+%rownames(b.test)=gene.snp.names
+%weightedquants=lapply(seq(1:100),function(j){total.quant.per.snp(j,covmat,b.gp.hat=b.test,se.gp.hat = se.test,pis,A="Simulations",checkpoint = FALSE)})
+%\end{verbatim}
+%
+%This will return a set of 6 files containing the JxR matrix of posterior means, marginal variances, tail probabilities, local false sign rates, and the JxK matrix of posterior weights. Checkpoint = FALSE means that the files will be created (rather than simply outputting an object array which contains the posterior quantities.
 
 \end{document}

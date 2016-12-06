@@ -4,6 +4,4 @@
 \BOOKMARK [1][-]{section.3}{Focus on a single gene-SNP pair}{}% 4
 \BOOKMARK [1][-]{section.4}{Choice of Covariance Matrices}{}% 5
 \BOOKMARK [1][-]{section.5}{Denoising Our Covariance Matrices}{}% 6
-\BOOKMARK [1][-]{section.6}{Training our Model}{}% 7
-\BOOKMARK [1][-]{section.7}{Quantity Per SNP}{}% 8
-\BOOKMARK [1][-]{section.8}{Putting it All together}{}% 9
+\BOOKMARK [1][-]{section.6}{Quantity Per SNP}{}% 7

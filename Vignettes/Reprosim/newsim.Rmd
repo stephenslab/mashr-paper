@@ -9,9 +9,11 @@ First, install the package:
 knitr::opts_chunk$set(cache=TRUE)
 #devtools::install_github("surbut/matrix_ash")
 library("mash")
-library("bigmemory")
-library("SQUAREM")
-library("mvtnorm")
+```
+
+If you wanted to compute the denoised estimates using Extreme Deconvolution, you would need the Extreme Deconvolution package from Bovy et al as well:
+```{r,eval=FALSE}
+library("ExtremeDeconvolution")
 ```
 
 I simulated the data this way
@@ -79,6 +81,19 @@ se.test=s.j[1:20000,]
 weightedquants=lapply(seq(1:20000),function(j){total.quant.per.snp(j,cov,b.gp.hat=b.test,se.gp.hat = se.test,pis,A=A,checkpoint = FALSE)})
 ```
 
+If we wanted to use the Extreme Deconvolution package, we could add an additional step. However, in this vignette we use the code above (without Extreme Deconvolution) to generate posteriors. 
+
+``````{r generate covmatswithbovy,eval=FALSE}
+library("ExtremeDeconvolution")
+ms=deconvolution.em.with.bovy(t.stat=t[index,],factor.mat,s.j,lambda.mat,K=3,P=3)
+saveRDS(ms,"mstruecovs.rds")
+A="reproseedomegawithED"
+cov=compute.hm.covmat.all.max.step(max.step = ms,b.gp.hat = t,sebetahat = s.j,Q =5, t.stat=t[index,],lambda.mat=lambda.mat,P=3,A=A, factor.mat = factor.mat,bma = TRUE,zero=TRUE,power = 2)$cov
+```
+
+You can look at the output of `ms$true.covs` to see how these estimates compare with the original covariance matrix, rank 5 SFA and rank 3 SVD decomposition respectively.
+
+##Posteriors
 
 After computing the posteriors, you should have files corresponding to the $\pi$ hierarchical weights and posterior quantities with the prefix you designated in A. 
 I've included my computations in this directory using the prefix "reproseedomega2" for you to check your results. 
@@ -204,20 +219,22 @@ k=3
 U.gp1kl <- (post.b.gpkl.cov(V.gp.hat.inv, covmat[[k]]))
 mu.gp1kl <- as.array(post.b.gpkl.mean(b.mle, V.gp.hat.inv, U.gp1kl))
 #(all.arrays$post.means[k,])
-plot(all.arrays$post.means[k,],mu.gp1kl)
+all.equal(as.numeric(all.arrays$post.means[k,]),as.numeric(mu.gp1kl))
 
-##Now, check to make sure weighting is correct
+```
+
+Now, check to make sure weighting is correct
+
+```{r}
 post.means=as.matrix(read.table(paste0(A,"posterior.means.txt"))[,-1])
 lik.snp=lik.func(b.mle,V.gp.hat,covmat)
 post.weights=t(lik.snp*pis/sum(lik.snp*pis))
 
-plot(post.means[j,],post.weights%*%all.arrays$post.means)
-#(post.means[j,])
-#(post.weights[j,]%*%all.arrays$post.means)
+all.equal(as.numeric(post.means[j,]),as.numeric(post.weights%*%all.arrays$post.means))
 
 ```
 
-```{r,eval=F}
+```{r,eval=T}
 library('gplots')
 library('colorRamps')
 A="reproseedomega2"
@@ -227,12 +244,11 @@ pis=readRDS(paste0("pis",A,".rds"))$pihat
 pi.mat=matrix(pis[-length(pis)],byrow = T,ncol=54)
 cov=readRDS(paste0("covmat",A,".rds"))
 
-barplot(colSums(pi.mat))
 mostimportant=c(2:9)
 for(k in mostimportant){
   x=cov[[k]]/max(diag(cov[[k]]))
 
-  heatmap.2(x,revC = T,col = blue2green(256),dendrogram="none",density="none",trace="none")
+  heatmap.2(x,col = blue2green(256),dendrogram="none",density="none",trace="none",main=paste0("HeatmapofUk",k))
 v=svd(cov[[k]])$v
 barplot(v[,1]/max(v[,1]))
 }
