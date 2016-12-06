@@ -10,3 +10,4 @@ Vignettes/*.Rdata
 Vignettes/*.Rhistory
 Vignettes/Reprosim/*cache*
 Vignettes/Reprosim/*files*
+gh-pages

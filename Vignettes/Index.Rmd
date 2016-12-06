@@ -9,15 +9,17 @@ output: html_document
 
 There are two kinds of simulations in this directory.
 
-1) The purpose is to simulate according to the patterns of sharing present in the GTEX V6 Data, where 100 snps in cis of 500 genes with $\hat{\beta}$ and standard erros available across 44 tissues, pi0 is 0.80, and there is sharing according to gtex covmats 2:9 or, in the 'tspec case', 35% according to tissue specific configuration.
+1) In the ReproSim directory, we simulate according to the patterns of sharing present in the GTEX V6 Data, where 100 snps in cis of 500 genes with $\hat{\beta}$ and standard errors available across 44 tissues, and there is sharing according to gtex covmats 2:9. In this directory, we walk the user through a step by step analysis to reproduce the simulated results with a seed, and provide ROC curves, RMSE computations and patterns of sharing, etc.
+
+2) In the `Advanced Directory', the purpose is to simulate according to the patterns of sharing present in the GTEX V6 Data, where 100 snps in cis of 500 genes with $\hat{\beta}$ and standard errors available across 44 tissues, pi0 is 0.80, and there is sharing according to gtex covmats 2:9 or, in the 'tspec case', 35% according to tissue specific configuration.
 Thus there are 50,000 gene snp pairs, and 400 'true'.
 We now want to compare to the results using univariate methods (ASH) the bmalite configs for inference.
 
 ## Notes
 * [First, I demonstrate the framework using MASH for the shared and allow the user to resimulate data or use simulated data](Reprosim/newsim.html)
-* [First, I demonstrate the framework using MASH for the shared](FullSimulation.html)
-* [Then, I demonstrate the framework using MASH for the 'tspec case'](TissueSpecificVignette.html)
-* [Here I compare the RMSE and the Number of Associations vs LFSR with the 'full sim' for BMA, MASH, and ASH](PowervsAccuracy.html)
-* [Now, I compare the RMSE and the Number of Associations vs LFSR with the 'tspec' for BMA, MASH, and ASH](PowervsAccuracy_tspec.html)
-* [In the sharing case, I may want to consider how the heterogeneity indices perform](heterogeneity.sim.html)
-* [Please refer to dropbox file "BMAFails" to see how BMA fails on simulated (and real) data ](BmaFails.html).
+* [Then, I demonstrate the framework using MASH for the shared](Advanced/FullSimulation.html)
+* [Then, I demonstrate the framework using MASH for the 'tspec case'](Advanced/TissueSpecificVignette.html)
+* [Here I compare the RMSE and the Number of Associations vs LFSR with the 'full sim' for BMA, MASH, and ASH](Advanced/PowervsAccuracy.html)
+* [Now, I compare the RMSE and the Number of Associations vs LFSR with the 'tspec' for BMA, MASH, and ASH](Advanced/PowervsAccuracy_tspec.html)
+* [In the sharing case, I may want to consider how the heterogeneity indices perform](Advanced/heterogeneity.sim.html)
+* [Please refer to dropbox file "BMAFails" to see how BMA fails on simulated (and real) data ](Advanced/BmaFails.html).
