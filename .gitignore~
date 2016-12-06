@@ -13,3 +13,9 @@ Vignettes/Reprosim/*files*
 gh-pages
 Vignettes/Advanced/*cache*
 Vignettes/Advanced/*files*
+Manual/*.synctex.gz
+Manual/*.toc
+Manual/*.out
+Manual/*.aux
+Manual/*.log
+Manual/*.tex
