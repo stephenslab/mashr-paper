@@ -11,7 +11,8 @@ knitr::opts_chunk$set(cache=TRUE)
 library("mash")
 ```
 
-If you wanted to compute the denoised estimates using Extreme Deconvolution, you would need the Extreme Deconvolution package from Bovy et al as well:
+If you wanted to compute the denoised estimates using Extreme Deconvolution, you would need the Extreme Deconvolution package from Bovy et al as well, using the following package:
+
 ```{r,eval=FALSE}
 library("ExtremeDeconvolution")
 ```
