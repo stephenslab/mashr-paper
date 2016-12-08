@@ -11,3 +11,11 @@ Vignettes/*.Rhistory
 Vignettes/Reprosim/*cache*
 Vignettes/Reprosim/*files*
 gh-pages
+Vignettes/Advanced/*cache*
+Vignettes/Advanced/*files*
+Manual/manual.synctex.gz
+Manual/manual.toc
+Manual/manual.out
+Manual/manual.aux
+Manual/manual.log
+Manual/manual.tex
