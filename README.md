@@ -13,22 +13,24 @@ The intention of this package is to produce an estimate of the posterior effect 
  
 
 ```
- $\bm{b} | \bm{\pi},\bf{U} \sim \sum_{k,l} \pi_{k,l} \;{\it N}_R(\bm{0}, \omega_l U_{k})$
+ g(\cdot; \bm{\pi},\bm{U}) = \sum_{k=1}^K \sum_{l=1}^L \pi_{k,l} \; N_R(\cdot;\bm{0}, \omega_l U_{k}).
+
 ```
 
 
-The novelty of our approach is to use a list of data-sensitive covariance matrices which aim to recapitulate these patterns of sharing. Please see the Manual and vignettes (compute.per.snp and separatingtrainingandtesting) for package execution and information on comparing between methods.
+The novelty of our approach is to use a list of data-sensitive covariance matrices which aim to recapitulate these patterns of sharing. Please see the Manual and vignettes: [Repo Sim](Vignettes/Reprosim/newsim.html) and [Tissue Specific](Vignettes/Advanced/TissueSpecificVignette.html) in the Vignettes for package execution and more details in the Advanced branch on comparing between methods.
 
-Essentially, matrix ash works in a modular fashion 
+Essentially, matrix ash (`mash`) works in a modular fashion 
 
-1) Generate a list of covariance matrices which aim to catpure all the patterns of sharing in the data. This may be done in a fixed or iteratively 'learned' fashion.
+* Generate a list of covariance matrices which aim to capture all the patterns of sharing in the data. This may be done in a fixed or iteratively 'learned' fashion, with or without the `ExtremeDeconvolution` package.
 
-2) Compute the likelihood of a training data set to produce a set of hierarchical weights reflecting the relative frequency of each pattern of sharing in the data. The choice of largely null data will influence the shrinkage of the data set.
+* Compute the likelihood of a training data set to produce a set of hierarchical weights reflecting the relative frequency of each pattern of sharing in the data. The choice of data will influence the appropriate `shrinkage` of the data set.
 
-2) Compute the mixture distribution on the test set:
-   a) Compute its likelihood as a J x K matrix of likelihoods at each component
-   b) Posterior quantities of interest (means, tail probabilities and covariance matrices) stored in a J snps x K components x R subgroup array.
+* Compute the mixture distribution on the test set:
+	* Compute its likelihood as a *J effects x P components* matrix of likelihoods at each component
+   
+   * Posterior quantities of interest (means, tail probabilities and marginal subgroup specific posterior variances) stored in a *J effects x P components x R subgroup* array.
 
-3) Using the prior weights computed in step (1) and the  likelihood computed in (2a) compute the posterior weighted quantities to understand the posterior mean, local false sign rate and marginal variance for the effect size in each tissue.
+* Using the prior weights computed in step (1) and the  likelihood computed in (2a) compute the posterior weighted quantities to understand the posterior mean, local false sign rate and marginal variance for the effect size in each tissue.
 
-Please see extensive documentation in the manual and Documentation section for details on separate functions and derivation.
+Please see extensive documentation in the manual and Urbut _et al 2016_ for details on specific functions and derivation.

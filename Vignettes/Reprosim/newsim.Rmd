@@ -11,7 +11,8 @@ knitr::opts_chunk$set(cache=TRUE)
 library("mash")
 ```
 
-If you wanted to compute the denoised estimates using Extreme Deconvolution, you would need the Extreme Deconvolution package from Bovy et al as well:
+If you wanted to compute the denoised estimates using Extreme Deconvolution, you would need the Extreme Deconvolution package from Bovy et al as well, using the following package:
+
 ```{r,eval=FALSE}
 library("ExtremeDeconvolution")
 ```
@@ -88,7 +89,7 @@ library("ExtremeDeconvolution")
 ms=deconvolution.em.with.bovy(t.stat=t[index,],factor.mat,s.j,lambda.mat,K=3,P=3)
 saveRDS(ms,"mstruecovs.rds")
 A="reproseedomegawithED"
-cov=compute.hm.covmat.all.max.step(max.step = ms,b.gp.hat = t,sebetahat = s.j,Q =5, t.stat=t[index,],lambda.mat=lambda.mat,P=3,A=A, factor.mat = factor.mat,bma = TRUE,zero=TRUE,power = 2)$cov
+coved=compute.hm.covmat.all.max.step(max.step = ms,b.gp.hat = t,sebetahat = s.j,Q =5, t.stat=t[index,],lambda.mat=lambda.mat,P=3,A=A, factor.mat = factor.mat,bma = TRUE,zero=TRUE,power = 2)$cov
 ```
 
 You can look at the output of `ms$true.covs` to see how these estimates compare with the original covariance matrix, rank 5 SFA and rank 3 SVD decomposition respectively.

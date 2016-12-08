@@ -1,0 +1,336 @@
+---
+title: "Testingvmat"
+output: html_document
+---
+
+
+The purpose of this is to test the new results with residual matrix coding, and to demonstrate that in simulationw with a known residual matrix, the likelihood is better using the correlated residuals than without.
+
+The purpose of the document is thus three fold:
+
+1) We show that using a variance matrix as an input to `compute.hm.log.lik.pen.vmat` (as opposed to `comput.hm.log.lik.pen` with a matrix of standard errors to be diagonalized) results in the same values when the matrix input the `var.mat` is simply the diagonalized vector of squared standard errors (and all genes have the same standard error in this simulation.)
+
+2) We demonstrate this result under the EE and EZ model. In the EZ model, recall that the vector of standard erros is simply a vector of 1s, and accordingly the var.mat is the Identity matrix.
+
+3) In the  setting with a residual matrix in which the correlation in errors is 0.80, I demonstrate that under both the EE and EZ model, the likelihoods are better using the residual matrix input as opposed to the identiy matrix. 
+  a) in the EZ model, this is just cov2cor of the known var.mat. I show that it is very close to the empirical estimation of the covariance matrix of the null Z statistics. Likewise, the true var.mat of the betahats is very close to the empirical estimate of the covariance matric of the null betahats.
+  
+  
+4) In my **Posteriors** section, I show that using the `compute.quant.per.snp` and `compute.quant.per.snp.with.vmat` code produce the same results when inputting v.mat as the squared diagonalized s.j.
+
+5) Most importantly, I produce RMSE and ROC curve for both the EE and ET computed posteriors, using the diagonal and reisdual assumption, again in the setting where there exists strong correlation in the residduals. The results are perfect: when correlation existis, incorporating it is succesfully marked as both more accurate and powerful by MASH. 
+
+So there's no problem with my code!
+
+```{r}
+rm(list=ls())
+system("ls; rm *rds;rm *txt; rm *pdf")
+library('mash')
+
+```
+
+Here, I simulate some data in which the residuals are correlated
+
+```{r, eval=F,echo=TRUE}
+sim.with.error=function(J,d=44,betasd=1,esd=0.11,n=400,rho=0.8){
+   n=n
+  covmat=readRDS(system.file('simdata/covmatforsimulation.rds', package = 'mash'))[2:9]
+  covmat=lapply(seq(1:length(covmat)),function(x){covmat[[x]]/max(diag(covmat[[x]]))})
+  
+  
+  
+  library("mvtnorm")
+  library("MASS")
+  K=length(covmat)
+  
+  
+  if(n!=0){
+  z = sample(K,n,replace=TRUE)
+  omega=abs(rnorm(n,mean=0,sd=betasd))##effect size variance can be big or small
+  beta=t(sapply(seq(1:n),function(j){
+    k=z[j]
+    o=omega[j]
+    mvrnorm(1,mu=rep(0,d),Sigma=o*covmat[[k]])
+  }))
+  beta=rbind(beta,matrix(rep(0,(J-n)*d),ncol=d))}
+  if(n==0){
+    beta=matrix(rep(0,(J-n)*d),ncol=d)
+  }
+  
+  s.j.r=as.matrix(abs(rnorm(d,esd,0.001)))##simulate with the same standard error for every J
+  v.j.r=s.j.r%*%t(s.j.r)##now v.j.r will be the same for every J
+  v.mat=rho*v.j.r+(1-rho)*diag(diag(v.j.r))#make the errors correlated
+  cormat=cov2cor(v.mat)
+  e=rmvnorm(J,mean=rep(0,d),sigma=v.mat)
+  betahat = beta + e
+  s.j=matrix(rep(s.j.r),nrow(betahat),byrow=T,ncol=d)
+  t.stat=betahat/abs(s.j)
+  if(n!=0){
+    return(list(beta=beta,betahat=betahat,component.mats=covmat,sebetahat=s.j,t.stat=t.stat,component.id=z,error=e,var.mat=v.mat,omega=omega,cormat=cormat))
+  }
+  if(n==0){
+    return(list(beta=beta,betahat=betahat,sebetahat=s.j,t.stat=t.stat,error=e,var.mat=v.mat))
+  }
+}
+```
+
+Here, I simulate 1000 values, 400 of which are `true` shared structured with $rho$ = 0.8 in the correlation of residual matrix.
+```{r, echo=FALSE}
+seed=4
+set.seed(seed)
+s=sim.with.error(J = 1000,d = 44,rho = 0.8,n=400);R=44
+```
+
+To test the simulations are accurate, make sure that the covariance of the nulls is the same as the covariance of the errors. This should be true because under the simulation framework above,
+
+$$B_null=0+E$$
+
+
+
+```{r test}
+(cov(s$betahat[401:1000,])[1:5,1:5])
+(cov(s$error[401:1000,])[1:5,1:5])
+```
+
+And most importantly, we want to make sure that this resembles the *true* residaul matrix since $$E ~ N(0,V)$$
+```{r}
+s$var.mat[1:5,1:5]
+```
+You can see they are the same.
+
+And show that s$var.mat correctly represents the scaled matrix of covariance of the error terms. This is easy to check since in our simulation the standard error is the same for all j.
+
+```{r}
+j=10;all.equal(diag(s$sebetahat[j,])%*%s$cormat%*%diag(s$sebetahat[j,]),s$var.mat)
+all.equal(cov2cor(diag(s$sebetahat[j,])%*%s$cormat%*%diag(s$sebetahat[j,])),s$cormat)
+```
+First, let's test that even though we have correlation of the error terms, using the old code and the new code with a diagonal matrix results in the same answers, first under the EE model where we input beta hats and their standard errors. For simplicity and because this isn't to compare our inference measures with others, I'm just going to use a list of the 8 simulated covariance matrices, so our likelihood matrix will only need to be $1000x8$.
+
+```{r}
+
+covmat=s$component.mats
+compute.hm.train.log.lik.pen.vmat(train.b = s$betahat[1:1000,],covmat=covmat,A = "testeewithdiagvmat",pen = 1,train.s=s$sebetahat[1:1000,],cormat = diag(1,ncol(s$betahat)))
+                                  
+
+lik.mat=readRDS("liketraintesteewithdiagvmat.rds")
+pis=readRDS("pistesteewithdiagvmat.rds")$pihat
+test=exp(lik.mat)
+total.lik.func(test,pis)
+
+
+
+
+##just double check that s.j^2 is accordingly the diagonal of s$var.mat
+plot(s$sebetahat[1,]^2,diag(s$var.mat))
+##and that the standard error of tissue i and j scale s$cormat properly
+s$sebetahat[1,5]*s$sebetahat[1,9]*s$cormat[5,9]
+s$var.mat[5,9]
+
+compute.hm.train.log.lik.pen(train.b = s$betahat[1:1000,],se.train = s$sebetahat,covmat = covmat,A="testwitholdcode",pen=1)
+
+lik.mat=readRDS("liketraintestwitholdcode.rds")
+pis=readRDS("pistestwitholdcode.rds")$pihat
+test=exp(lik.mat)
+total.lik.func(test,pis)
+
+```
+
+Great! Now let's make sure the likelihoods are better when we use the residual matrix:
+
+```{r}
+covmat=s$component.mats
+compute.hm.train.log.lik.pen.vmat(train.b = s$betahat[1:1000,],covmat=covmat,A = "testwithrealvmat",pen = 1,train.s=s$sebetahat,cormat=s$cormat)
+
+lik.mat=readRDS("liketraintestwithrealvmat.rds")
+pis=readRDS("pistestwithrealvmat.rds")$pihat
+test=exp(lik.mat)
+total.lik.func(test,pis)
+```
+
+##Testing Under ET Model##
+
+Great!! Now let's make sure this is true with the ET model.Recall that in the ET model:
+$$\frac{\beta}{\hat{s}} \sim N(0,Uk)$$
+Thus the input summary statistic is  $Z \sim N(0,V_j)$ where regardless of the correlation between residuals, $t_{jr}$ has standard error of 1.
+
+First check to see they give the same result when the residuals are assumed to be uncorrelated (i.e., var mat is the Identity matrix)
+
+```{r}
+##Here i just rescale the covariance matrices to be consistent with the fact that the true Z's are on order $1/standard error$ larger.
+covmat=lapply(s$component.mats,function(x){
+  #median(abs(s$t.stat))^2*
+  (1/0.11)^2*x})
+compute.hm.train.log.lik.pen.vmat(train.b = s$t.stat[1:1000,],covmat=covmat,A = "testwithtdiag",pen = 1,train.s = s$t.stat[1:1000,]/s$t.stat[1:1000,],cormat = diag(1,R))
+lik.mat=readRDS("liketraintestwithtdiag.rds")
+pis=readRDS("pistestwithtdiag.rds")$pihat
+test=exp(lik.mat)
+total.lik.func(test,pis)
+##this old code required a JxR matrix of standard erros, so we need repeat
+
+compute.hm.train.log.lik.pen(train.b = s$t.stat[1:1000,],se.train = s$sebetahat/s$sebetahat,covmat = covmat,A="t.testwitholdcode",pen=1)
+
+lik.mat=readRDS("liketraint.testwitholdcode.rds")
+pis=readRDS("pist.testwitholdcode.rds")$pihat
+test=exp(lik.mat)
+total.lik.func(test,pis)
+
+```
+
+Good! And let's make sure the likelihood with the real vmat is better under the ET assumption. Recall that here, we can use `cov2cor` of the var mat so that the diagonals are 1 and every off diagonal element is divided by the standard error of tissue i,j.I've also now returned the cormat:
+```{r}
+
+compute.hm.train.log.lik.pen.vmat(train.b = s$t.stat[1:1000,],covmat=covmat,A = "test.tcov2cor",pen = 1,train.s = s$t.stat[1:1000,]/s$t.stat[1:1000,],cormat = s$cormat)
+
+identical(s$cormat,cov2cor(s$var.mat))
+```
+
+Just to show that using the vmat as the cov2cor of the true var.mat, let's look at the actual empirical covariance of the null t statistics values:
+
+```{r}
+cov(s$t.stat[401:1000,])[1:5,1:5]
+cov2cor(s$var.mat)[1:5,1:5]
+s$cormat[1:5,1:5]
+```
+
+
+And here we go. You'll note that ** the likelihood in this case , where the residuals are highly structured, is much improved**!! Great!!!
+
+```{r}
+lik.mat=readRDS("liketraintest.tcov2cor.rds")
+pis=readRDS("pistest.tcov2cor.rds")$pihat
+test=exp(lik.mat)
+total.lik.func(test,pis)
+```
+
+**Posterior Tests**
+
+Now, let's also test our ability to compute posteriors under both methods. Again, let's use but EE and ET, first try with diagonalised standard errors to show that the results match our previous computations.
+
+```{r}
+j=sample(100,1)
+pis=readRDS("pistestwitholdcode.rds")
+b.with.old.code=total.quant.per.snp(j = j,covmat = s$component.mats,b.gp.hat = s$betahat,se.gp.hat = s$sebetahat,pis = pis$pihat,checkpoint = T)
+
+##and here was where I used the new code (i.e. with vmat), with the squared standard error on the diagonal. 
+
+pis=readRDS("pistesteewithdiagvmat.rds")
+b.with.new.code=total.quant.per.snp.with.vmat(j = j,covmat = s$component.mats,b.gp.hat = s$betahat,se.gp.hat=s$sebetahat,cormat = diag(1,ncol(s$betahat)),pis = pis$pihat,checkpoint = T)
+
+all.equal(b.with.new.code$posterior.means,b.with.old.code$posterior.means,tolerance = 1e-6)
+all.equal(b.with.new.code$lfsr,b.with.old.code$lfsr,tol=1e-6)
+##and let's do the same thing for the t stat
+
+j=sample(100,1)
+pis=readRDS("pist.testwitholdcode.rds")
+t.with.old.code=total.quant.per.snp(j = j,covmat = covmat,b.gp.hat = s$t.stat,se.gp.hat = s$sebetahat/s$sebetahat,pis = pis$pihat,checkpoint = T)
+
+##and here was where I used the new code (i.e. with vmat), with the squared standard error on the diagonal. Let's use the same pis just so that we're testing the posterior code and not the HM, which might have slightly different weights (but the total likelihood was the same)
+
+pis=readRDS("pistestwithtdiag.rds")
+t.with.new.code=total.quant.per.snp.with.vmat(j = j,covmat = covmat,b.gp.hat = s$t.stat,se.gp.hat=s$t.stat/s$t.stat,cormat = diag(1,ncol(s$betahat)),pis = pis$pihat,checkpoint = T)
+
+all.equal(t.with.new.code$posterior.means,t.with.old.code$posterior.means,tolerance = 1e-6)
+
+all.equal(t.with.new.code$lfsr,t.with.old.code$lfsr,tol=1e-6)
+```
+
+And now, let's make sure the RMSE is better. We'll use the EE:
+
+```{r}
+covmat=s$component.mats
+pis=readRDS("pistestwitholdcode.rds")$pihat
+weightedquants=lapply(seq(1:nrow(s$betahat)),function(j){total.quant.per.snp(j,covmat,b.gp.hat=s$betahat,se.gp.hat = s$sebetahat,pis,A="testwitholdcode",checkpoint = FALSE)})
+
+##check to make sure results same
+
+pis=readRDS("pistesteewithdiagvmat.rds")$pihat
+weightedquants=lapply(seq(1:nrow(s$betahat)),function(j){total.quant.per.snp(j,covmat,b.gp.hat=s$betahat,se.gp.hat = s$sebetahat,pis,A="eewithdiagvmat",checkpoint = FALSE)})
+
+pis=readRDS("pistestwithrealvmat.rds")$pihat
+weightedquants=lapply(seq(1:nrow(s$betahat)),function(j){total.quant.per.snp.with.vmat(j,covmat,b.gp.hat=s$betahat,se.gp.hat = s$sebetahat,cormat = s$cormat,pis,A="testwithrealvmat",checkpoint = FALSE)})
+
+post.means.var.mat=as.matrix(read.table("testwithrealvmatposterior.means.txt")[,-1])
+post.means.diag.mat=as.matrix(read.table("eewithdiagvmatposterior.means.txt")[,-1])
+beta=as.matrix(s$beta)
+```
+
+And the RMSE is so much better!!!
+
+```{r}
+rmse.table=data.frame("withresidualmat"=sqrt(mean((beta[1:1000,]-post.means.var.mat[1:1000,])^2)),"diagresiduals"=sqrt(mean((beta[1:1000,]-post.means.diag.mat[1:1000,])^2)))
+barplot(as.matrix(rmse.table),names=colnames(rmse.table))
+```
+
+As are the ROC curces:
+
+```{r}
+
+lfsr.diag.mat=read.table("testwitholdcodelfsr.txt")[,-1]
+lfsr.var.mat=read.table("testwithrealvmatlfsr.txt")[,-1]
+
+thresh=seq(0,0.5,by=0.01)
+fp.var.mat=NULL
+fp.diag.mat=NULL
+tp.var.mat=NULL
+tp.diag.mat=NULL
+for(t in 1:length(thresh)){
+  sig=thresh[t]
+  fp.var.mat[t]=mean(beta==0&lfsr.var.mat<sig)
+  fp.diag.mat[t]=mean(beta==0&lfsr.diag.mat<sig)
+  tp.var.mat[t]=mean(beta!=0&lfsr.var.mat<sig)
+  tp.diag.mat[t]=mean(beta!=0&lfsr.diag.mat<sig)
+}
+
+plot(fp.var.mat,tp.var.mat,type="l",col="green")
+lines(fp.diag.mat,tp.diag.mat,col="red")
+```
+
+##Posteriors With ET##
+And now, let's make sure the RMSE is better. We'll use the ET now:
+
+```{r}
+covmat=lapply(s$component.mats,function(x){
+  #median(abs(s$t.stat))^2*
+  (1/0.11)^2*x})
+pis=readRDS("pist.testwitholdcode.rds")$pihat
+weightedquants=lapply(seq(1:nrow(s$betahat)),function(j){total.quant.per.snp(j,covmat,b.gp.hat=s$t.stat,se.gp.hat = s$sebetahat/s$sebetahat,pis,A="EToldcode",checkpoint = FALSE)})
+
+
+pis=readRDS("pistest.tcov2cor.rds")$pihat
+weightedquants=lapply(seq(1:nrow(s$betahat)),function(j){total.quant.per.snp.with.vmat(j,covmat,b.gp.hat=s$t.stat,se.gp.hat = s$t.stat/s$t.stat,cormat = s$cormat,pis,A="ETwithrealvmat",checkpoint = FALSE)})
+
+post.means.var.mat=as.matrix(read.table("ETwithrealvmatposterior.means.txt")[,-1])*as.matrix(s$sebetahat)
+post.means.diag.mat=as.matrix(read.table("EToldcodeposterior.means.txt")[,-1])*as.matrix(s$sebetahat)
+beta=as.matrix(s$beta)
+```
+
+And the RMSE is so much better!!!
+
+```{r}
+rmse.table=data.frame("withresidualmat"=sqrt(mean((beta[1:1000,]-post.means.var.mat[1:1000,])^2)),"diagresiduals"=sqrt(mean((beta[1:1000,]-post.means.diag.mat[1:1000,])^2)))
+barplot(as.matrix(rmse.table),names=colnames(rmse.table))
+```
+
+As are the ROC curces:
+
+```{r}
+
+lfsr.var.mat=read.table("ETwithrealvmatlfsr.txt")[,-1]
+lfsr.diag.mat=read.table("EToldcodelfsr.txt")[,-1]
+
+thresh=seq(0,0.5,by=0.01)
+fp.var.mat=NULL
+fp.diag.mat=NULL
+tp.var.mat=NULL
+tp.diag.mat=NULL
+for(t in 1:length(thresh)){
+  sig=thresh[t]
+  fp.var.mat[t]=mean(beta==0&lfsr.var.mat<sig)
+  fp.diag.mat[t]=mean(beta==0&lfsr.diag.mat<sig)
+  tp.var.mat[t]=mean(beta!=0&lfsr.var.mat<sig)
+  tp.diag.mat[t]=mean(beta!=0&lfsr.diag.mat<sig)
+}
+
+plot(fp.var.mat,tp.var.mat,type="l",col="green")
+lines(fp.diag.mat,tp.diag.mat,col="red")
+```

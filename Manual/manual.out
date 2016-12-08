@@ -1,7 +1,0 @@
-\BOOKMARK [1][-]{section.1}{Posterior Effect Computation}{}% 1
-\BOOKMARK [1][-]{section.2}{Intuition}{}% 2
-\BOOKMARK [2][-]{subsection.2.1}{Intuition}{section.2}% 3
-\BOOKMARK [1][-]{section.3}{Focus on a single gene-SNP pair}{}% 4
-\BOOKMARK [1][-]{section.4}{Choice of Covariance Matrices}{}% 5
-\BOOKMARK [1][-]{section.5}{Denoising Our Covariance Matrices}{}% 6
-\BOOKMARK [1][-]{section.6}{Quantity Per SNP}{}% 7
