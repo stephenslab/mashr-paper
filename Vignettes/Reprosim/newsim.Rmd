@@ -3,19 +3,20 @@ title: "RepoSim"
 output: html_document
 ---
 
-This requires the package be installed.
+First, install the mashr package. You will also need to install the R packages
+ExtremeDeconvolution, gplots, ashr and colorRamps. Also install the command
+line program sfa for sparse factor analysis.
+
 
 ```{r}
-knitr::opts_chunk$set(cache=TRUE)
-#devtools::install_github("surbut/matrix_ash")
-library("mash")
+knitr::opts_chunk$set(cache=FALSE)
+library(mashr)
+library(ashr)
+library(gplots)
+library(colorRamps)
+library(ExtremeDeconvolution)
 ```
 
-If you wanted to compute the denoised estimates using Extreme Deconvolution, you would need the Extreme Deconvolution package from Bovy et al as well, using the following package:
-
-```{r,eval=FALSE}
-library("ExtremeDeconvolution")
-```
 
 I simulated the data this way
 ```{r, eval=FALSE}
@@ -32,7 +33,7 @@ t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta;s.j=matri
 In this step, we run ash to choose the effects that satisfy a univariate ash lfsr threshold of 0.05 in at least one tissue. Again, you can choose to excecute this step yourself, but for your convenience, I've included these files in the directory.
 
 ```{r,eval=FALSE}
-library('ashr')
+
 t.fit=data$tstat
 se.fit=data$sebetahat/data$sebetahat
 
@@ -85,7 +86,6 @@ weightedquants=lapply(seq(1:20000),function(j){total.quant.per.snp(j,cov,b.gp.ha
 If we wanted to use the Extreme Deconvolution package, we could add an additional step. However, in this vignette we use the code above (without Extreme Deconvolution) to generate posteriors. 
 
 ``````{r generate covmatswithbovy,eval=FALSE}
-library("ExtremeDeconvolution")
 ms=deconvolution.em.with.bovy(t.stat=t[index,],factor.mat,s.j,lambda.mat,K=3,P=3)
 saveRDS(ms,"mstruecovs.rds")
 A="reproseedomegawithED"
@@ -236,8 +236,6 @@ all.equal(as.numeric(post.means[j,]),as.numeric(post.weights%*%all.arrays$post.m
 ```
 
 ```{r,eval=T}
-library('gplots')
-library('colorRamps')
 A="reproseedomega2"
 
 pis=readRDS(paste0("pis",A,".rds"))$pihat
