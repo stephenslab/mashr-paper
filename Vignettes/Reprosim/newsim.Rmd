@@ -27,7 +27,7 @@ saveRDS(data,"newsimdata.rds")
 
 Here, I load my previously simulated data:
 ```{r,echo=T}
-data=readRDS("newsimdata.rds")
+data=readRDS(unzip(zipfile="newsimdata.rds.zip"))
 t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta;s.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
 ```
 In this step, we run ash to choose the effects that satisfy a univariate ash lfsr threshold of 0.05 in at least one tissue. Again, you can choose to excecute this step yourself, but for your convenience, I've included these files in the directory.
@@ -49,7 +49,7 @@ univariate.ash.lfsr[,x]=b$lfsr
 
 write.table(univariate.ash.lfsr,"univariate.ash.lfsrnewdata.txt")
 write.table(univariate.ash.pm,"univariate.ash.pmnewdata.txt")
-lfsr=read.table("univariate.ash.lfsrnewdata.txt")
+lfsr=read.table(unzip(zipfile"univariate.ash.lfsrnewdata.txt.zip"))
 index=which(rowSums(lfsr<0.05)>0)
 write.table(t[index,],"maxtsim.txt",row.names = F,col.names = F)
 ```
@@ -101,10 +101,10 @@ I've included my computations in this directory using the prefix "reproseedomega
 
 Now let's check the results:
 ```{r}
-mash.means=read.table("reproseedomega2posterior.means.txt")[,-1]
-univariate.ash.pm=read.table("univariateashpm.txt")
-lfsr.mash=read.table("reproseedomega2lfsr.txt")[,-1]
-lfsr.ash=read.table("univariate.ash.lfsrnewdata.txt")
+mash.means=read.table(unzip(zipfile="reproseedomega2posterior.means.txt.zip"))[,-1]
+univariate.ash.pm=read.table(unzip(zipfile="univariateashpm.txt.zip"))
+lfsr.mash=read.table(unzip(zipfile="reproseedomega2lfsr.txt.zip"))[,-1]
+lfsr.ash=read.table(unzip(zipfile="univariate.ash.lfsrnewdata.txt.zip"))
                                                       
 sebetahat=data$sebetahat
 sebetahat=sebetahat[1:20000,]
@@ -227,7 +227,8 @@ all.equal(as.numeric(all.arrays$post.means[k,]),as.numeric(mu.gp1kl))
 Now, check to make sure weighting is correct
 
 ```{r}
-post.means=as.matrix(read.table(paste0(A,"posterior.means.txt"))[,-1])
+pm=paste0(A,"posterior.means.txt.zip")
+post.means=as.matrix(read.table(unzip(pm)))[,-1]
 lik.snp=lik.func(b.mle,V.gp.hat,covmat)
 post.weights=t(lik.snp*pis/sum(lik.snp*pis))
 
