@@ -12,7 +12,6 @@ knitr::opts_chunk$set(cache=TRUE)
 
 First, install, the package. I've already done this:
 ```{r,echo=TRUE,eval=FALSE}
-devtools::install_github("surbut/matrix_ash")
 library("mash")
 library("bigmemory")
 library("SQUAREM")

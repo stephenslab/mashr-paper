@@ -3,7 +3,7 @@ title: "RepoSim"
 output: html_document
 ---
 
-First, install the package:
+This requires the package be installed.
 
 ```{r}
 knitr::opts_chunk$set(cache=TRUE)
