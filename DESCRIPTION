@@ -1,8 +1,8 @@
-Package: mash
+Package: mashr
 Type: Package
-Title: Estimates Posterior Effects Across Subgroups
-Version: 1.0
-Date: 2015-05-12
+Title: Multivariate adaptive shrinkage package for estimating multiple effects in multiple conditions
+Version: 0.1
+Date: 2016-12-16
 Authors: Sarah Urbut <sarahmurbut@gmail.com>
 Description: More about what it does (maybe more than one line)
 License: What license is it under?
