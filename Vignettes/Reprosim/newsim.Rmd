@@ -54,7 +54,7 @@ for(x in 1:44){
   cat("Fitting ash model for tissue",x,"\n")
   b=ash(betahat=t.fit[,x],sebetahat=se.fit[,x],mixcompdist="normal")
   univariate.ash.pm[,x]   = b$result$PosteriorMean
-  univariate.ash.lfsr[,x] = b$lfsr
+  univariate.ash.lfsr[,x] = b$result$lfsr
 }
 
 write.table(univariate.ash.lfsr,"univariate.ash.lfsrnewdata.txt")
@@ -82,7 +82,7 @@ s.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
 A="reproseedomega2"
 cov=compute.covmat(b.gp.hat = t,sebetahat = s.j,Q =5, t.stat=t[index,],lambda.mat=lambda.mat,P=3,A=A, factor.mat = factor.mat,bma = TRUE,zero=TRUE,power = 2)$cov
 
-compute.hm.train.log.lik.pen(train.b = t,se.train = s.j,covmat = cov,A=A,pen=1)
+out <- compute.hm.train.log.lik.pen(train.b = t,se.train = s.j,covmat = cov,A=A,pen=1)
 
 pis=readRDS(paste0("pis",A,".rds"))$pihat
 b.test=t[1:20000,]
@@ -129,6 +129,7 @@ lfsr.ash=as.matrix(lfsr.ash)
 mash.means=as.matrix(mash.means)
 ash.means=as.matrix(univariate.ash.pm)
 ```
+
 Then, we can ask how many truly non-zero associations we capture at a given threshold.
 
 ```{r echo=TRUE}
