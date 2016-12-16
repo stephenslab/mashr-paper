@@ -120,7 +120,7 @@ $(document).ready(function () {
 </div>
 
 
-<p>First, install the package:</p>
+<p>This requires the package be installed.</p>
 <pre class="r"><code>knitr::opts_chunk$set(cache=TRUE)
 #devtools::install_github(&quot;surbut/matrix_ash&quot;)
 library(&quot;mash&quot;)</code></pre>
@@ -251,8 +251,13 @@ post.weights=t(lik.snp*pis/sum(lik.snp*pis))
 
 all.equal(as.numeric(post.means[j,]),as.numeric(post.weights%*%all.arrays$post.means))</code></pre>
 <pre><code>## [1] TRUE</code></pre>
-<pre class="r"><code>library('gplots')
-library('colorRamps')
+<pre class="r"><code>library('gplots')</code></pre>
+<pre><code>## 
+## Attaching package: 'gplots'</code></pre>
+<pre><code>## The following object is masked from 'package:stats':
+## 
+##     lowess</code></pre>
+<pre class="r"><code>library('colorRamps')
 A=&quot;reproseedomega2&quot;
 
 pis=readRDS(paste0(&quot;pis&quot;,A,&quot;.rds&quot;))$pihat

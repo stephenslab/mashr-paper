@@ -3,8 +3,10 @@ title: "RepoSim"
 output: html_document
 ---
 
-First, install the mashr package. You will also need to install 
-ExtremeDeconvolution, gplots, ashr and colorRamps. And install sfa?
+First, install the mashr package. You will also need to install the R packages
+ExtremeDeconvolution, gplots, ashr and colorRamps. Also install the command
+line program sfa for sparse factor analysis.
+
 
 ```{r}
 knitr::opts_chunk$set(cache=FALSE)

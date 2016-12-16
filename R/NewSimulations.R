@@ -10,7 +10,7 @@
 #' @title factor.sim.new
 #' @export
 
-factor_sim_new=function(J,d=44,betasd=1,esd=0.11,tspec=0,n=400){
+factor_sim_new=function(J,d=44,betasd=1,esd=0.11,tspec=0,n=400,R=44){
   #n=trunc(0.008*J,units = 0)##number of significant gene-snp Pairs, so there are 100 snps in cis of a gene and one causal snp
   n=n
   #F=t(sapply(seq(1:K),function(x){rnorm(d,mean=0,sd=betasd)})) 

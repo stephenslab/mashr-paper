@@ -11,8 +11,5 @@ There are two kinds of simulations in this directory.
 
 1) [In the ReproSim directory, we simulate according to the patterns of sharing present in the GTEX V6 Data, where 100 snps in cis of 500 genes with $\hat{\beta}$ and standard errors available across 44 tissues, and there is sharing according to gtex covariance matrices 2:9 (See Urbut et al). In this directory, we walk the user through a step by step analysis to reproduce the simulated results with a seed, and provide ROC curves, RMSE computations and patterns of sharing, etc.](Reprosim/newsim.html)
 
-2) [In the `Advanced Directory', the purpose of the tissue-specificity simulations are to simulate according to both the patterns of sharing metnioned above and according to tissue specificity; accordingly, 35% are simulated according to a randomly chosen tissue specific configuration.
-Thus there are 50,000 gene snp pairs, and 400 'true'. We also want to compare to the results using univariate methods (ASH)/](Advanced/TissueSpecificVignette.html)
-
-3) [We also demonstrate how the software could be used when correlated errors are suspected, and the matrix of correlation among the errors is known.](Advanced/testingvmat.html)
+2) [In the `Advanced Directory', we also demonstrate how the software could be used when correlated errors are suspected, and the matrix of correlation among the errors is known.](Advanced/testingvmat.html)
 
