@@ -7,44 +7,54 @@ First, install the mashr package. You will also need to install the R packages
 ExtremeDeconvolution, gplots, ashr and colorRamps. Also install the command
 line program sfa for sparse factor analysis.
 
-
 ```{r}
 knitr::opts_chunk$set(cache=FALSE)
 library(mashr)
-library(ashr)
 library(gplots)
 library(colorRamps)
+
+# Only needed for model fitting ("fit_model" chunk).
+library(ashr)
+
+# Only needed for optional "generate_covmatswithbovy" chunk.
 library(ExtremeDeconvolution)
 ```
-
 
 I simulated the data this way
 ```{r, eval=FALSE}
 set.seed(123)
-data=factor_sim_new(J = 20000)##simulate 20000 gene snp pairs with 400 true effects
-saveRDS(data,"newsimdata.rds")
+
+## Simulate 20000 gene snp pairs with 400 true effects.
+sim_data = factor_sim_new(J = 20000) 
+saveRDS(sim_data,"newsimdata.rds")
 ````
 
 Here, I load my previously simulated data:
+
 ```{r,echo=T}
-data=readRDS("newsimdata.rds")
-t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta;s.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
+sim_data = readRDS("newsimdata.rds")
+t         = sim_data$tstat
+bhat      = sim_data$betahat
+sebetahat = sim_data$sebetahat
+beta      = sim_data$beta;s.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
 ```
+
 In this step, we run ash to choose the effects that satisfy a univariate ash lfsr threshold of 0.05 in at least one tissue. Again, you can choose to excecute this step yourself, but for your convenience, I've included these files in the directory.
 
-```{r,eval=FALSE}
+```{r fit_model,eval=FALSE}
 
-t.fit=data$tstat
-se.fit=data$sebetahat/data$sebetahat
+t.fit  = sim_data$tstat
+se.fit = sim_data$sebetahat / sim_data$sebetahat
 
 univariate.ash.pm=matrix(nrow=nrow(t.fit),ncol=ncol(t.fit))
 univariate.ash.lfsr=matrix(nrow=nrow(t.fit),ncol=ncol(t.fit))
 
+cat("Fit ash models separately for each tissue.\n")
 for(x in 1:44){
-
-b=ash(betahat=t.fit[,x],sebetahat=se.fit[,x],mixcompdist="normal")
-univariate.ash.pm[,x]=b$PosteriorMean
-univariate.ash.lfsr[,x]=b$lfsr
+  cat("Fitting ash model for tissue",x,"\n")
+  b=ash(betahat=t.fit[,x],sebetahat=se.fit[,x],mixcompdist="normal")
+  univariate.ash.pm[,x]   = b$result$PosteriorMean
+  univariate.ash.lfsr[,x] = b$lfsr
 }
 
 write.table(univariate.ash.lfsr,"univariate.ash.lfsrnewdata.txt")
@@ -53,8 +63,6 @@ lfsr=read.table("univariate.ash.lfsrnewdata.txt")
 index=which(rowSums(lfsr<0.05)>0)
 write.table(t[index,],"maxtsim.txt",row.names = F,col.names = F)
 ```
-
-
 
 Then we perform SFA on the maxes, however we choose to select them. I chose those which satisfied an LFSR threshold of 0.05 in at least one subgroup, and I saved the factors and loadings for your convenience in the directory as you can see. However, you can reperform yourslef with the SFA software installed.
 
@@ -76,7 +84,6 @@ cov=compute.covmat(b.gp.hat = t,sebetahat = s.j,Q =5, t.stat=t[index,],lambda.ma
 
 compute.hm.train.log.lik.pen(train.b = t,se.train = s.j,covmat = cov,A=A,pen=1)
 
-
 pis=readRDS(paste0("pis",A,".rds"))$pihat
 b.test=t[1:20000,]
 se.test=s.j[1:20000,]
@@ -85,7 +92,7 @@ weightedquants=lapply(seq(1:20000),function(j){total.quant.per.snp(j,cov,b.gp.ha
 
 If we wanted to use the Extreme Deconvolution package, we could add an additional step. However, in this vignette we use the code above (without Extreme Deconvolution) to generate posteriors. 
 
-``````{r generate covmatswithbovy,eval=FALSE}
+``````{r generate_covmatswithbovy,eval=FALSE}
 ms=deconvolution.em.with.bovy(t.stat=t[index,],factor.mat,s.j,lambda.mat,K=3,P=3)
 saveRDS(ms,"mstruecovs.rds")
 A="reproseedomegawithED"
@@ -106,12 +113,11 @@ univariate.ash.pm=read.table("univariateashpm.txt")
 lfsr.mash=read.table("reproseedomega2lfsr.txt")[,-1]
 lfsr.ash=read.table("univariate.ash.lfsrnewdata.txt")
                                                       
-sebetahat=data$sebetahat
-sebetahat=sebetahat[1:20000,]
-standard=sqrt(mean((beta[1:20000,]-bhat[1:20000,])^2))
+sebetahat = sim_data$sebetahat
+sebetahat = sebetahat[1:20000,]
+standard  = sqrt(mean((beta[1:20000,]-bhat[1:20000,])^2))
 sqrt(mean((beta[1:20000,]-mash.means[1:20000,]*sebetahat)^2))/standard
 sqrt(mean((beta[1:20000,]-univariate.ash.pm[1:20000,]*sebetahat)^2))/standard
-
 ```
 
 
@@ -128,41 +134,35 @@ Then, we can ask how many truly non-zero associations we capture at a given thre
 ```{r echo=TRUE}
 thresh=0.05
 
-
 sum(sum(beta!=0&lfsr.mash<thresh))/sum(beta!=0)
 sum(sum(beta!=0&lfsr.ash<thresh))/sum(beta!=0)
-
 ```
 
 Then, we compute the nominal lfsr (S) value, and we ask how many we correctly and incorrectly sign at a given threshold.
 
 ```{r echo=TRUE}
 
-
 sign.test.mash=beta*mash.means
 sign.test.ash=beta*ash.means
-###compute nominal lfsr threshold
+
+### compute nominal lfsr threshold
 mean(lfsr.mash[lfsr.mash<0.05])
 mean(lfsr.ash[lfsr.ash<0.05])
-
 
 ##ask what proportion of associations do we correctly sign 
 sum(sign.test.mash>0&lfsr.mash<thresh)/sum(beta!=0)
 sum(sign.test.ash>0&lfsr.ash<thresh)/sum(beta!=0)
-
 ```
+
 And here we plot a power comparison:
+
 ```{r roccurve1shared,echo=FALSE}
 mash.power=NULL
 ash.power=NULL
 
-
-
 mash.fp=NULL
 ash.fp=NULL
 bma.fp=NULL
-
-
 
 thresholds=seq(0.01,1,by=0.01)
 for(s in 1:length(thresholds)){
@@ -172,18 +172,9 @@ thresh=thresholds[s]
 mash.power[s]=sum(sign.test.mash>0&lfsr.mash<=thresh)/sum(beta!=0)
 ash.power[s]=sum(sign.test.ash>0&lfsr.ash<=thresh)/sum(beta!=0)
 
-
-
-
 ##false positives is the proportion of null effects called at a given threshold
 mash.fp[s]=sum(beta==0&lfsr.mash<=thresh)/sum(beta==0)
 ash.fp[s]=sum(beta==0&lfsr.ash<=thresh)/sum(beta==0)
-
-
-
-
-
-
 }
 
 #frow=c(1,2))
@@ -194,7 +185,6 @@ lines(ash.fp,ash.power,cex=0.5,pch=1,ylim=c(0,1),col="red")
 legend("bottomright",legend = c("mash","ash"),col=c("green","red"),pch=c(1,1))
 
 ```
-
 
 To show our calculations are correct, we show the calculation for a sample pair.
 
@@ -232,8 +222,10 @@ lik.snp=lik.func(b.mle,V.gp.hat,covmat)
 post.weights=t(lik.snp*pis/sum(lik.snp*pis))
 
 all.equal(as.numeric(post.means[j,]),as.numeric(post.weights%*%all.arrays$post.means))
-
 ```
+
+*What does this last chunk do? It seems like a nice plot, but I'm not sure what
+it is showing. --Peter*
 
 ```{r,eval=T}
 A="reproseedomega2"
@@ -249,5 +241,7 @@ for(k in mostimportant){
 
   heatmap.2(x,col = blue2green(256),dendrogram="none",density="none",trace="none",main=paste0("HeatmapofUk",k))
 v=svd(cov[[k]])$v
-barplot(v[,1]/max(v[,1]))
+barplot(v[,1]/max(v[,1]),
+        xlab = "Add x-axis label",
+        ylab = "Add y-axis label")
 }
