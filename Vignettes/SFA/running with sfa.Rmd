@@ -1,0 +1,27 @@
+---
+title: "runningsfa"
+output: html_document
+---
+
+##Running with SFA##
+
+Here, we demonstrate how to run SFA to provide factors and loadings for the covariance matrices.
+
+You'll note the statement: 'then we perform SFA on the maxes, however we choose to select them. I chose those which satisfied an LFSR threshold of 0.05 in at least one subgroup, and I saved the factors and loadings for your convenience in the directory as you can see. However, you can reperform yourself with the SFA software installed. 
+
+Briefly, SFA produces a variety of single rank factors which the gene-snp pairs can be loaded. These represent succinct 'patterns of sharing' that theoretically capture some of the overarching patterns in the data.
+
+
+For details on the SFA package, see [the details from Engelhardt et al](http://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1001117)
+
+You can find the executables for SFA [here](https://github.com/kkdey/sfa_seq/tree/master/sfa/bin).
+
+After installing, you run SFA on the maximum t statistics in the dataset, as computed in [Reprosim](../Reprosim/newsim.html).
+
+```{r sfa, eval=FALSE}
+wc -l maxtsim.txt
+##here there were 269 rows, so -g is 269
+sfa -gen ./maxtsim.txt -g 269 -n 44 -o reproseed i -k 5
+```
+
+As you can see, this produces a set of files that contain `reproseed_F.out` and `reproseed_lambda.out`

@@ -56,7 +56,7 @@ write.table(t[index,],"maxtsim.txt",row.names = F,col.names = F)
 
 
 
-Then we perform SFA on the maxes, however we choose to select them. I chose those which satisfied an LFSR threshold of 0.05 in at least one subgroup, and I saved the factors and loadings for your convenience in the directory as you can see. However, you can reperform yourslef with the SFA software installed.
+Then we perform SFA on the maxes, however we choose to select them. I chose those which satisfied an LFSR threshold of 0.05 in at least one subgroup, and I saved the factors and loadings for your convenience in the directory as you can see. However, you can reperform yourslef with the SFA software installed. See ()
 
 ```{r sfa, eval=FALSE}
 wc -l maxtsim.txt

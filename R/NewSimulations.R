@@ -15,7 +15,7 @@ factor_sim_new=function(J,d=44,betasd=1,esd=0.11,tspec=0,n=400,R=44){
   n=n
   #F=t(sapply(seq(1:K),function(x){rnorm(d,mean=0,sd=betasd)})) 
   #covmat=readRDS("~/matrix_ash/inst/simdata/covmatforsimulation.rds")[2:9]
-  covmat=readRDS(system.file('simdata/covmatforsimulation.rds', package = 'mash'))[2:9]
+  covmat=readRDS(system.file('simdata/covmatforsimulation.rds', package = 'mashr'))[2:9]
   covmat=lapply(seq(1:length(covmat)),function(x){covmat[[x]]/max(diag(covmat[[x]]))})
  
   if(tspec!=0){
