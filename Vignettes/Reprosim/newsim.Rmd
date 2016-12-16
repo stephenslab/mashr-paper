@@ -21,7 +21,7 @@ I simulated the data this way
 ```{r, eval=FALSE}
 set.seed(123)
 data=factor_sim_new(J = 20000)##simulate 20000 gene snp pairs with 400 true effects
-saveRDS(data,"~/Dropbox/newsimdata.rds")
+saveRDS(data,"newsimdata.rds")
 ````
 
 Here, I load my previously simulated data:
@@ -46,8 +46,8 @@ univariate.ash.pm[,x]=b$PosteriorMean
 univariate.ash.lfsr[,x]=b$lfsr
 }
 
-write.table(univariate.ash.lfsr,"~/Dropbox/univariate.ash.lfsrnewdata.txt")
-write.table(univariate.ash.pm,"~/Dropbox/univariate.ash.pmnewdata.txt")
+write.table(univariate.ash.lfsr,"univariate.ash.lfsrnewdata.txt")
+write.table(univariate.ash.pm,"univariate.ash.pmnewdata.txt")
 lfsr=read.table("univariate.ash.lfsrnewdata.txt")
 index=which(rowSums(lfsr<0.05)>0)
 write.table(t[index,],"maxtsim.txt",row.names = F,col.names = F)
