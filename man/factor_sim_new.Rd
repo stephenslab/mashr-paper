@@ -4,7 +4,8 @@
 \alias{factor_sim_new}
 \title{factor.sim.new}
 \usage{
-factor_sim_new(J, d = 44, betasd = 1, esd = 0.11, tspec = 0, n = 400)
+factor_sim_new(J, d = 44, betasd = 1, esd = 0.11, tspec = 0, n = 400,
+  R = 44)
 }
 \arguments{
 \item{J}{Number of Gene-SNP Pairs and by definition, only 0.8 percent of them will be true eQTL; pi0 is 0.20 and the number of genes is J/100)}
