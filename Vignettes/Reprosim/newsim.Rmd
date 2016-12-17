@@ -1,5 +1,5 @@
 ---
-title: "RepoSim"
+title: "Reproducible Simulation"
 output: html_document
 ---
 
@@ -11,9 +11,13 @@ line program sfa for sparse factor analysis.
 ```{r}
 knitr::opts_chunk$set(cache=FALSE)
 library(mashr)
-library(ashr)
 library(gplots)
 library(colorRamps)
+
+# Only needed for model fitting ("fit_model" chunk).
+library(ashr)
+
+# Only needed for optional "generate_covmatswithbovy" chunk.
 library(ExtremeDeconvolution)
 ```
 
@@ -21,42 +25,51 @@ library(ExtremeDeconvolution)
 I simulated the data this way
 ```{r, eval=FALSE}
 set.seed(123)
-data=factor_sim_new(J = 20000)##simulate 20000 gene snp pairs with 400 true effects
+
+## Simulate 20000 gene snp pairs with 400 true effects
+data=factor_sim_new(J = 20000)
 saveRDS(data,"newsimdata.rds")
 ````
 
 Here, I load my previously simulated data:
+
 ```{r,echo=T}
-data=readRDS(unzip(zipfile="newsimdata.rds.zip"))
-t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta;s.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
+sim_data=readRDS(unzip(zipfile="newsimdata.rds.zip"))
+t         = sim_data$tstat
+bhat      = sim_data$betahat
+sebetahat = sim_data$sebetahat
+beta      = sim_data$beta;s.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
 ```
-In this step, we run ash to choose the effects that satisfy a univariate ash lfsr threshold of 0.05 in at least one tissue. Again, you can choose to excecute this step yourself, but for your convenience, I've included these files in the directory.
+
+In this step, we run ash to choose the effects that satisfy a univariate ash lfsr threshold of 0.05 in at least one tissue. Again, you can choose to excecute this step yourself, but for your convenience, I've included these files in the directory and zipped them.
 
 ```{r,eval=FALSE}
-
-t.fit=data$tstat
-se.fit=data$sebetahat/data$sebetahat
+t.fit  = sim_data$tstat
+se.fit = sim_data$sebetahat / sim_data$sebetahat
 
 univariate.ash.pm=matrix(nrow=nrow(t.fit),ncol=ncol(t.fit))
 univariate.ash.lfsr=matrix(nrow=nrow(t.fit),ncol=ncol(t.fit))
 
+cat("Fit ash models separately for each tissue.\n")
 for(x in 1:44){
-
-b=ash(betahat=t.fit[,x],sebetahat=se.fit[,x],mixcompdist="normal")
-univariate.ash.pm[,x]=b$PosteriorMean
-univariate.ash.lfsr[,x]=b$lfsr
+  cat("Fitting ash model for tissue",x,"\n")
+  b=ash(betahat=t.fit[,x],sebetahat=se.fit[,x],mixcompdist="normal")
+  univariate.ash.pm[,x]   = b$result$PosteriorMean
+  univariate.ash.lfsr[,x] = b$result$lfsr
 }
 
 write.table(univariate.ash.lfsr,"univariate.ash.lfsrnewdata.txt")
 write.table(univariate.ash.pm,"univariate.ash.pmnewdata.txt")
-lfsr=read.table(unzip(zipfile"univariate.ash.lfsrnewdata.txt.zip"))
+lfsr=read.table(unzip(zipfile="univariate.ash.lfsrnewdata.txt.zip"))
 index=which(rowSums(lfsr<0.05)>0)
 write.table(t[index,],"maxtsim.txt",row.names = F,col.names = F)
 ```
 
 
 
-Then we perform SFA on the maxes, however we choose to select them. I chose those which satisfied an LFSR threshold of 0.05 in at least one subgroup, and I saved the factors and loadings for your convenience in the directory as you can see. However, you can reperform yourslef with the SFA software installed. See ()
+Then we perform SFA on the maxes, however we choose to select them. I chose those which satisfied an LFSR threshold of 0.05 in at least one subgroup, and I saved the factors and loadings for your convenience in the directory as you can see. However, you can reperform yourslef with the SFA software installed. 
+
+See [link](..\SFA\running_with_sfa.html) to a vignette here.
 
 ```{r sfa, eval=FALSE}
 wc -l maxtsim.txt
@@ -74,8 +87,7 @@ s.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
 A="reproseedomega2"
 cov=compute.covmat(b.gp.hat = t,sebetahat = s.j,Q =5, t.stat=t[index,],lambda.mat=lambda.mat,P=3,A=A, factor.mat = factor.mat,bma = TRUE,zero=TRUE,power = 2)$cov
 
-compute.hm.train.log.lik.pen(train.b = t,se.train = s.j,covmat = cov,A=A,pen=1)
-
+out <- compute.hm.train.log.lik.pen(train.b = t,se.train = s.j,covmat = cov,A=A,pen=1)
 
 pis=readRDS(paste0("pis",A,".rds"))$pihat
 b.test=t[1:20000,]
@@ -105,10 +117,10 @@ mash.means=read.table(unzip(zipfile="reproseedomega2posterior.means.txt.zip"))[,
 univariate.ash.pm=read.table(unzip(zipfile="univariateashpm.txt.zip"))
 lfsr.mash=read.table(unzip(zipfile="reproseedomega2lfsr.txt.zip"))[,-1]
 lfsr.ash=read.table(unzip(zipfile="univariate.ash.lfsrnewdata.txt.zip"))
-                                                      
-sebetahat=data$sebetahat
-sebetahat=sebetahat[1:20000,]
-standard=sqrt(mean((beta[1:20000,]-bhat[1:20000,])^2))
+
+sebetahat = sim_data$sebetahat
+sebetahat = sebetahat[1:20000,]
+standard  = sqrt(mean((beta[1:20000,]-bhat[1:20000,])^2))
 sqrt(mean((beta[1:20000,]-mash.means[1:20000,]*sebetahat)^2))/standard
 sqrt(mean((beta[1:20000,]-univariate.ash.pm[1:20000,]*sebetahat)^2))/standard
 
@@ -123,6 +135,7 @@ lfsr.ash=as.matrix(lfsr.ash)
 mash.means=as.matrix(mash.means)
 ash.means=as.matrix(univariate.ash.pm)
 ```
+
 Then, we can ask how many truly non-zero associations we capture at a given threshold.
 
 ```{r echo=TRUE}
@@ -151,7 +164,9 @@ sum(sign.test.mash>0&lfsr.mash<thresh)/sum(beta!=0)
 sum(sign.test.ash>0&lfsr.ash<thresh)/sum(beta!=0)
 
 ```
+
 And here we plot a power comparison:
+
 ```{r roccurve1shared,echo=FALSE}
 mash.power=NULL
 ash.power=NULL
@@ -195,7 +210,6 @@ legend("bottomright",legend = c("mash","ash"),col=c("green","red"),pch=c(1,1))
 
 ```
 
-
 To show our calculations are correct, we show the calculation for a sample pair.
 
 ````{r}
@@ -206,8 +220,6 @@ A="reproseedomega2"
 pis=readRDS(paste0("pis",A,".rds"))$pihat
 b.test=t[1:20000,]
 se.test=s.j[1:20000,]
-
-
 
 covmat=readRDS(paste0("covmat",A,".rds"))
 all.arrays=post.array.per.snp(j=j,covmat = covmat,b.gp.hat = t,se.gp.hat = s.j)
@@ -236,6 +248,8 @@ all.equal(as.numeric(post.means[j,]),as.numeric(post.weights%*%all.arrays$post.m
 
 ```
 
+In this chunk, we show a heatmap of some of the major patterns of sharing (the UKs) that are *learned* from the data, equivalent to our supplemental figure.
+
 ```{r,eval=T}
 A="reproseedomega2"
 
@@ -250,5 +264,7 @@ for(k in mostimportant){
 
   heatmap.2(x,col = blue2green(256),dendrogram="none",density="none",trace="none",main=paste0("HeatmapofUk",k))
 v=svd(cov[[k]])$v
-barplot(v[,1]/max(v[,1]))
+barplot(v[,1]/max(v[,1]),
+         xlab = paste0("EigenVector1 of UK",k))
 }
+
