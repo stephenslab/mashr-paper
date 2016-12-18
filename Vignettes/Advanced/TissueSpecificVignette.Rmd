@@ -1,0 +1,302 @@
+---
+title: "Simulations with Tissue Specificity"
+output: html_document
+---
+
+The purpose is to simulate according to the patterns of sharing present in the GTEX V6 Data, where 100 snps in cis of 500 genes, $pi0$ is 0.80, and there is sharing according to gtex covmats 2:9 and about 35% tissues specific. Thus the componenet ID for the _tissue specific QTL_ will be _SimulatedComponenet=9:13_.
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE)
+```
+
+First, install, the package. I've already done this:
+```{r,echo=TRUE,eval=FALSE}
+rm(list=ls())
+
+```
+
+Here, we simulate data and select the genes with maximum T statistic across tissues (here, called t, but assuming the sample size is sufficient that t is normally distributed) in order to capture the `strong patterns' of sharing. We performs SFA on these strong Z statistics, and use these to compute the $U_{k}$ that will be used in inference. We scale each $U_{k}$ by a grid chosen according to the effect sizes present in the overall data set.
+
+
+This is how we simulate data, but for the purposes of this document we will use data that has already been simulated so that the  Factors and Loadings from SFA are appropriate. 
+
+```{r simulatedata, eval=T}
+library("mashr")
+set.seed(123)
+data=factor_sim_new(J = 50000,tspec=5) #tissue specific tissues
+saveRDS(data,"simdata_tspec.rds")
+```
+
+Now we can read in the data. We will compute according to the ET model and corresponding covariance matrices as described in Urbut et al. Note that we use the top 400 gene snp pairs to create this covariance matrix. In later applications, we've run univariate ash on the whole data set and then used the maxes as the genes with a significant effect in at least one tissue, but here we simply select the 400 tops for brevity.
+
+
+```{r readindata}
+data=readRDS(unzip(zipfile="simdata_tspec.rds.zip"))
+t=data$tstat;
+bhat=data$betahat;
+sebetahat=data$sebetahat;
+beta=data$beta;
+s.j=matrix(rep(1,ncol(bhat)*nrow(bhat)),ncol=ncol(bhat))
+c=apply(t,1,function(x){max(abs(x))})
+maxes=order(c,decreasing = TRUE)[1:400]##take top gene snp pairs
+max.t=t[maxes,]
+write.table(max.t,"maxt.txt")
+
+system('/Users/sarahurbut/miniconda3/bin/sfa -gen maxt.txt -g 400 -n 44 -o t_spec i -k 5')
+
+
+A="yourfavoritename"
+factor.mat=as.matrix(read.table("t_spec_F.out"))
+lambda.mat=as.matrix(read.table("t_spec_lambda.out"))
+s.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
+v.j=s.j^2
+covmat=compute.covmat(b.gp.hat = t,sebetahat = s.j,Q =5, t.stat=max.t,lambda.mat=lambda.mat,P=3,A=A, factor.mat = factor.mat,bma = TRUE,zero=TRUE)$cov
+```
+
+To determine how much is tissue specific, recall that components 9:54 represented tissue specificity; we can ask which gene-snp pairs belong to component 9 or greater.
+
+```{r definedata,eval=TRUE}
+library("mashr")
+sum(data$component.id>8)/length(data$component.id)
+```
+
+Here, we can see that `r sum(data$component.id>8)/length(data$component.id)`of associations are tissue specific, and the tissue specific tissues are:
+```{r whichspec}
+lapply((data$component.mats[9:13]),function(x){which(diag(x)!=0)})
+```
+We can find which pairs have tissue specific activity and plot an example of their t statistic, to make sure the model is simulating correctly:
+```{r plotsample}
+
+(j=which(data$component.id==9)[2])
+```
+This corresponds to tissue specificity in:
+```{r tissuespectissue}
+diag(data$component.mats[[9]])
+which(diag(data$component.mats[[9]])!=0)
+```
+
+Accordingly, a plot of gene-snp pair `r j` t-statistics should show tissue specificity tissue `r which(diag(data$component.mats[[9]])!=0)`:
+```{r}
+barplot(data$tstat[j,],names=seq(1,44),las=3,xlab="Tissue",ylab="Tstatistic",main=paste(c("Individual",j,"T stats")))
+```
+
+Now, let's fit the model using the random set of 20,000 gene snp pairs. We computed the covariance matrix above, using the strongest 500 gene snp pairs to estimate the strong 'patterns' of sharing, and building a KxL list that incorporated $\omega$ according to the magntiude of the effect size present in the overall data.
+
+```{r, eval=T}
+A="yourfavoritename"
+covmat=readRDS(paste0("covmat",A,".rds"))
+```
+
+Now we train the Model, as this can take some time, I provide the user with precomputed weights:
+```{r picache,eval=F}
+compute.hm.train.log.lik.pen(train.b = t[1:20000,],se.train = s.j[1:20000,],covmat = covmat,A=A,pen=10)
+```
+
+This will the object of pis, a pdf of their weight, and a likelihood matrix.
+Now, we can compute posteriors. For simplicity, let's just do it for the first 5000 gene-snp pairs:As this can take some time I provide precomputed posteriors.
+
+```{r computeposteriors,eval=F,cache=T}
+A="yourfavoritename"
+
+pis=readRDS(paste0("pis",A,".rds"))$pihat
+b.test=t[1:5000,]
+se.test=s.j[1:5000,]
+weightedquants=lapply(seq(1:5000),function(j){total.quant.per.snp(j,covmat,b.gp.hat=b.test,se.gp.hat = se.test,pis,A=A,checkpoint = FALSE)})
+```
+
+Let's check some stuff out to make sure our computations are correct.
+
+```{r checkpoint,eval=TRUE}
+
+j=5
+A="yourfavoritename"
+pis=readRDS(paste0("pis",A,".rds"))$pihat
+covmat=readRDS(paste0("covmat",A,".rds"))
+all.arrays=post.array.per.snp(j=j,covmat = covmat,b.gp.hat = t,se.gp.hat = v.j)
+
+b.mle=as.vector(t(t[j,]))##turn i into a R x 1 vector
+V.gp.hat=diag(s.j[j,])^2
+V.gp.hat.inv <- solve(V.gp.hat)
+k=3
+
+U.gp1kl <- (post.b.gpkl.cov(V.gp.hat.inv, covmat[[k]]))
+mu.gp1kl <- as.array(post.b.gpkl.mean(b.mle, V.gp.hat.inv, U.gp1kl))
+#(all.arrays$post.means[k,])
+all.equal(as.numeric(all.arrays$post.means[k,]),as.numeric(mu.gp1kl))
+
+##Now, check to make sure weighting is correct
+post.means=as.matrix(read.table(unzip(zipfile="yourfavoritenameposterior.means.txt.zip"))[-1])
+lik.snp=lik.func(b.mle,V.gp.hat,covmat)
+post.weights=t(lik.snp*pis/sum(lik.snp*pis))
+
+all.equal(as.numeric(post.means[j,]),as.numeric(post.weights%*%all.arrays$post.means))
+#(post.means[j,])
+#(post.weights[j,]%*%all.arrays$post.means)
+
+```
+
+Let's take a tissue specific guy and see how well we estimate his posterior weight. 
+
+```{r}
+#i=sample(seq(1:139),1)
+i=24
+(tspecindividual=which(data$component.id>8))
+(j=tspecindividual[i])
+(true.componenet=data$component.id[j])##determine which component he arose from
+(tspec=which(diag(data$component.mats[[true.componenet]])!=0))###which tissue is that specific too
+
+
+b.mle=as.vector(t(t[j,]))##turn i into a R x 1 vector
+V.gp.hat=diag(s.j[j,])^2
+
+lik.snp=lik.func(b.mle,V.gp.hat,covmat)
+post.weights=t(lik.snp*pis/sum(lik.snp*pis))
+pi.mat=matrix(pis[-length(pis)],ncol = 54,byrow = T)
+pw.mat=matrix(post.weights[-length(pis)],ncol = 54,byrow = T)
+
+###ask if the posterior weight at that componenet is higher than the prior weight, recognizing that we must add to the first 9 covmats
+colSums(pi.mat)[tspec+9]
+colSums(pw.mat)[tspec+9]
+
+```
+We can see that our model is very good at capturing this tissue specific example!
+
+
+Now let's compare this to univariate ash measures:
+```{r univariateash,eval=FALSE}
+train.z=t[1:20000,]
+train.v=s.j[1:20000,]
+
+z.stat=t[1:5000,]
+v.j=s.j[1:5000,]
+
+univariate.ash.pm=matrix(nrow=nrow(z.stat),ncol=ncol(z.stat))
+univariate.ash.lfsr=matrix(nrow=nrow(z.stat),ncol=ncol(z.stat))
+
+R=ncol(z.stat)
+library('ashr')
+
+for(x in 1:R){
+
+b=ash(betahat=train.z[,x],sebetahat=train.v[,x],mixcompdist="normal")##fit weights on random data
+g.fix=b$fitted.g
+max.z.fit=ash(betahat=z.stat[,x], sebetahat=v.j[,x],g=g.fix,fixg=TRUE)
+univariate.ash.pm[,x]=max.z.fit$PosteriorMean
+univariate.ash.lfsr[,x]=max.z.fit$lfsr
+}
+
+write.table(univariate.ash.pm,file="uniashpm.txt")
+write.table(univariate.ash.lfsr,file="uniashlfsr.txt")
+```
+
+Let's compare the RMSE here between our multivariate and a univariate method. We want to compute the mean squared error of the effect, so we multiply by the standard error.
+
+```{r univariateashcompare}
+
+data=readRDS((unzip(zipfile = "simdata_tspec.rds.zip")))
+t=data$tstat;bhat=data$betahat;sebetahat=data$sebetahat;beta=data$beta;v.j=matrix(rep(1,ncol(t)*nrow(t)),ncol=ncol(t),nrow=nrow(t))
+t.truth.test=beta/sebetahat
+mash.means=as.matrix(read.table(unzip(zipfile="yourfavoritenameposterior.means.txt.zip"))[-1])
+univariate.ash.pm=as.matrix(read.table(unzip(zipfile="uniashpm.txt.zip")))
+standard=sqrt(mean((beta[1:5000,]-bhat[1:5000,])^2))
+sqrt(mean((beta[1:5000,]-mash.means*sebetahat[1:5000,])^2))/standard
+sqrt(mean((beta[1:5000,]-univariate.ash.pm[1:5000,]*sebetahat[1:5000,])^2))/standard
+
+```
+
+We can also plot the scatterplot to observe the behavior of 'null'(in red) and 'real'(in blue) associations. We see that our joint analysis reduces the Root Mean Squared Error (RMSE) and provides ample shrinkage of 'null values'.
+
+```{r scatterplot,eval=FALSE, echo=FALSE}
+
+nulls=which(rowSums(data$beta)==0,)
+null.vals=intersect(1:nrow(post.means),nulls)
+tspec=which((data$component.id>8))
+tissues=apply(t.truth.test[tspec,],1,function(x){
+  which(x!=0)
+})
+
+tspecific=cbind(tspec,tissues)
+
+
+post.means=as.matrix(post.means)
+
+plot(as.matrix(t[1:5000,]),as.matrix(post.means),col=adjustcolor("blue", alpha=0.5), pch=16,main="E(Z|Data) vs Zmle",ylab="E(Z|Data)",xlab="Zmle")
+points(t[null.vals,],post.means[null.vals,],col="red")
+points(t[tspecific],post.means[tspecific],col="green")
+
+
+plot(as.matrix(t[1:5000,]),as.matrix(univariate.ash.pm),col=adjustcolor("blue", alpha=0.5), pch=16,main="E(Z|Data_ash) vs Zmle",ylab="E(Z|Data_ash)",xlab="Zmle")
+points(as.matrix(t[null.vals,]),as.matrix(univariate.ash.pm[null.vals,]),col="red")
+#points(t[tspecific],univariate.ash.pm[tspecific],col="green")
+
+
+
+plot(as.matrix(t.truth.test[1:5000,]),as.matrix(post.means),col=adjustcolor("blue", alpha=0.5), pch=16,main="E(Z|Data) vs Z.true",ylab="E(Z|Data)",xlab="Z.truth")
+points(t.truth.test[null.vals,],post.means[null.vals,],col="red")
+#points(t.truth.test[tspecific],post.means[tspecific],col="green")
+legend("right",legend=c("all","TrueNulls"),pch=1,col=c("blue","red"))
+
+
+
+
+plot(as.matrix(t.truth.test[1:5000,]),as.matrix(univariate.ash.pm),col=adjustcolor("blue", alpha=0.5), pch=16,main="E(Z|Data.ash) vs Z.True",ylab="E(Z|Data)",xlab="Z.True")
+points(t.truth.test[null.vals,],as.matrix(univariate.ash.pm[null.vals,]),col="red")
+legend("right",legend=c("All","TrueNulls"),pch=1,col=c("blue","red"))
+
+
+```
+
+We can also look at the covariance patterns learned:
+
+```{r coveigen}
+for(i in c(2:9)){
+  
+v=svd(covmat[[i]])$v
+ 
+max.effect=sign(v[,1][which.max(abs(v[,1]))])
+barplot(max.effect*v[,1],las=2,main=paste0("EigenVector1ofUk=",i),col=i-1,cex.names=1)}
+
+```
+
+
+
+And here we plot number sig vs significance threshold:
+```{r echo=FALSE,cache=TRUE,eval=F}
+
+lfsr.mash=read.table(paste0(A,"lfsr.txt"))[,-1]
+lfsr.ash=read.table("uniashlfsr.txt")
+
+
+beta=as.matrix(beta[1:5000,])
+lfsr.mash=as.matrix(lfsr.mash)
+lfsr.ash=as.matrix(lfsr.ash)
+
+
+
+sig_func=function(beta,lfsr,thresh){
+sapply(seq(1:nrow(beta)),function(x){
+  nonzero=which(beta[x,]!=0)
+  sigs=which(lfsr[x,]<thresh)
+  length(intersect(sigs,nonzero))
+})
+}
+
+
+# mash.sigs=sig_func(beta,lfsr.mash,thresh=0.10)
+# ash.sigs=sig_func(beta,lfsr.ash,thresh=0.10)
+# bma.sigs=sig_func(beta,lfsr.bma,thresh=0.10)
+
+
+
+plot(0.05,sum(sum(beta!=0&lfsr.mash<0.05)),col="blue",ylim=c(0,10000),xlim=c(0.01,0.10),pch=2,ylab="NumberofTrueAssociationsCaptured",xlab="LFSRThreshold")
+
+for(thresh in seq(from = 0.01,to = 0.1,by = 0.001)){
+points(thresh,sum(beta!=0&lfsr.mash<thresh),col="blue",pch=1)}
+
+for(thresh in seq(from = 0.01,to = 0.1,by = 0.001)){
+points(thresh,sum(beta!=0&lfsr.ash<thresh),col="red",pch=1)}
+
+legend("center",legend=c("MASH","ASH"),pch=c(2,1,3),col=c("blue","red"))
+title("Number of True Association Captured vs LFSR Threshold, with TS")
+```

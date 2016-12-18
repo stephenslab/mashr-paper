@@ -15,3 +15,6 @@ There are two kinds of simulations in this directory.
 
 2) [In the `Advanced Directory', we also demonstrate how the software could be used when correlated errors are suspected, and the matrix of correlation among the errors is known.](Advanced/testingvmat.html)
 
+2) [In the `Advanced Directory', the purpose of the tissue-specificity simulations are to simulate according to both the patterns of sharing mentioned above and according to tissue specificity; accordingly, 35% are simulated according to a randomly chosen tissue specific configuration.
+Thus there are 50,000 gene snp pairs, and 400 'true'. We also want to compare to the results using univariate methods (ASH) and I also show at how well our method captures a 'tissue specific association.](Advanced/TissueSpecificVignette.html)
+

@@ -120,13 +120,14 @@ $(document).ready(function () {
 </div>
 
 
-<p><strong>Last updated:</strong> 2016-12-16</p>
-<p><strong>Code version:</strong> 00a4520b550442f9c3f633f9f826647c98f0172a</p>
+<p><strong>Last updated:</strong> 2016-12-18</p>
+<p><strong>Code version:</strong> 38a69ade1dfc67e94e757abaa573140a36f7d456</p>
 <p>There are two kinds of simulations in this directory.</p>
 <ol style="list-style-type: decimal">
 <li><p><a href="Reprosim/newsim.html">In the ReproSim directory, we simulate according to the patterns of sharing present in the GTEX V6 Data, where 100 snps in cis of 500 genes with <span class="math">\(\hat{\beta}\)</span> and standard errors available across 44 tissues, and there is sharing according to gtex covariance matrices 2:9 (See Urbut et al). In this directory, we walk the user through a step by step analysis to reproduce the simulated results with a seed, and provide ROC curves, RMSE computations and patterns of sharing, etc.</a></p></li>
 <li><p><a href="SFA/running_with_sfa.html">I add the ability to run with SFA, explaining to users how this is done</a></p></li>
 <li><p><a href="Advanced/testingvmat.html">In the `Advanced Directory’, we also demonstrate how the software could be used when correlated errors are suspected, and the matrix of correlation among the errors is known.</a></p></li>
+<li><p><a href="Advanced/TissueSpecificVignette.html">In the `Advanced Directory’, the purpose of the tissue-specificity simulations are to simulate according to both the patterns of sharing mentioned above and according to tissue specificity; accordingly, 35% are simulated according to a randomly chosen tissue specific configuration. Thus there are 50,000 gene snp pairs, and 400 ‘true’. We also want to compare to the results using univariate methods (ASH) and I also show at how well our method captures a ’tissue specific association.</a></p></li>
 </ol>
 
 
