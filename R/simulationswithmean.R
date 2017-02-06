@@ -193,7 +193,7 @@ chat_sim_fsingle_fixedomega=function(n=1000,d=8,omega=2,esd=0.1){
   
   beta=rbind(beta,matrix(rep(0,(n-J)*d),ncol=d))
   c=beta+mumat
-  sj=abs(matrix(rnorm(n*d,esd,0.001),ncol=d))##use uniform to simulate 'shrunken'
+  sj=matrix(rep(esd,n*d),ncol=d)##use uniform to simulate 'shrunken'
   e=t(apply(sj,1,function(x){rmvnorm(1,mean=rep(0,d),sigma=diag(x)^2)}))
   chat=c+e
   t=chat/sj
