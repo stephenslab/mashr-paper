@@ -16,4 +16,3 @@
 \value{
 K x R xR array of 'true covariance matrices' and Kx1 vector of pis
 }
-

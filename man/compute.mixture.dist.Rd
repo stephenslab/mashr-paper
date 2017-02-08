@@ -23,4 +23,3 @@ all.arrays a list of JxKxR arrays of posterior quantities
 \description{
 compute a list of JxKxR arrays with componenet specific quanitites and a JxK matrix of posterior weights
 }
-

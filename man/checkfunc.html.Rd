@@ -6,4 +6,3 @@
 \usage{
 checkfunc.html(j, b.gp.hat, se.gp.hat, A, k)
 }
-

@@ -6,4 +6,3 @@
 \usage{
 total.mean.per.snp(post.weights, post.means)
 }
-

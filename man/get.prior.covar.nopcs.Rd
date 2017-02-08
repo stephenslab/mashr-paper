@@ -9,4 +9,3 @@ get.prior.covar.nopcs(lambda.mat, Q, X.c, simat, omega.table, bma = TRUE)
 \description{
 get.prior.covar.nopcs
 }
-

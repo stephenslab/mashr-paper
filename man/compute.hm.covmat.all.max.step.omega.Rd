@@ -32,4 +32,3 @@ compute.hm.covmat.all.max.step.omega(mult = sqrt(2), minparam = 4, b.hat,
 \value{
 A list of covariance matrices
 }
-

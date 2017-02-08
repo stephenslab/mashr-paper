@@ -6,4 +6,3 @@
 \usage{
 compute.mix.test(b.gp.hat, J, se.gp.hat, covmat, A, save = FALSE)
 }
-

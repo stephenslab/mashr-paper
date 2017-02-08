@@ -15,4 +15,3 @@ post.cov.with.proj(tinv, U.k, L)
 
 \item{b.gp.hat}{projected L}
 }
-

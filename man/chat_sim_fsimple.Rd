@@ -20,4 +20,3 @@ omega the size of the effects
 
 f the factors from which they were simulated
 }
-

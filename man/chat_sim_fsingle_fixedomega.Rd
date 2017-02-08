@@ -4,7 +4,8 @@
 \alias{chat_sim_fsingle_fixedomega}
 \title{chat_sim_fsingle_fixedomega}
 \usage{
-chat_sim_fsingle_fixedomega(n = 1000, d = 8, omega = 2, esd = 0.1)
+chat_sim_fsingle_fixedomega(n = 1000, d = 8, omega = 2, esd = 0.1,
+  mu = 0)
 }
 \arguments{
 \item{n}{number of SNPs}
@@ -20,4 +21,3 @@ omega the size of the effects
 
 f the factors from which they were simulated
 }
-

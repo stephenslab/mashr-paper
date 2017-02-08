@@ -16,4 +16,3 @@ test.funct(j, max.step.unlist, k, R)
 \details{
 shows that the e step properly stores the posterior mean for a given gene snp pair and componenet combination
 }
-

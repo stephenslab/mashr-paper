@@ -6,4 +6,3 @@
 \usage{
 sim.with.error(J, d = 44, betasd = 1, esd = 0.11, n = 400, rho = 0.8)
 }
-

@@ -11,4 +11,3 @@ here, use the matrix of residual variation that may have non-diagonal elements
 
 v.mat is the input (as opposed to the vector of standard error) and is the same for all J genes
 }
-

@@ -16,4 +16,3 @@
 \details{
 computes log.likelihood for each betahat
 }
-

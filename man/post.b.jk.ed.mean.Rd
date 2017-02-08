@@ -16,4 +16,3 @@ post.b.jk.ed.mean(b.mle, tinv, U.k)
 \value{
 component specific vector of posterior means for the jth gene snp pair
 }
-

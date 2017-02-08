@@ -6,4 +6,3 @@
 \usage{
 independent.totally(J, d = 44, betasd = 1, esd = 1, tspec = 0)
 }
-

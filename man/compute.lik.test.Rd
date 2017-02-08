@@ -17,4 +17,3 @@ compute.lik.test(b.test, J, se.test, covmat, A, pis)
 
 \item{pis}{K matrix of HM weights form compute.hm.train}
 }
-

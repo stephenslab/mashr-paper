@@ -18,4 +18,3 @@ em.array.generator(max.step, b.j.hat, se.j.hat)
 \value{
 list of 3 arrays: JxKxR conditional posterior means, JxKxRxR posterior covariance matries and JxK normalized likelihoods (P(K|Data))
 }
-

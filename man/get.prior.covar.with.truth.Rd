@@ -14,4 +14,3 @@ get.prior.covar.with.truth(R, omega.table, covlist)
 \value{
 a L x K list of covariance matrices
 }
-

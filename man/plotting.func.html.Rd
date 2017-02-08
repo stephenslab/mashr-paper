@@ -7,4 +7,3 @@
 plotting.func.html(j, posterior.means, lfsr.mat, marginal.var, genesnpnames,
   tissue.names, mle.mat)
 }
-

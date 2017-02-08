@@ -15,4 +15,3 @@ compare.func(j, all.upper, all.lower)
 \details{
 compares upper and lower tail probability at each tissue to determine larger
 }
-

@@ -6,4 +6,3 @@
 \usage{
 factor_sim(J, d = 3, betasd = 1, esd = 0.1, K = 10)
 }
-

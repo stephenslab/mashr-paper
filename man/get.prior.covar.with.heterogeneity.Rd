@@ -14,4 +14,3 @@ get.prior.covar.with.heterogeneity(R, omega.table)
 \value{
 a L x K list of covariance matrices
 }
-

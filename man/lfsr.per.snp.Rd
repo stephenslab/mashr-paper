@@ -6,4 +6,3 @@
 \usage{
 lfsr.per.snp(all.ups, all.downs)
 }
-

@@ -6,4 +6,3 @@
 \usage{
 compute.hm.train.with.tol(train.b, se.train, covmat, A)
 }
-

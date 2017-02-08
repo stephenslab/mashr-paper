@@ -6,4 +6,3 @@
 \usage{
 gtexchatsim(J, d = 44, betasd = 1, esd = 0.11, tspec = 0, n = 400)
 }
-

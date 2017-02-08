@@ -6,4 +6,3 @@
 \usage{
 compute.hm.train(train.b, se.train, covmat, A)
 }
-

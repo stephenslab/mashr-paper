@@ -7,4 +7,3 @@
 compute.covmat.with.rho(b.gp.hat, sebetahat, Q, lambda.mat, P, A, factor.mat,
   t.stat)
 }
-

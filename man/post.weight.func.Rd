@@ -17,4 +17,3 @@ a 1xK vector of posterior weight for each gene snp pait
 \details{
 converts the matrix of likelihood for each gene snp pairs to matrix of posterior weights
 }
-

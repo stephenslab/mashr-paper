@@ -14,4 +14,3 @@ post.b.gpkl.cov ## returns an R*R posterior covariance matrix for jth gene snp p
 
 post.b.gpkl.mean return a 1 * R vector of posterior means for a given prior covariance matrix
 }
-

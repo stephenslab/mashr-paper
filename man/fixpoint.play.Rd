@@ -12,4 +12,3 @@ pi
 \details{
 returns pis for squareEM recognizing that if the rowSums are 0 for certain likmat entries, these need to be removed
 }
-

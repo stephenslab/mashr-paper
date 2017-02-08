@@ -16,4 +16,3 @@ lik.func(b.mle, V.gp.hat, covmat)
 \details{
 computes likelihood for each betahat
 }
-

@@ -25,4 +25,3 @@ get.prior.covar.Ukl(P, X.c, lambda.mat, Q, factor.mat, omega.table,
 \value{
 U.0kl
 }
-

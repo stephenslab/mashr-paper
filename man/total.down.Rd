@@ -14,4 +14,3 @@ total.down(j, post.downs, post.weights)
 \description{
 generate a K x R matrix of post.weighted lower tail probabilites and sum them to get total weighted
 }
-

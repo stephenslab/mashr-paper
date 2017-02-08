@@ -9,4 +9,3 @@
 \details{
 outputs a list of dimensions for both the true covariance matrices and the vector of pis
 }
-

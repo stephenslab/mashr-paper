@@ -6,4 +6,3 @@
 \usage{
 test.quant(A, all.arrays)
 }
-

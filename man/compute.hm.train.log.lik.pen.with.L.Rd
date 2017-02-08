@@ -25,4 +25,3 @@ An object containing pis and model fit from the EM, and a pdf barplot
 \description{
 = takes a matrix of training sumamry statistics and their standard errors and computes the likelihood matrix according to a list of covariance matrices, using the exponent of the log likelihood - max (llj)
 }
-

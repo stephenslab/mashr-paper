@@ -11,4 +11,3 @@ post.array.per.snp.with.vmat(j, covmat, b.gp.hat, se.gp.hat, cormat)
 
 \item{segphat}{is a the JxR matrix of standard errors for scaling}
 }
-

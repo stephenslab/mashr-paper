@@ -14,4 +14,3 @@ total.lik.func(test, pis)
 \value{
 likelihood of whole data set
 }
-

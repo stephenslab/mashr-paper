@@ -9,4 +9,3 @@ compute.determinant(se.gp.hat)
 \description{
 compute product of inverse sebhats for transofrmations of likielihood
 }
-

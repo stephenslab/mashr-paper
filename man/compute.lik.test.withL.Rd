@@ -19,4 +19,3 @@ compute.lik.test.withL(b.test, J, se.test, covmat, A, pis, L)
 
 \item{L}{projection matrix}
 }
-

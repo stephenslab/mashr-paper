@@ -13,4 +13,3 @@ compute.covmat.using.oneK.fixed.omega(covlist, A, omega, zero = TRUE)
 
 \item{se.gp.hat}{JxR matrix of standarderrors}
 }
-

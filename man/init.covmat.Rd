@@ -21,4 +21,3 @@ init.covmat(t.stat = t.stat, factor.mat = factors, lambda.mat = lambda, K,
 \value{
 KxRxR matric of prior covariance matrices to initialize the EM
 }
-

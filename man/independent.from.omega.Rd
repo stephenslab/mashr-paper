@@ -9,4 +9,3 @@ independent.from.omega(J, d = 44, betasd = 1, esd = 0.1, tspec = 0)
 \details{
 simulate shared effects with randomly chosen omegas
 }
-

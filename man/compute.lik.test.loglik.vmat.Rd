@@ -19,4 +19,3 @@ compute.lik.test.loglik.vmat(b.test, s.test, J, cormat, covmat, A, pis)
 
 \item{pis}{K matrix of HM weights form compute.hm.train}
 }
-

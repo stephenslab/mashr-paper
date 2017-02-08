@@ -16,4 +16,3 @@ mult.tissue.grid(mult = sqrt(2), betahat, sebetahat, maxp, minp)
 \value{
 omega
 }
-

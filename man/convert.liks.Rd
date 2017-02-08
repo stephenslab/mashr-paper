@@ -9,4 +9,3 @@ convert.liks(se.gp.hat, test.lik, pis)
 \description{
 converttestlikelihoods between models
 }
-

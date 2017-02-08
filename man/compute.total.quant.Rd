@@ -15,4 +15,3 @@ compute.total.quant(A, J, all.arrays)
 
 \item{If}{file present, read array file; else use list in memory}
 }
-

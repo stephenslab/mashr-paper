@@ -14,4 +14,3 @@ post.b.jk.ed.cov(tinv, U.k)
 \value{
 RxR posterior covariance matrix for the Jth gene snp pair at the kth componenet
 }
-

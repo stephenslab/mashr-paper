@@ -10,4 +10,3 @@ compute.covmat.nopc(b.gp.hat, sebetahat, Q, t.stat, lambda.mat, A, factor.mat,
 \description{
 get.prior.covar.nopcs
 }
-

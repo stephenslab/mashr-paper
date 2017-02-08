@@ -25,4 +25,3 @@ compute.covmat(b.gp.hat, sebetahat, Q, t.stat, lambda.mat, P, A, factor.mat,
 \value{
 A list of covariance matrices
 }
-

@@ -22,4 +22,3 @@ a 2 element list of K pis and the KxRxR true.covariance arrays
 \details{
 wrapper to compute denoised estimates of the fuller rank covariance matrices
 }
-

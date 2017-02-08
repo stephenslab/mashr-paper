@@ -17,4 +17,3 @@ a 2 element list of K pis and the KxRxR true.covariance arrays
 \details{
 combines e and m step
 }
-

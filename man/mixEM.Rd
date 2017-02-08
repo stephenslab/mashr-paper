@@ -26,4 +26,3 @@ the parameters of the fitted posterior on \eqn{\pi} (pipost),
 the bound on the log likelihood for each iteration (B)
 and a flag to indicate convergence (converged).
 }
-

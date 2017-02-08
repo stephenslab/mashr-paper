@@ -14,4 +14,3 @@ genlvlarray(s.j, L)
 \value{
 the JxRxR (or R-1) array of marginal variances
 }
-

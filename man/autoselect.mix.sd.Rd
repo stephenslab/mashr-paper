@@ -14,4 +14,3 @@ autoselect.mix.sd(betahat, sebetahat, mult)
 \value{
 mult^((-npoint):0) * sigmaamax)
 }
-

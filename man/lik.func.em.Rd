@@ -16,4 +16,3 @@ lik.func.em(true.covs, b.mle, V.j.hat, K)
 \value{
 1xK vector of likelihoods for the jth gene snp pair across all K covariance matrices
 }
-

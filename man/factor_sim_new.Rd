@@ -25,4 +25,3 @@ Generate J beta,betahats, T statistics across R tissues from a set of covariance
 
 to simulate strong sharing, I use the gtex covariance matrices
 }
-

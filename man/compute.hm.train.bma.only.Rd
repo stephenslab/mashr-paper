@@ -6,4 +6,3 @@
 \usage{
 compute.hm.train.bma.only(train.b, se.train, covmat, A)
 }
-

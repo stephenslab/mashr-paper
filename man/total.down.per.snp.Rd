@@ -6,4 +6,3 @@
 \usage{
 total.down.per.snp(post.weights, post.downs)
 }
-

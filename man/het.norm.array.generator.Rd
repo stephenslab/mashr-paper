@@ -26,4 +26,3 @@ Proportion of Time signs disagree
 \details{
 simulates from multivariate normal according to componenet responsibility; counts number of times there exist discordant signs among the simulations for each gene snp pair
 }
-

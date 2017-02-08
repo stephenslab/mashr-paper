@@ -21,4 +21,3 @@ init.covmat.single.with.projection(t.stat = t.stat, factor.mat = factors,
 \value{
 KxRxR matric of prior covariance matrices to initialize the EM
 }
-

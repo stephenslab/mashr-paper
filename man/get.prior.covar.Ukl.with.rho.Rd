@@ -22,4 +22,3 @@ U.0kl L dimensional list of K dimensional list with prior covairnace matrix for 
 \description{
 Compute the prior covariance matrix for each gene SNP pair in the rows and componenets in the columns
 }
-

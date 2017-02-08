@@ -14,4 +14,3 @@ total.covs.partone(j, post.means, post.covs, post.weights)
 \description{
 generate a K x R matrix of post.weighted marginal variances and sum them to get total weighted
 }
-

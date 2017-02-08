@@ -6,4 +6,3 @@
 \usage{
 checkfunc(j, b.gp.hat, se.gp.hat, A, k)
 }
-

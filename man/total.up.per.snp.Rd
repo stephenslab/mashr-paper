@@ -6,4 +6,3 @@
 \usage{
 total.up.per.snp(post.weights, post.ups)
 }
-

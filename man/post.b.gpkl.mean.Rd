@@ -12,4 +12,3 @@ post.b.gpkl.mean(b.mle, V.gp.hat.inv, U.gp1kl)
 \value{
 post.b.gpkl.mean return a 1 * R vector of posterior means for a given prior covariance matrix
 }
-

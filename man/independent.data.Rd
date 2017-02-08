@@ -6,4 +6,3 @@
 \usage{
 independent.data(J, d = 44, betasd = 1, esd = 0.1, tspec = 0)
 }
-

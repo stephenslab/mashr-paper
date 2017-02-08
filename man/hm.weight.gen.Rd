@@ -16,4 +16,3 @@ hm.weight.gen(lik.mat, jtrain, jtest)
 \value{
 compute HM weights on training and test set for compoarsion
 }
-

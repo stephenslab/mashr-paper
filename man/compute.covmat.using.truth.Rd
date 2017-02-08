@@ -14,4 +14,3 @@ compute.covmat.using.truth(b.gp.hat, sebetahat, A, zero = FALSE, covlist,
 
 \item{se.gp.hat}{JxR matrix of standarderrors}
 }
-

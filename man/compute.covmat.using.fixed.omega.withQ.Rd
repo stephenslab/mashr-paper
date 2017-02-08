@@ -14,4 +14,3 @@ compute.covmat.using.fixed.omega.withQ(max.step, Q, bma = TRUE, omega = 2,
 
 \item{se.gp.hat}{JxR matrix of standarderrors}
 }
-

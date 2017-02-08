@@ -14,4 +14,3 @@ convertstandarderrors(s.j, L)
 \value{
 the standard errors of wj, diag(LVL)
 }
-

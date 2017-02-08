@@ -15,4 +15,3 @@ chat_sim(n = 1000, d = 3, betasd = 1, esd = 0.1, K = 10)
 
 \item{esd}{the standard error of E in chat=mu+c+E, i.e., E~N(0,diag(esd^2))}
 }
-

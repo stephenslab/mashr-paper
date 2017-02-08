@@ -31,4 +31,3 @@ a list of covariance matrices
 \details{
 use a prespecified X`X from the output of the 'deconvoluting EM'
 }
-

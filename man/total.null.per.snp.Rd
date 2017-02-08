@@ -6,4 +6,3 @@
 \usage{
 total.null.per.snp(post.weights, post.nulls)
 }
-

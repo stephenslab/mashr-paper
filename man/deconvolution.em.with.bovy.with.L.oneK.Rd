@@ -14,4 +14,3 @@ deconvolution.em.with.bovy.with.L.oneK(t.stat, v.j, L, w)
 \value{
 the JxRxR (or R-1) array of marginal variances
 }
-

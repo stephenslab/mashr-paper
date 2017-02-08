@@ -15,4 +15,3 @@ post.mean.with.proj(b.mle, tinv, U.k, L)
 
 \item{L}{projection matrix}
 }
-

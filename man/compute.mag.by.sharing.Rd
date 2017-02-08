@@ -9,4 +9,3 @@ compute.mag.by.sharing(lfsr.mash, thresh, pm.mash.beta)
 \details{
 computes the matrix of pairwise sharing by magnitude
 }
-

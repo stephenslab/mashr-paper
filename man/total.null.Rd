@@ -14,4 +14,3 @@ total.null(j, post.nulls, post.weights)
 \description{
 generate a K x R matrix of post.weighted null probabilites and sum them to get total weighted
 }
-

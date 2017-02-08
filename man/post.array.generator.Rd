@@ -30,4 +30,3 @@ post.nulls JxKxR array of posterior nullprobs, corresponding to the marginal
 
 "null probability"" for the Jth individual in the Kth component across all R
 }
-

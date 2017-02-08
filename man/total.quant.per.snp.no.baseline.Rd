@@ -23,4 +23,3 @@ total.quant.per.snp.no.baseline(j, covmat, b.gp.hat, se.gp.hat, pis, A,
 \value{
 writes the posterior weighted quantities to a file
 }
-

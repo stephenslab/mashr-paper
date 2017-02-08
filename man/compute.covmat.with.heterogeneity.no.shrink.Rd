@@ -15,4 +15,3 @@ compute.covmat.with.heterogeneity.no.shrink(b.gp.hat, sebetahat, A,
 \value{
 A list of covariance matrices
 }
-

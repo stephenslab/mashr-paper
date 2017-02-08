@@ -14,4 +14,3 @@ compute.covmat.bma.only(b.gp.hat, sebetahat, A)
 \value{
 A list of covariance matrices
 }
-

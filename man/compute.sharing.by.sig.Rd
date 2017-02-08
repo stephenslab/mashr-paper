@@ -9,4 +9,3 @@ compute.sharing.by.sig(lfsr.mash, thresh)
 \details{
 computes the matrix of pairwise sharing by significiance
 }
-

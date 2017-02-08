@@ -6,4 +6,3 @@
 \usage{
 post.array.per.snp(j, covmat, b.gp.hat, se.gp.hat)
 }
-

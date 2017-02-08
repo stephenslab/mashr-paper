@@ -17,4 +17,3 @@ get vector of total weighted quanties for each gene SNP pair
 \description{
 generate a K x R matrix of post.weighted quantieis for each gene snp pair and sum them to get total weighted
 }
-

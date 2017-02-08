@@ -6,4 +6,3 @@
 \usage{
 total.covs.partone.persnp(post.means, post.covs, post.weights)
 }
-

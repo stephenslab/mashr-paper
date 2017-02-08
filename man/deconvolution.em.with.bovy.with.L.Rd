@@ -28,4 +28,3 @@ wrapper to compute denoised estimates of the fuller rank covariance matrices
 
 note that w and vj, L should all by R-1, while t.stat and factor mat should be R
 }
-

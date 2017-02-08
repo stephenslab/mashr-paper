@@ -6,4 +6,3 @@
 \usage{
 compute.hm.train.semat(train.b, v.mat, covmat, A)
 }
-

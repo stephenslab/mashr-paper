@@ -21,4 +21,3 @@ total.quant.per.snp.with.vmat(j, covmat, b.gp.hat, cormat, se.gp.hat, pis, A,
 \value{
 writes the posterior weighted quantities to a file
 }
-

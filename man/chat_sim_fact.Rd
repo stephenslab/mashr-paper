@@ -18,4 +18,3 @@ chat_sim_fact(n = 1000, d = 44, betasd = 1, esd = 0.1, K = 10)
 \value{
 omega the size of the effects
 }
-

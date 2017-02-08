@@ -23,4 +23,3 @@ vector of variances for one tissue
 \concept{
 this computes a rough largest value you'd want to use, based on idea that sigmaamax^2 + sebetahat^2 should be at least betahat^2
 }
-

@@ -13,4 +13,3 @@ post.array.per.snp.no.baseline(j, covmat, b.gp.hat, se.gp.hat, L)
 
 \item{L}{projection matrix}
 }
-
