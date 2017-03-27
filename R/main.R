@@ -1676,7 +1676,7 @@ compute.covmat.with.heterogeneity.no.shrink = function(b.gp.hat,sebetahat,A,zero
 #' @return A list of covariance matrices
 #' @export
 
-compute.covmat.with.heterogeneity = function(b.gp.hat,sebetahat,A,zero=FALSE){
+compute.covmat.with.heterogeneity = function(b.gp.hat,sebetahat,A,zero=FALSE,maxp=1,minp=1){
   
   omega=mult.tissue.grid(mult=sqrt(2),b.gp.hat,sebetahat)
   
