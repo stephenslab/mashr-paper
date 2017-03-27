@@ -1678,7 +1678,7 @@ compute.covmat.with.heterogeneity.no.shrink = function(b.gp.hat,sebetahat,A,zero
 
 compute.covmat.with.heterogeneity = function(b.gp.hat,sebetahat,A,zero=FALSE,maxp=1,minp=1){
   
-  omega=mult.tissue.grid(mult=sqrt(2),b.gp.hat,sebetahat)
+  omega=mult.tissue.grid(mult=sqrt(2),betahat=b.gp.hat,sebetahat=sebetahat,maxp=maxp,minp=minp)
   
   omega.table=data.frame(omega)
   
