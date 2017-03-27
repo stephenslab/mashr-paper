@@ -5,7 +5,7 @@
 \title{chat_sim_fsingle_fixedomega}
 \usage{
 chat_sim_fsingle_fixedomega(n = 1000, d = 8, omega = 2, esd = 0.1,
-  mu = 0)
+  mu = 0, reals = 0.1)
 }
 \arguments{
 \item{n}{number of SNPs}

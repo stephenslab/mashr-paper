@@ -176,17 +176,22 @@ chat_sim_fsingle=function(n=1000,d=8,betasd=1,esd=0.1,K=10){
 #' @return f the factors from which they were simulated
 #' @export
 
-chat_sim_fsingle_fixedomega=function(n=1000,d=8,omega=2,esd=0.1,mu=0){
+chat_sim_fsingle_fixedomega=function(n=1000,d=8,omega=2,esd=0.1,mu=0,reals=0.10){
   library("MASS")
   library("mvtnorm")
-  J=0.10*n
+  J=reals*n
   config=rep(0,d)
   config[d]=1
   config[d-1]=1
-  mus=rnorm(n,mean = mu)  ###generate a list of n mus
+if (mu==FALSE) {
+    mumat=matrix(rep(0,n*d),ncol=d)
+  } else {
+    mus=rnorm(n,mean = mu) 
+    mumat=matrix(rep(mus,d),ncol=d)
+  }
+   ###generate a list of n mus
   covmat=(config)%*%t(config)##only active in tissues d and d-1
-  mumat=matrix(rep(mus,d),ncol=d)##generate a matrix of mus for each gene
-  
+  ##generate a matrix of mus for each gene
   beta=t(sapply(seq(1:J),function(j){
     
     mvrnorm(1,mu=rep(0,d),Sigma=omega*covmat)}))
