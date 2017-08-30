@@ -129,6 +129,7 @@ if(pen==TRUE){
   pdf(paste0("pis",A,".pdf"))
   barplot(t(as.matrix(pis$pihat)))
   dev.off()
+  return(list(lik.mat=lik.mat, pis=pis))
 }
 
 
@@ -240,6 +241,7 @@ compute.hm.train.log.lik.pen=function(train.b,se.train,covmat,A,pen){
   pdf(paste0("pis",A,".pdf"))
   barplot(t(as.matrix(pis$pihat)))
   dev.off()
+  return(list(lik.mat=lik.mat, pis=pis))
 }
 
 
@@ -293,4 +295,5 @@ compute.hm.train.log.lik.pen.vmat=function(train.b,covmat,A,pen,train.s,cormat){
   pdf(paste0("pis",A,".pdf"))
   barplot(t(as.matrix(pis$pihat)))
   dev.off()
+  return(list(lik.mat=lik.mat, pis=pis))
 }
