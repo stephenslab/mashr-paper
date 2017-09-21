@@ -4,7 +4,8 @@
 \alias{compute.covmat.with.heterogeneity}
 \title{compute.covmat.with.heterogeneity}
 \usage{
-compute.covmat.with.heterogeneity(b.gp.hat, sebetahat, A, zero = FALSE)
+compute.covmat.with.heterogeneity(b.gp.hat, sebetahat, A, zero = FALSE,
+  maxp = 1, minp = 1)
 }
 \arguments{
 \item{b.gp.hat}{a JxR matrix of betahats}

@@ -6,7 +6,7 @@ Title: Multivariate Adaptive Shrinkage Package for Estimating
 Version: 0.1
 Date: 2017-09-21
 Authors@R: c(person("Sarah","Urbut",role=c("aut","cre"),
-                    email="sarahmurbut@gmail.com"),
+                    email="sarahmurbut@gmail.com"))
 Description: This package implements methods to estimate and test many
     effects in many conditions (or many effects on many outcomes). The
     methods use Empirical Bayes methods to estimate patterns of
