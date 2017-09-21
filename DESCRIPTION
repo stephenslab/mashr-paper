@@ -1,13 +1,18 @@
 Package: mashr
+Encoding: UTF-8
 Type: Package
-Title: Multivariate adaptive shrinkage package for estimating multiple effects in multiple conditions
+Title: Multivariate Adaptive Shrinkage Package for Estimating
+    Multiple Effects in Multiple Conditions
 Version: 0.1
-Date: 2016-12-16
-Authors: Sarah Urbut <sarahmurbut@gmail.com>
-Description: This package implements methods to estimate and test many effects in many conditions (or many effects on many outcomes). The methods use Empirical Bayes methods to estimate patterns of similarity of effects among conditions, and then exploit those patterns of similarity among conditions to improve accuracy of effect estimates. 
+Date: 2017-09-21
+Authors@R: c(person("Sarah","Urbut",role=c("aut","cre"),
+                    email="sarahmurbut@gmail.com"),
+Description: This package implements methods to estimate and test many
+    effects in many conditions (or many effects on many outcomes). The
+    methods use Empirical Bayes methods to estimate patterns of
+    similarity of effects among conditions, and then exploit those
+    patterns of similarity among conditions to improve accuracy of
+    effect estimates.
 License: What license is it under?
+LazyData: true
 RoxygenNote: 6.0.1
-LazyData: TRUE
-Depends: 
-	SQUAREM,
-	mvtnorm
