@@ -1,8 +1,8 @@
 Package: mashr
 Encoding: UTF-8
 Type: Package
-Title: Multivariate Adaptive Shrinkage Package for Estimating
-    Multiple Effects in Multiple Conditions
+Title: Multivariate Adaptive Shrinkage for Estimating Multiple Effects
+  in Multiple Conditions
 Version: 0.1
 Date: 2017-09-21
 Authors@R: c(person("Sarah","Urbut",role=c("aut","cre"),
