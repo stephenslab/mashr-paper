@@ -13,6 +13,6 @@ Description: This package implements methods to estimate and test many
     similarity of effects among conditions, and then exploit those
     patterns of similarity among conditions to improve accuracy of
     effect estimates.
-License: What license is it under?
+License: GPL (>= 3)
 LazyData: true
 RoxygenNote: 6.0.1
