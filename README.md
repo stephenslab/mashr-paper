@@ -7,7 +7,12 @@ to the the
 [Genotype-Tissue Expression (GTEx) study](https://www.gtexportal.org),
 please see [Urbut *et al*, 2017](https://doi.org/10.1101/096552).
 
-## Using the source code
+*Note:* The primary purpose of this repository is to implement the
+analyses presented in the Urbut *et al* manuscript. We are also
+developing an R package for broader application, and this R package
+can be found [here](https://github.com/stephenslab/mashr).
+
+## Using the code
 
 Although this repository has the standard structure of an
 [R package](http://r-pkgs.had.co.nz/package.html), this package is in
@@ -32,24 +37,9 @@ data](inst/demos/Reprosim/newsim.Rmd), as well as a
 [more advanced demonstration of mashr for estimating tissue-specific
 effects on gene expression](inst/demos/Advanced/TissueSpecificVignette.Rmd).
 
-## License
-
-Copyright (C) 2017, Sarah Urbut.
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the
-[GNU General Public License](http://www.gnu.org/licenses/gpl.html) as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but
-**without any warranty**; without even the implied warranty of
-**merchantability** or **fitness for a particular purchase**. See the
-[GNU General Public License](LICENSE) for more details.
-
 ## Overview
 
-A typical `mashr` analysis will include the following steps:
+A typical mashr analysis will include the following steps:
 
 + Generate a list of covariance matrices to capture patterns of
 sharing in the data. This may be done with predetermined matrices, or
@@ -72,3 +62,18 @@ probabilities, marginal subgroup-specific posterior variances.
 + Compute posterior quantities of interest; e.g., posterior mean,
 local false sign rate, marginal variance for the effect size in
 each condition.
+
+## License
+
+Copyright (C) 2017, Sarah Urbut.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the
+[GNU General Public License](http://www.gnu.org/licenses/gpl.html) as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+**without any warranty**; without even the implied warranty of
+**merchantability** or **fitness for a particular purchase**. See the
+[GNU General Public License](LICENSE) for more details.
