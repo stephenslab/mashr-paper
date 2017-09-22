@@ -3,7 +3,7 @@ Encoding: UTF-8
 Type: Package
 Title: Multivariate Adaptive Shrinkage for Estimating Multiple Effects
   in Multiple Conditions
-Version: 0.2-0
+Version: 0.2-1
 Date: 2017-09-22
 Authors@R: c(person("Sarah","Urbut",role=c("aut","cre"),
                     email="sarahmurbut@gmail.com"))

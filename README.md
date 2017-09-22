@@ -1,30 +1,74 @@
-Welcome to Multivariate Adaptive Shrinkage (R package)!
+# mashr-paper
 
-The package implements methods to estimate and test many effects in many conditions (or many effects on many outcomes).
+This repository contains R source code implementing Empirical Bayes
+methods for simultaneously testing many effects in many conditions or
+outcomes. For more information on these methods and their application
+to the the
+[Genotype-Tissue Expression (GTEx) study](https://www.gtexportal.org),
+please see [Urbut *et al*, 2017](https://doi.org/10.1101/096552).
 
-The methods use Empirical Bayes methods to estimate patterns of similarity among conditions, and then exploit
-those patterns of similarity among conditions to improve accuracy of effect estimates.
-See (preprint)[preprint link to appear] for further details.
+## Using the source code
 
-To install:
+Although this repository has the standard structure of an
+[R package](http://r-pkgs.had.co.nz/package.html), this package is in
+development, so it is recommended that you load the function
+definitions directly into your R environment rather than attempting to
+install this repository as a package. For example, this can be done by
+cloning or downloading this repository, setting your working directory
+to this repository on your computer, then running the following
+commands in R:
 
+```r
+library(devtools)
+load_all(export_all = TRUE)
 ```
-devtools::install_github("stephenslab/mashr")
-library("mashr")
-```
 
-See the Manual and vignettes: [Repo Sim](Vignettes/Reprosim/newsim.html) and [Tissue Specific](Vignettes/Advanced/TissueSpecificVignette.html) in the Vignettes for package execution and more details in the Advanced branch on comparing between methods.
+This will load all the mashr functions into your environment without
+actually installing the package.
 
-A typical `mashr` analysis will involve the following steps:
+To start, we recommend walking through
+[a small demonstration of mashr on simulated
+data](inst/demos/Reprosim/newsim.Rmd), as well as a
+[more advanced demonstration of mashr for estimating tissue-specific
+effects on gene expression](inst/demos/Advanced/TissueSpecificVignette.Rmd).
 
-* Generate a list of covariance matrices which aim to capture all the patterns of sharing in the data. This may be done in a fixed or iteratively 'learned' fashion, with or without the `ExtremeDeconvolution` package.
+## License
 
-* Estimate weights reflecting the relative frequency of each pattern of sharing in the data. 
+Copyright (C) 2017, Sarah Urbut.
 
-* (Optionally) Assess the model fit on a held-out test set (useful for comparing across models).
-	* Compute its likelihood as a *J effects x P components* matrix of likelihoods at each component
+This program is free software: you can redistribute it and/or modify
+it under the terms of the
+[GNU General Public License](http://www.gnu.org/licenses/gpl.html) as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+**without any warranty**; without even the implied warranty of
+**merchantability** or **fitness for a particular purchase**. See the
+[GNU General Public License](LICENSE) for more details.
+
+## Overview
+
+A typical `mashr` analysis will include the following steps:
+
++ Generate a list of covariance matrices to capture patterns of
+sharing in the data. This may be done with predetermined matrices, or
+using a method that adapts the matrices to the data (e.g, using
+[Extreme Deconvoluion](https://github.com/jobovy/extreme-deconvolution).
+
++ Estimate weights reflecting the relative frequency of each pattern
+of sharing in the data.
+
++ (Optionally) Assess the model fit on a held-out test set, which is
+useful for comparing across models.
+
++ Compute the J x P conditional likelihood matrix, where J is the
+number of estimated effects and P is the number of mixture
+components.
    
-   * Posterior quantities of interest (means, tail probabilities and marginal subgroup specific posterior variances) stored in a *J effects x P components x R subgroup* array.
++ Compute intermediate posterior quantities; e.g., means, tail
+probabilities, marginal subgroup-specific posterior variances.
 
-* Compute the posterior quantities of interest: posterior mean, local false sign rate and marginal variance for the effect size in each condition.
-
++ Compute posterior quantities of interest; e.g., posterior mean,
+local false sign rate, marginal variance for the effect size in
+each condition.
