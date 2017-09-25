@@ -9,8 +9,9 @@ please see [Urbut *et al*, 2017](https://doi.org/10.1101/096552).
 
 *Note:* The primary purpose of this repository is to implement the
 analyses presented in the Urbut *et al* manuscript. We are also
-developing an R package for broader application, and this R package
-can be found [here](https://github.com/stephenslab/mashr).
+developing R and Julia packages for broader application; these
+packages can be found [here](https://github.com/stephenslab/mashr) and
+[here](https://github.com/stephenslab/mash.jl).
 
 ## Using the code
 
